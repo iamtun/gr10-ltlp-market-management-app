@@ -4,8 +4,10 @@
  */
 package market.app.client.ui.staff;
 
+import market.app.client.ui.frmViewInfor;
 import java.awt.Component;
 import java.awt.Dimension;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -21,9 +23,12 @@ public class frmMenuStaff extends javax.swing.JFrame {
     /**
      * Creates new form frmHomeStaff
      */
+    private JButton[] buttons = null;
+
     public frmMenuStaff() {
         initComponents();
-        startPanel();
+        Config.startPanel(new frmSale(), pnContent, btnSale);
+        this.buttons = new JButton[]{btnLogout, btnSale, btnViewInfor};
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
     }
 
@@ -42,10 +47,9 @@ public class frmMenuStaff extends javax.swing.JFrame {
         btnViewInfor = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
         lblLogo = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lblPosition = new javax.swing.JLabel();
+        lblNameAndID = new javax.swing.JLabel();
         pnContent = new javax.swing.JPanel();
-        pnMenuSale = new javax.swing.JPanel();
 
         jInternalFrame1.setVisible(true);
 
@@ -95,13 +99,13 @@ public class frmMenuStaff extends javax.swing.JFrame {
         lblLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/carbon_user-avatar-filled-alt.png"))); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Nhân viên bàn hàng");
+        lblPosition.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblPosition.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPosition.setText("Nhân viên bàn hàng");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("BH001 - Lê Tuấn");
+        lblNameAndID.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblNameAndID.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblNameAndID.setText("BH001 - Lê Tuấn");
 
         javax.swing.GroupLayout pnMenuLayout = new javax.swing.GroupLayout(pnMenu);
         pnMenu.setLayout(pnMenuLayout);
@@ -110,12 +114,12 @@ public class frmMenuStaff extends javax.swing.JFrame {
             .addGroup(pnMenuLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblNameAndID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnLogout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnViewInfor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                     .addComponent(btnSale, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnMenuLayout.setVerticalGroup(
@@ -124,9 +128,9 @@ public class frmMenuStaff extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addComponent(lblLogo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
+                .addComponent(lblNameAndID)
                 .addGap(69, 69, 69)
                 .addComponent(btnSale, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -138,31 +142,15 @@ public class frmMenuStaff extends javax.swing.JFrame {
 
         getContentPane().add(pnMenu, java.awt.BorderLayout.WEST);
 
-        javax.swing.GroupLayout pnMenuSaleLayout = new javax.swing.GroupLayout(pnMenuSale);
-        pnMenuSale.setLayout(pnMenuSaleLayout);
-        pnMenuSaleLayout.setHorizontalGroup(
-            pnMenuSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 707, Short.MAX_VALUE)
-        );
-        pnMenuSaleLayout.setVerticalGroup(
-            pnMenuSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 525, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout pnContentLayout = new javax.swing.GroupLayout(pnContent);
         pnContent.setLayout(pnContentLayout);
         pnContentLayout.setHorizontalGroup(
             pnContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnContentLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnMenuSale, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 719, Short.MAX_VALUE)
         );
         pnContentLayout.setVerticalGroup(
             pnContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnContentLayout.createSequentialGroup()
-                .addComponent(pnMenuSale, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 531, Short.MAX_VALUE)
         );
 
         getContentPane().add(pnContent, java.awt.BorderLayout.CENTER);
@@ -170,49 +158,24 @@ public class frmMenuStaff extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void openComponent(JInternalFrame frame) {
-        Component[] components = pnContent.getComponents();
-        Component component;
-        for (Component component1 : components) {
-            component = component1;
-            if (component != null) {
-                component.setVisible(false);
-            }
-        }
-        frame.setSize(new Dimension(1285, 800));
-        pnContent.add(frame);
-        frame.setVisible(true);
-    }
-
-    private void startPanel() {
-        frmSale sale = new frmSale();
-        openComponent(sale);
-        btnSale.setBackground(Config.colorButtonClick);
-    }
     private void btnSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleActionPerformed
         // TODO add your handling code here:
-        startPanel();
-        btnSale.setBackground(Config.colorButtonClick);
-        btnViewInfor.setBackground(Config.colorButtonUnClick);
-        btnLogout.setBackground(Config.colorButtonUnClick);
+        Config.startPanel(new frmSale(), pnContent, btnSale);
+        Config.handleButtonClick(buttons, btnSale);
     }//GEN-LAST:event_btnSaleActionPerformed
 
     private void btnViewInforActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInforActionPerformed
         // TODO add your handling code here:
         frmViewInfor viewInfor = new frmViewInfor();
-        openComponent(viewInfor);
-        btnSale.setBackground(Config.colorButtonUnClick);
-        btnViewInfor.setBackground(Config.colorButtonClick);
-        btnLogout.setBackground(Config.colorButtonUnClick);
+        Config.openComponent(viewInfor, pnContent);
+        Config.handleButtonClick(buttons, btnViewInfor);
     }//GEN-LAST:event_btnViewInforActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
-        btnSale.setBackground(Config.colorButtonUnClick);
-        btnViewInfor.setBackground(Config.colorButtonUnClick);
-        btnLogout.setBackground(Config.colorButtonClick);
-        int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn đăng xuất?", "Thông báo",  JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(choose == JOptionPane.YES_OPTION){
+        Config.handleButtonClick(buttons, btnLogout);
+        int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn đăng xuất?", "Thông báo", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (choose == JOptionPane.YES_OPTION) {
             new frmLogin().setVisible(true);
             this.dispose();
         }
@@ -264,11 +227,10 @@ public class frmMenuStaff extends javax.swing.JFrame {
     private javax.swing.JButton btnSale;
     private javax.swing.JButton btnViewInfor;
     private javax.swing.JInternalFrame jInternalFrame1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JLabel lblNameAndID;
+    private javax.swing.JLabel lblPosition;
     private javax.swing.JPanel pnContent;
     private javax.swing.JPanel pnMenu;
-    private javax.swing.JPanel pnMenuSale;
     // End of variables declaration//GEN-END:variables
 }

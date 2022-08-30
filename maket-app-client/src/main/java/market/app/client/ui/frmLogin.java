@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import market.app.client.Config;
+import market.app.client.ui.manager.frmMenuManager;
 import market.app.client.ui.staff.frmMenuStaff;
 
 /**
@@ -40,8 +41,8 @@ public class frmLogin extends javax.swing.JFrame {
         lblNameShop = new javax.swing.JLabel();
         lblTiltle = new javax.swing.JLabel();
         txtUserName = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
+        txtPassword = new javax.swing.JPasswordField();
         pnImage = new javax.swing.JPanel();
         lblImage = new javax.swing.JLabel();
 
@@ -68,8 +69,6 @@ public class frmLogin extends javax.swing.JFrame {
         txtUserName.setText("Tên đăng nhập");
         txtUserName.setToolTipText("");
 
-        txtPassword.setText("Mật khẩu");
-
         btnLogin.setBackground(new java.awt.Color(69, 123, 157));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
@@ -88,14 +87,14 @@ public class frmLogin extends javax.swing.JFrame {
         pnLogin.setLayout(pnLoginLayout);
         pnLoginLayout.setHorizontalGroup(
             pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnLoginLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnLoginLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtUserName)
-                    .addComponent(lblNameShop, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                    .addComponent(lblTiltle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtPassword)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtUserName, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNameShop, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addComponent(lblTiltle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnLoginLayout.setVerticalGroup(
@@ -142,13 +141,16 @@ public class frmLogin extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
         String userName = txtUserName.getText().trim();
-        String password = txtPassword.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
         
-        if("Tên đăng nhập".equals(userName) && "Mật khẩu".equals(password)){
+        if("Tên đăng nhập".equals(userName) && "123".equals(password)){
             new frmMenuStaff().setVisible(true);
-            //close form
-            this.dispose();
+        }else if("admin".equals(userName) && "admin".equals(password)){
+            new frmMenuManager().setVisible(true);
         }
+        
+        //close form
+           this.dispose();
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -175,7 +177,7 @@ public class frmLogin extends javax.swing.JFrame {
     private javax.swing.JLabel lblTiltle;
     private javax.swing.JPanel pnImage;
     private javax.swing.JPanel pnLogin;
-    private javax.swing.JTextField txtPassword;
+    private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 }

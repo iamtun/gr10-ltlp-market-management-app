@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
-package market.app.client.ui.staff;
+package market.app.client.ui;
 
-import market.app.client.ui.frmPasswordChange;
+import market.app.client.Config;
 
 /**
  *
@@ -17,9 +17,7 @@ public class frmViewInfor extends javax.swing.JInternalFrame {
      */
     public frmViewInfor() {
         initComponents();
-        //hide title bar
-        ((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
-        
+        Config.hideTitleBarInternalFrame(this);
     }
 
     /**
@@ -50,7 +48,7 @@ public class frmViewInfor extends javax.swing.JInternalFrame {
         txtSalary = new javax.swing.JTextField();
         btnPasswordChange = new javax.swing.JButton();
 
-        pnViewInfor.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true));
+        pnViewInfor.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Thông tin nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
 
         lblStaffID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblStaffID.setText("Mã nhân viên: ");
@@ -128,7 +126,7 @@ public class frmViewInfor extends javax.swing.JInternalFrame {
                         .addGroup(pnViewInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnViewInforLayout.createSequentialGroup()
                                 .addComponent(lblSalary)
-                                .addGap(0, 194, Short.MAX_VALUE))
+                                .addGap(0, 186, Short.MAX_VALUE))
                             .addComponent(txtSalary)))
                     .addComponent(txtAddress))
                 .addContainerGap())
@@ -162,9 +160,8 @@ public class frmViewInfor extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnViewInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtSalary, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                    .addGroup(pnViewInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtGender, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                        .addComponent(txtPosition)))
+                    .addComponent(txtGender, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                    .addComponent(txtPosition))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
@@ -199,7 +196,7 @@ public class frmViewInfor extends javax.swing.JInternalFrame {
                 .addComponent(btnPasswordChange, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(pnViewInfor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(153, Short.MAX_VALUE))
+                .addContainerGap(130, Short.MAX_VALUE))
         );
 
         pack();

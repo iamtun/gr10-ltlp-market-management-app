@@ -28,12 +28,12 @@ public class frmPasswordChange extends javax.swing.JFrame {
     private void initComponents() {
 
         lblCurrentPassword = new javax.swing.JLabel();
-        txtCurrentPassword = new javax.swing.JTextField();
         lblNewPassword = new javax.swing.JLabel();
-        txtNewPassword = new javax.swing.JTextField();
         lblNewPasswordConfirm = new javax.swing.JLabel();
-        txtNewPasswordConfirm = new javax.swing.JTextField();
         btnConfirm = new javax.swing.JButton();
+        txtCurrentPass = new javax.swing.JPasswordField();
+        txtNewPass = new javax.swing.JPasswordField();
+        txtConfirmPass = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -59,12 +59,14 @@ public class frmPasswordChange extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtConfirmPass)
+                    .addComponent(txtNewPass)
+                    .addComponent(txtCurrentPass)
                     .addComponent(btnConfirm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtNewPasswordConfirm)
-                    .addComponent(txtNewPassword)
-                    .addComponent(txtCurrentPassword, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblNewPasswordConfirm, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
-                    .addComponent(lblNewPassword, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(lblNewPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(96, 96, 96))
                     .addComponent(lblCurrentPassword, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -74,15 +76,15 @@ public class frmPasswordChange extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(lblCurrentPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCurrentPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCurrentPass, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblNewPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNewPass, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblNewPasswordConfirm)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNewPasswordConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtConfirmPass, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(47, Short.MAX_VALUE))
@@ -132,8 +134,8 @@ public class frmPasswordChange extends javax.swing.JFrame {
     private javax.swing.JLabel lblCurrentPassword;
     private javax.swing.JLabel lblNewPassword;
     private javax.swing.JLabel lblNewPasswordConfirm;
-    private javax.swing.JTextField txtCurrentPassword;
-    private javax.swing.JTextField txtNewPassword;
-    private javax.swing.JTextField txtNewPasswordConfirm;
+    private javax.swing.JPasswordField txtConfirmPass;
+    private javax.swing.JPasswordField txtCurrentPass;
+    private javax.swing.JPasswordField txtNewPass;
     // End of variables declaration//GEN-END:variables
 }
