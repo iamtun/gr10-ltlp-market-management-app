@@ -6,8 +6,11 @@ package market.app.client.ui;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import market.app.client.Config;
+import market.app.client.ui.staff.frmMenuStaff;
 
 /**
  *
@@ -42,17 +45,23 @@ public class frmLogin extends javax.swing.JFrame {
         pnImage = new javax.swing.JPanel();
         lblImage = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnLogin.setBackground(new java.awt.Color(214, 229, 227));
         pnLogin.setPreferredSize(new java.awt.Dimension(400, 618));
 
-        lblNameShop.setFont(new java.awt.Font("Palatino Linotype", 0, 36)); // NOI18N
+        lblNameShop.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         lblNameShop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblNameShop.setText("Siêu Thị KMart");
         lblNameShop.setToolTipText("");
 
-        lblTiltle.setFont(new java.awt.Font("Palatino Linotype", 0, 24)); // NOI18N
+        lblTiltle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTiltle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTiltle.setText("Đăng nhập");
 
@@ -62,13 +71,18 @@ public class frmLogin extends javax.swing.JFrame {
         txtPassword.setText("Mật khẩu");
 
         btnLogin.setBackground(new java.awt.Color(69, 123, 157));
-        btnLogin.setFont(new java.awt.Font("Palatino Linotype", 1, 12)); // NOI18N
+        btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
         btnLogin.setText("Đăng nhập");
         btnLogin.setToolTipText("Nhập tài khoản mật khẩu để đăng nhập");
         btnLogin.setMaximumSize(new java.awt.Dimension(66, 22));
         btnLogin.setMinimumSize(new java.awt.Dimension(66, 22));
         btnLogin.setPreferredSize(new java.awt.Dimension(66, 22));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnLoginLayout = new javax.swing.GroupLayout(pnLogin);
         pnLogin.setLayout(pnLoginLayout);
@@ -97,7 +111,7 @@ public class frmLogin extends javax.swing.JFrame {
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addContainerGap(240, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnLogin, java.awt.BorderLayout.WEST);
@@ -124,6 +138,23 @@ public class frmLogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // TODO add your handling code here:
+        String userName = txtUserName.getText().trim();
+        String password = txtPassword.getText().trim();
+        
+        if("Tên đăng nhập".equals(userName) && "Mật khẩu".equals(password)){
+            new frmMenuStaff().setVisible(true);
+            //close form
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        Config.closeForm(this);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
