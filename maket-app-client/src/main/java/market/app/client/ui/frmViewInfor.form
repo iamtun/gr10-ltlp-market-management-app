@@ -22,7 +22,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="pnViewInfor" alignment="0" max="32767" attributes="0"/>
+                  <Component id="pnViewInfor" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btnPasswordChange" min="-2" pref="195" max="-2" attributes="0"/>
@@ -39,7 +39,7 @@
               <Component id="btnPasswordChange" min="-2" pref="44" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Component id="pnViewInfor" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="153" max="32767" attributes="0"/>
+              <EmptySpace pref="130" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -48,10 +48,15 @@
     <Container class="javax.swing.JPanel" name="pnViewInfor">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-            <LineBorder roundedCorners="true" thickness="3">
-              <Color PropertyName="color" blue="9d" green="7b" red="45" type="rgb"/>
-            </LineBorder>
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Th&#xf4;ng tin nh&#xe2;n vi&#xea;n">
+              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                <LineBorder roundedCorners="true" thickness="3">
+                  <Color PropertyName="color" blue="9d" green="7b" red="45" type="rgb"/>
+                </LineBorder>
+              </Border>
+              <Font PropertyName="font" name="Segoe UI" size="14" style="0"/>
+            </TitledBorder>
           </Border>
         </Property>
       </Properties>
@@ -98,7 +103,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="lblSalary" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="194" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="186" max="32767" attributes="0"/>
                               </Group>
                               <Component id="txtSalary" max="32767" attributes="0"/>
                           </Group>
@@ -143,10 +148,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="txtSalary" pref="41" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="txtGender" pref="41" max="32767" attributes="0"/>
-                          <Component id="txtPosition" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="txtGender" pref="41" max="32767" attributes="0"/>
+                      <Component id="txtPosition" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="28" max="32767" attributes="0"/>
               </Group>
