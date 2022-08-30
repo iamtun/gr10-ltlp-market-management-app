@@ -4,9 +4,12 @@
  */
 package market.app.client;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -23,6 +26,15 @@ public class Config {
                                                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(choose == JOptionPane.YES_OPTION){
             System.exit(0);
+        }
+    }
+    
+    public static void setLookAndFeelUI() {
+        try {
+            FlatLightLaf.setup();
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException ex) {
+            System.err.println("Failed to initialize LaF");
         }
     }
 }

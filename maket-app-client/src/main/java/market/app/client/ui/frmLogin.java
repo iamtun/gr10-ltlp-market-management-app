@@ -161,13 +161,7 @@ public class frmLogin extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the FlatLaf look and feel */
-        try {
-            FlatLightLaf.setup();
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (UnsupportedLookAndFeelException ex) {
-            System.err.println("Failed to initialize LaF");
-        }
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new frmLogin().setVisible(true);
