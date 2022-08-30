@@ -12,9 +12,12 @@ import market.app.client.ui.frmLogin;
  *
  * @author Le Tuan
  */
-public class MaketAppClient {
+public class MarketAppClient {
 
     public static void main(String[] args) {
+        /* Set the FlatLaf look and feel */
+        Config.setLookAndFeelUI();
+        
         java.awt.EventQueue.invokeLater(() -> {
             new frmLogin().setVisible(true);
         });

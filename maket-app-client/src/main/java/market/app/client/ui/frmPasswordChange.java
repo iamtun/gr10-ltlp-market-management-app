@@ -35,7 +35,7 @@ public class frmPasswordChange extends javax.swing.JFrame {
         txtNewPasswordConfirm = new javax.swing.JTextField();
         btnConfirm = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         lblCurrentPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
