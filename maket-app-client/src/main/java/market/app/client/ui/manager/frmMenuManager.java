@@ -209,6 +209,7 @@ public class frmMenuManager extends javax.swing.JFrame {
 
     private void btnManageStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageStaffActionPerformed
         // TODO add your handling code here:
+        Config.startPanel(new frmManageStaff(), pnContent, btnManageItem);
         Config.handleButtonClick(buttons, btnManageStaff);
         
     }//GEN-LAST:event_btnManageStaffActionPerformed
