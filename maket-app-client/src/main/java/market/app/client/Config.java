@@ -8,7 +8,9 @@ import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -24,8 +26,8 @@ import javax.swing.table.DefaultTableModel;
  */
 // Variables and functions use in app
 public class Config {
-    public static Color colorButtonClick = new Color(69,123,157);
-    public static Color colorButtonUnClick = new Color(255, 255, 255);
+    public static final Color colorButtonClick = new Color(69,123,157);
+    public static final Color colorButtonUnClick = new Color(255, 255, 255);
     
     
     //functions:
@@ -83,5 +85,12 @@ public class Config {
     public static void initColTable(JTable table, DefaultTableModel model, String[] names) {
         model.setColumnIdentifiers(names);
         table.setModel(model);
+    }
+    
+    public static void initComboBox(JComboBox cbo, DefaultComboBoxModel model, String[] types){
+        for(String type : types) {
+            model.addElement(type);
+        }
+        cbo.setModel(model);
     }
 }

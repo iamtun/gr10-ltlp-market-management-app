@@ -414,6 +414,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Lo&#x1ea1;i m&#x1eb7;t h&#xe0;ng"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenFrmItemTypeActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

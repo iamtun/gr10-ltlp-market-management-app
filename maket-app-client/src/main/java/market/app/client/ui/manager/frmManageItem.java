@@ -4,6 +4,8 @@
  */
 package market.app.client.ui.manager;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
 
@@ -16,15 +18,19 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmManagemeItem
      */
-    private DefaultTableModel modelTableItemfList = new DefaultTableModel();
+    private final DefaultTableModel modelTableItemList = new DefaultTableModel();
+    private final DefaultComboBoxModel<String> modelComboItemType = new DefaultComboBoxModel<>();
     private String[] colums = new String[] {"Mã mặt hàng", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
+    private String[] itemTypes = new String[] {"Bánh", "Nước ngọt"};//get from database
     
     public frmManageItem() {
         initComponents();
         Config.hideTitleBarInternalFrame(this);
-        Config.initColTable(tblStaffList, modelTableItemfList, colums);
+        Config.initColTable(tblStaffList, modelTableItemList, colums);
+        Config.initComboBox(cboItemType, modelComboItemType, itemTypes);
     }
-
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -230,6 +236,11 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         btnOpenFrmItemType.setBackground(new java.awt.Color(69, 123, 157));
         btnOpenFrmItemType.setForeground(new java.awt.Color(255, 255, 255));
         btnOpenFrmItemType.setText("Loại mặt hàng");
+        btnOpenFrmItemType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenFrmItemTypeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -270,6 +281,11 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnOpenFrmItemTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFrmItemTypeActionPerformed
+        // TODO add your handling code here:
+        new frmItemType().setVisible(true);
+    }//GEN-LAST:event_btnOpenFrmItemTypeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

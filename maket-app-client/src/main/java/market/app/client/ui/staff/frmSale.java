@@ -6,6 +6,7 @@ package market.app.client.ui.staff;
 
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
+import market.app.client.ui.frmOrder;
 
 
 /**
@@ -17,8 +18,9 @@ public class frmSale extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmSale
      */
-    private DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
-    private String[] colums = new String[] {"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
+    private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
+    private final String[] colums = new String[] {"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
+    
     public frmSale() {
         initComponents();
         Config.initColTable(tblOrderDetail, modelTableOrderDetail, colums);
@@ -43,12 +45,12 @@ public class frmSale extends javax.swing.JInternalFrame {
         lblNumber = new javax.swing.JLabel();
         txtNumber = new javax.swing.JTextField();
         btnConfirm = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        pnItemList = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblOrderDetail = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        btnCreateOrder = new javax.swing.JButton();
+        lblTagTotalMoney = new javax.swing.JLabel();
+        lblTotalMoney = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -108,7 +110,7 @@ public class frmSale extends javax.swing.JInternalFrame {
                 .addContainerGap(101, Short.MAX_VALUE))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Danh sách mặt hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
+        pnItemList.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Danh sách mặt hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
 
         tblOrderDetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -123,44 +125,49 @@ public class frmSale extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(tblOrderDetail);
 
-        jButton1.setBackground(new java.awt.Color(69, 123, 157));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Tạo hóa đơn");
+        btnCreateOrder.setBackground(new java.awt.Color(69, 123, 157));
+        btnCreateOrder.setForeground(new java.awt.Color(255, 255, 255));
+        btnCreateOrder.setText("Tạo hóa đơn");
+        btnCreateOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateOrderActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Tổng tiền:");
+        lblTagTotalMoney.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTagTotalMoney.setText("Tổng tiền:");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("0,000 VNÐ");
+        lblTotalMoney.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblTotalMoney.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTotalMoney.setText("0,000 VNÐ");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout pnItemListLayout = new javax.swing.GroupLayout(pnItemList);
+        pnItemList.setLayout(pnItemListLayout);
+        pnItemListLayout.setHorizontalGroup(
+            pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnItemListLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addComponent(btnCreateOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnItemListLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
+                        .addComponent(lblTagTotalMoney)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblTotalMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        pnItemListLayout.setVerticalGroup(
+            pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnItemListLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
+                .addGroup(pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotalMoney)
+                    .addComponent(lblTagTotalMoney))
                 .addGap(12, 12, 12)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCreateOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -172,7 +179,7 @@ public class frmSale extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnItemList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
@@ -180,13 +187,18 @@ public class frmSale extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnItemList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pnInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(197, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCreateOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateOrderActionPerformed
+        // TODO add your handling code here:
+        new frmOrder().setVisible(true);
+    }//GEN-LAST:event_btnCreateOrderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,15 +207,15 @@ public class frmSale extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirm;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton btnCreateOrder;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblItemID;
     private javax.swing.JLabel lblItemName;
     private javax.swing.JLabel lblNumber;
+    private javax.swing.JLabel lblTagTotalMoney;
+    private javax.swing.JLabel lblTotalMoney;
     private javax.swing.JPanel pnInput;
+    private javax.swing.JPanel pnItemList;
     private javax.swing.JTable tblOrderDetail;
     private javax.swing.JTextField txtItemID;
     private javax.swing.JTextField txtItemName;
