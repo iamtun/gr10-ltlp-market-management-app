@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -13,7 +14,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "staffs")
-public class Staff {
+public class Staff implements Serializable{
 	@Id
 	@Column(name = "staff_id", nullable = false)
 	private String id;

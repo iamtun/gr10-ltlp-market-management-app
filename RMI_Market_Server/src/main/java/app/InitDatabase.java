@@ -28,23 +28,23 @@ public class InitDatabase {
 			Product product = new Product("Aqua", 100, 5000, productType);
 			Order order = new Order(new Date(), staff, null);
 
-			ProductDAO productDAO = new ProductDAO();
-			Product _product = productDAO.findProductById(1);
-
-			IOrderService orderDAO = new OrderServiceImpl();
-			Order _order = orderDAO.findOrderById(1);
-
-			System.out.println(_product + "\n" + _order.getTotal());
+//			ProductDAO productDAO = new ProductDAO();
+//			Product _product = productDAO.findProductById(1);
+////
+//			IOrderService orderDAO = new OrderServiceImpl();
+//			Order _order = orderDAO.findOrderById(1);
+//
+//			System.out.println(_product + "\n" + _order.getTotal());
 			
-//			OrderDetail detail = new OrderDetail(_product, _order, 3);
-//			try {
-//				transaction.begin();
-//				session.persist(detail);// use saveorupdate
-//				transaction.commit();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				transaction.rollback();
-//			}
+			//OrderDetail detail = new OrderDetail(_product, _order, 3);
+			try {
+				transaction.begin();
+				session.persist(order);// use saveorupdate
+				transaction.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+				transaction.rollback();
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

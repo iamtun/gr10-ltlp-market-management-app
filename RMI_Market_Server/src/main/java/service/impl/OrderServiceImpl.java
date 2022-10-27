@@ -20,7 +20,7 @@ public class OrderServiceImpl extends UnicastRemoteObject implements IOrderServi
 
 
 	@Override
-	public Order findOrderById(int id) {
+	public Order findOrderById(int id) throws Exception {
 		// TODO Auto-generated method stub
 		return dao.findOrderById(id);
 	}

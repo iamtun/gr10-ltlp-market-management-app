@@ -1,5 +1,7 @@
 package entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +15,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "order_details")
 @IdClass(OrderProductId.class)
-public class OrderDetail {
+public class OrderDetail implements Serializable{
 	@Id
 	@ManyToOne
 	@JoinColumn(name = "product_id")

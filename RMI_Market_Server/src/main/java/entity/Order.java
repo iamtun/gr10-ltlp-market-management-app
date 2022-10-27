@@ -36,7 +36,7 @@ public class Order implements Serializable {
 	@JoinColumn(name = "staff_id", referencedColumnName = "staff_id")
 	private Staff staff;
 
-	@OneToMany(mappedBy = "order")
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	List<OrderDetail> details;
 
 	public Order(Date date, Staff staff, List<OrderDetail> details) {
