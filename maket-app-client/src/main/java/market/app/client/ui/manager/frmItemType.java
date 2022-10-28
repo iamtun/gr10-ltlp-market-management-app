@@ -4,10 +4,14 @@
  */
 package market.app.client.ui.manager;
 
+import entity.ProductType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
 import market.app.client.connect.ConnectServer;
-
+import service.IProductTypeService;
 
 /**
  *
@@ -18,19 +22,21 @@ public class frmItemType extends javax.swing.JFrame {
     /**
      * Creates new form frmItemType
      */
-    
-    private ConnectServer connectServer;
-    private final DefaultTableModel modelTableStaffList = new DefaultTableModel();
-    private final String[] colums = new String[] {"Số thứ tự", "Tên loại mặt hàng", "Đơn vị"};
-    
+    private IProductTypeService productTypeService;
+    private final DefaultTableModel modelTableProductTypeList = new DefaultTableModel();
+    private final String[] colums = new String[]{"Số thứ tự", "Tên loại mặt hàng", "Đơn vị"};
+
     public frmItemType() {
         initComponents();
-        
+
         // connect RMI
-        connectServer.getProductTypeService();
-        
+        productTypeService = ConnectServer.getInstance().getProductTypeService();
+
         setLocationRelativeTo(null);
-        Config.initColTable(tblItemTypeList, modelTableStaffList, colums);
+        Config.initColTable(tblItemTypeList, modelTableProductTypeList, colums);
+
+        // load data
+        loadDataToListView();
     }
 
     /**
@@ -73,10 +79,20 @@ public class frmItemType extends javax.swing.JFrame {
         btnChange.setBackground(new java.awt.Color(69, 123, 157));
         btnChange.setForeground(new java.awt.Color(255, 255, 255));
         btnChange.setText("Sửa");
+        btnChange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangeActionPerformed(evt);
+            }
+        });
 
         btnDelete.setBackground(new java.awt.Color(69, 123, 157));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         lblIItemTypeName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblIItemTypeName.setText("Tên loại mặt hàng: ");
@@ -146,6 +162,11 @@ public class frmItemType extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblItemTypeList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblItemTypeListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblItemTypeList);
 
         javax.swing.GroupLayout pnItemTypeListLayout = new javax.swing.GroupLayout(pnItemTypeList);
@@ -195,9 +216,85 @@ public class frmItemType extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Load data to list
+    private void loadDataToListView() {
+        try {
+            modelTableProductTypeList.setRowCount(0);
+
+            for (ProductType prod : productTypeService.getAllProductType()) {
+                Object[] obj = new Object[]{prod.getId(), prod.getName(), prod.getUnit()};
+                modelTableProductTypeList.addRow(obj);
+            }
+
+            modelTableProductTypeList.fireTableDataChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // clear input
+    private void clearInputs() {
+        txtProductType.setText("");
+        txtUnit.setText("");
+    }
+
+    // Button add product type
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        String prodType = txtProductType.getText();
+        String unit = txtUnit.getText();
+
+        ProductType productType = new ProductType(prodType, unit);
+
+        try {
+            productTypeService.addProductType(productType);
+
+            clearInputs();
+            loadDataToListView();
+        } catch (Exception ex) {
+            Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        }
+
     }//GEN-LAST:event_btnAddActionPerformed
+
+    // Button update
+    private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnChangeActionPerformed
+
+    // Button delete
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        ProductType productType = null;
+        
+        try {
+//            for(ProductType productType : productTypeService.getAllProductType()) {
+//                if(productTypeService.findProductTypeById(productType.getId()) )
+//            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    // Cliked list view
+    private void tblItemTypeListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemTypeListMouseClicked
+        int selected = tblItemTypeList.getSelectedRow();
+
+        if (selected >= 0) {
+            int index = (int) tblItemTypeList.getValueAt(selected, 0);
+            ProductType productType = null;
+
+            try {
+                productType = productTypeService.findProductTypeById(index);
+
+                if (productType != null) {
+                    txtProductType.setText(productType.getName());
+                    txtUnit.setText(productType.getUnit());
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_tblItemTypeListMouseClicked
 
     /**
      * @param args the command line arguments
