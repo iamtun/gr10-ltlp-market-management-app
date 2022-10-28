@@ -1,5 +1,7 @@
 package service.impl;
 
+import java.util.List;
+
 import dao.OrderDAO;
 import entity.Order;
 import service.IOrderService;
@@ -39,6 +41,13 @@ public class OrderServiecImpl implements IOrderService{
 	public void updateOrder(Order order) {
 		// TODO Auto-generated method stub
 		dao.updateOrder(order);
+	}
+
+
+	@Override
+	public List<Order> getAllOrder() {
+		// TODO Auto-generated method stub
+		return dao.getAllOrder();
 	}
 
 }

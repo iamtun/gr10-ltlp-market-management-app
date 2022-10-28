@@ -1,5 +1,7 @@
 package service.impl;
 
+import java.util.List;
+
 import dao.ProductTypeDAO;
 import entity.ProductType;
 import service.IOProductTypeService;
@@ -13,7 +15,7 @@ public class ProductTypeServiceImpl implements IOProductTypeService {
 	}
 	
 	@Override
-	public ProductType findProductTypeById(String id) {
+	public ProductType findProductTypeById(int id) {
 		// TODO Auto-generated method stub
 		return dao.findProductTypeById(id);
 	}
@@ -33,6 +35,12 @@ public class ProductTypeServiceImpl implements IOProductTypeService {
 	@Override
 	public void deleteProductType(ProductType productType) {
 		dao.deleteProductType(productType);	
+	}
+
+	@Override
+	public List<ProductType> getAllProductType() {
+		// TODO Auto-generated method stub
+		return dao.getAllProductType();
 	}
 
 }

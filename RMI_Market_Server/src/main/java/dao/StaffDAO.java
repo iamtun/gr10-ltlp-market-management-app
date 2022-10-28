@@ -1,14 +1,19 @@
 package dao;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import db.MyEMFactory;
+import entity.Account;
+import entity.Order;
 import entity.Staff;
+import service.IOAccountService;
 import service.IOStaffService;
+import service.impl.AccountServiceImpl;
 
 public class StaffDAO implements IOStaffService {
 
@@ -23,9 +28,7 @@ public class StaffDAO implements IOStaffService {
 		// TODO Auto-generated method stub
 		Session session = factory.openSession();
 		try {
-			session.getTransaction().begin();
 			Staff staff = session.find(Staff.class, id);
-			session.getTransaction().commit();
 			session.close();
 			return staff;
 		}catch (Exception e) {
@@ -36,15 +39,15 @@ public class StaffDAO implements IOStaffService {
 
 	@Override
 	public boolean addStaff(Staff staff) {
-		// TODO Auto-generated method stub
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
-			session.persist(staff);
-			session.getTransaction().commit();;
-			session.close();
+			transaction.begin();
+			session.save(staff);
+			transaction.commit();;
 			return true;
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}
 		return false;
@@ -52,15 +55,47 @@ public class StaffDAO implements IOStaffService {
 
 	@Override
 	public void updateStaff(Staff staff) {
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
+			transaction.begin();
 			session.update(staff);
-			session.getTransaction().commit();
-			session.close();
+			transaction.commit();
 		}catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public List<Staff> getAllStaff() {
+		Session session = factory.openSession();
+		try {
+			List<Staff> entities = session.createNativeQuery(
+					"SELECT * " +
+					"FROM staffs ", Staff.class)
+				.list();
+			return entities;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public boolean deleteStaff(Staff staff) {
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			session.delete(staff);
+			transaction.commit();;
+			return true;
+		} catch (Exception e) {
+			transaction.rollback();
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

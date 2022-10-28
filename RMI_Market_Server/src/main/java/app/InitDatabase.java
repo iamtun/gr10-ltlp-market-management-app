@@ -1,5 +1,6 @@
 package app;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.hibernate.Transaction;
 
 import dao.AccountDAO;
 import dao.OrderDAO;
+import dao.OrderDetailDAO;
 import dao.ProductDAO;
 import dao.StaffDAO;
 import db.MyEMFactory;
@@ -20,92 +22,110 @@ import entity.ProductType;
 import entity.Staff;
 import service.IOAccountService;
 import service.IOOrderDetailService;
+import service.IOProductService;
+import service.IOProductTypeService;
 import service.IOStaffService;
 import service.IOrderService;
 import service.impl.AccountServiceImpl;
 import service.impl.OrderDetailServiceImpl;
 import service.impl.OrderServiecImpl;
+import service.impl.ProductServiceImpl;
+import service.impl.ProductTypeServiceImpl;
 import service.impl.StaffServiceImpl;
 
 public class InitDatabase {
 	public static void main(String[] args) {
 		try {
-			Session session = MyEMFactory.getInstance().getEntityManagerFactory().getCurrentSession();
-			Transaction transaction = session.getTransaction();
-			Staff staff = new Staff("NV010", "Nguyen Duc Huy", "21211935", "0343240598", "Nghe An", false, false, false);
+//			Session session = MyEMFactory.getInstance().getEntityManagerFactory().getCurrentSession();
+//			Transaction transaction = session.getTransaction();
 //			Account account = new Account(staff, "123456");
-			
-			// Test Account
-			
-//			IOAccountService accountService = new AccountServiceImpl();
-//			IOStaffService staffService = new StaffServiceImpl();
-			IOOrderDetailService orderDetail = new OrderDetailServiceImpl();
-			OrderDetail detail = orderDetail.findOrderDetailById(1,1);
-			orderDetail.deleteOrderDetail(detail);
-			System.out.println(detail.getProduct().toString());
-//			for(int i = 0 ; i < detail.size() ; i++) {
-//				System.out.println(detail[i]);
-//			}
-//			Account _account = accountService.findAccountByUserName("NV003");
-//			_account.setPassword("22222");
-//			accountService.changePassWord(_account);
-//			Account _account1 = accountService.findAccountByUserName("NV003");
-//			System.out.println("test2 " + _account1.getStaff().getName());
-			
-//			Staff staff2 = new Staff("NV003", "Nguyen Duc Hung", "212112", "0879276284", "Nghe An", false, false, false);
-//			staffService.addStaff(staff);
-//			Account account2 = new Account(staff2, "123456");
-//			accountService.addAccount(account);
-//			Account _account2 = accountService.findAccountByUserName("NV010");
-//			Staff staff = staffService.findStaffById("NV010");
-//			staff.setName("Sông Lam Nghệ An");
-//			staffService.updateStaff(staff);
-//			System.out.println("Staff "+ staff.toString());
-//			System.out.println("Account " + _account2.toString());
-//			System.out.println("Staff "+ staff.getName());
-			
-			//show sql
-			//  <property name="hibernate.show_sql">true</property>
-			
-			
 //			ProductType productType = new ProductType("Nuoc uong", "Chai");
-//			Product product = new Product("Aqua", 100, 5000, productType);
+//			Product product = new Product("AquaPhina", 100, 5000, productType);
 //			Order order = new Order(new Date(), staff, null);
 //			OrderDetail orderDetail = new OrderDetail(product, order, 3);
-//
-//			ProductDAO productDAO = new ProductDAO();
-//			Product _product = productDAO.findProductById(1);
-//
-//			IOrderService orderDAO = new OrderServiecImpl();
-//			Order _order = orderDAO.findOrderById(1);
+//			
 			
-//			System.out.println(_product + "\n" + _order.getTotal());
+			// Test 
 			
-//			OrderDetail detail = new OrderDetail(_product, _order, 3);
+			IOAccountService ioAccountService = new AccountServiceImpl();
+			IOStaffService ioStaffService = new StaffServiceImpl();
+			IOrderService ioOrderService = new OrderServiecImpl();
+			IOOrderDetailService ioOrderDetailIO = new OrderDetailServiceImpl();
+			IOProductService ioProductService = new ProductServiceImpl();
+			IOProductTypeService ioProductTypeService = new ProductTypeServiceImpl();
+			
+			
+//			
+//			List<OrderDetail> list = new ArrayList<>();
+//			list = ioOrderDetailIO.getAllOrderDetail();
+//			for(OrderDetail detail : list) {
+//				System.out.println("all" + detail.getQuantity());
+//			}
+			
+			List<OrderDetail> list2 = new ArrayList<>();
+			list2 = ioOrderDetailIO.getAllByOrderId(2);
+			for(OrderDetail detail : list2) {
+				System.out.println("id = 2" + detail.getQuantity());
+			}
+//			List<Product> accounts = new ArrayList<>();
+//			accounts = ioAccountService.get();
+//			accounts = ioProductService.getAllProductByProductTypeId(1);
+//			System.out.println(accounts);
+//			for(Product account : accounts) {
+//				System.out.println(account.getName());
+//			}
+			
+//			List<ProductType> list = new ArrayList<>();
+//			list = ioProductTypeService.getAllProductType();
+//			System.out.println(list);
+//			for(ProductType account : list) {
+//				System.out.println(account.getName());
+//			}
+			
+//			Account _account = ioAccountService.findAccountByUserName("NV001");
+//			_account.setPassword("111111");
+//			System.out.println(_account.getPassword());
+//			ioAccountService.changePassWord(_account);
+			
+//			Staff _staff = ioStaffService.findStaffById("NV001");
+//			_staff.setName("Name 1");
+//			ioStaffService.updateStaff(_staff);
+//			System.out.println(_staff.toString());
+//			Staff _staff = new Staff("NV002", "Nguyen Duc Huy", "11113", "11113", "Nghe An", false, false, false);
+//			Account _newAccount = new Account(_staff, "123456");
+//			ioStaffService.addStaff(_staff);
+//			ioAccountService.addAccount(_newAccount);
+//			
+//			ProductType _productType = ioProductTypeService.findProductTypeById(4);
+//			System.out.println(_productType.toString());
+//			ProductType _newProductType = new ProductType("Vit", "Troi");
+//			ioProductTypeService.addProductType(_newProductType);
+			
+			//Product
+			
+//			Product _product1 = ioProductService.findProductById(1);
+//			Product _product2= ioProductService.findProductById(2);
+//			System.out.println(_product.toString());
+//			Product _newProduct = new Product("Product vit troi", 20, 100000, _productType);
+//			ioProductService.addProduct(_newProduct);
+			
+//			Order _order = ioOrderService.findOrderById(1);
+//			System.out.println(_order.toString());
 
+//			Order _newOrder = new Order(new Date(), _staff, null);
+//			Order _order = ioOrderService.findOrderById(2);
+//			OrderDetail detail1 = new OrderDetail(_product1, _order, 3);
+//			OrderDetail detail2 = new OrderDetail(_product2, _order, 3);
+//			List<OrderDetail> list = new ArrayList<>();
+//			list.add(detail1);
+//			list.add(detail2);
+//			_order.setDetails(list);
+//			ioOrderService.updateOrder(_order);
+
+//			ioOrderService.addOrder(_newOrder);
+//			OrderDetail _orderDetail = ioOrderDetailIO.findOrderDetailById(1,1);
+//			System.out.println(_orderDetail.getQuantity());
 			
-			
-//			try {
-//				transaction.begin();
-//				session.persist(productType);// use saveorupdate
-//				session.persist(product);
-//				session.persist(order);
-//				session.persist(orderDetail);
-//				transaction.commit();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				transaction.rollback();
-//			}
-			
-//			try {
-//				transaction.begin();
-//				//session.persist(staff);// use saveorupdate
-//				session.persist(account);
-//				transaction.commit();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				transaction.rollback();
-//			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

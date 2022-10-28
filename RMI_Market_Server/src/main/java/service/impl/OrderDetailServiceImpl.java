@@ -23,19 +23,29 @@ public class OrderDetailServiceImpl implements IOOrderDetailService {
 	@Override
 	public void addOrderDetail(OrderDetail orderDetail) {
 		// TODO Auto-generated method stub
-		
+		dao.addOrderDetail(orderDetail);
 	}
 
 	@Override
 	public void deleteOrderDetail(OrderDetail orderDetail) {
 		// TODO Auto-generated method stub
-		
+		dao.deleteOrderDetail(orderDetail);
 	}
 
 	@Override
 	public void updateOrderDetail(OrderDetail orderDetail) {
 		// TODO Auto-generated method stub
-		
+		dao.updateOrderDetail(orderDetail);
+	}
+	@Override
+	public List<OrderDetail> getAllOrderDetail() {
+		// TODO Auto-generated method stub
+		return dao.getAllOrderDetail();
+	}
+	@Override
+	public List<OrderDetail> getAllByOrderId(int order_id) {
+		// TODO Auto-generated method stub
+		return dao.getAllByOrderId(order_id);
 	}
 
 }
