@@ -19,7 +19,7 @@ public class ProductType implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name = "type_name", nullable = false)
+	@Column(name = "type_name", nullable = false, columnDefinition = "nvarchar(255)")
 	private String name;
 
 	@Column(nullable = false)

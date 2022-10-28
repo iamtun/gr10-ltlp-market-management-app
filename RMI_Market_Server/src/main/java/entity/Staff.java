@@ -15,20 +15,22 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "staffs")
 public class Staff implements Serializable{
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "staff_id", nullable = false)
 	private String id;
 
-	@Column(nullable = false, columnDefinition = "varchar(45)")
+	@Column(nullable = false, columnDefinition = "nvarchar(45)")
 	private String name;
 
-	@Column(unique = true, nullable = false, columnDefinition = "varchar(45)")
+	@Column(unique = true, nullable = false, columnDefinition = "nvarchar(45)")
 	private String identify;
 
-	@Column(unique = true, nullable = false, columnDefinition = "varchar(45)")
+	@Column(unique = true, nullable = false, columnDefinition = "nvarchar(45)")
 	private String phone;
 
-	@Column(nullable = false, columnDefinition = "varchar(45)")
+	@Column(nullable = false, columnDefinition = "nvarchar(45)")
 	private String address;
 
 	@Column(nullable = false)

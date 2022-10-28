@@ -13,7 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -39,11 +38,10 @@ public class Order implements Serializable {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	List<OrderDetail> details;
 
-	public Order(Date date, Staff staff, List<OrderDetail> details) {
+	public Order(Date date, Staff staff) {
 		super();
 		this.date = date;
 		this.staff = staff;
-		this.details = details;
 	}
 
 	public Order() {

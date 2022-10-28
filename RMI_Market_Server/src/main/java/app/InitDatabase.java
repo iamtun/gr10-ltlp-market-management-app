@@ -20,11 +20,11 @@ import entity.OrderDetail;
 import entity.Product;
 import entity.ProductType;
 import entity.Staff;
-import service.IOAccountService;
-import service.IOOrderDetailService;
-import service.IOProductService;
-import service.IOProductTypeService;
-import service.IOStaffService;
+import service.IAccountService;
+import service.IOrderDetailService;
+import service.IProductService;
+import service.IProductTypeService;
+import service.IStaffService;
 import service.IOrderService;
 import service.impl.AccountServiceImpl;
 import service.impl.OrderDetailServiceImpl;
@@ -47,12 +47,12 @@ public class InitDatabase {
 			
 			// Test 
 			
-			IOAccountService ioAccountService = new AccountServiceImpl();
-			IOStaffService ioStaffService = new StaffServiceImpl();
+			IAccountService ioAccountService = new AccountServiceImpl();
+			IStaffService ioStaffService = new StaffServiceImpl();
 			IOrderService ioOrderService = new OrderServiecImpl();
-			IOOrderDetailService ioOrderDetailIO = new OrderDetailServiceImpl();
-			IOProductService ioProductService = new ProductServiceImpl();
-			IOProductTypeService ioProductTypeService = new ProductTypeServiceImpl();
+			IOrderDetailService ioOrderDetailIO = new OrderDetailServiceImpl();
+			IProductService ioProductService = new ProductServiceImpl();
+			IProductTypeService ioProductTypeService = new ProductTypeServiceImpl();
 			
 			
 //			

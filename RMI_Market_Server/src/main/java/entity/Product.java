@@ -23,7 +23,7 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(nullable = false)
+	@Column(nullable = false,columnDefinition = "nvarchar(255)")
 	private String name;
 
 	@Column(nullable = false)

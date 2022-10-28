@@ -1,5 +1,6 @@
 package dao;
 
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -7,18 +8,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import db.MyEMFactory;
-import entity.Product;
 import entity.ProductType;
-import service.IOProductTypeService;
+import service.IProductTypeService;
 
-public class ProductTypeDAO implements IOProductTypeService {
+public class ProductTypeDAO extends UnicastRemoteObject implements IProductTypeService {
+	private static final long serialVersionUID = 1L;
 	private SessionFactory factory;
-	public ProductTypeDAO() {
+
+	public ProductTypeDAO() throws Exception {
 		super();
 		this.factory = MyEMFactory.getInstance().getEntityManagerFactory();
 	}
+
 	@Override
-	public ProductType findProductTypeById(int id) {
+	public ProductType findProductTypeById(int id) throws Exception {
 		Session session = factory.openSession();
 		try {
 			ProductType productType = session.find(ProductType.class, id);
@@ -30,8 +33,9 @@ public class ProductTypeDAO implements IOProductTypeService {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void addProductType(ProductType productType) {
+	public void addProductType(ProductType productType) throws Exception {
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
@@ -44,8 +48,9 @@ public class ProductTypeDAO implements IOProductTypeService {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void updateProductType(ProductType productType) {
+	public void updateProductType(ProductType productType) throws Exception {
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
@@ -56,11 +61,12 @@ public class ProductTypeDAO implements IOProductTypeService {
 			transaction.rollback();
 			e.printStackTrace();
 		}
-		
+
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void deleteProductType(ProductType productType) {
+	public void deleteProductType(ProductType productType) throws Exception {
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
@@ -72,13 +78,13 @@ public class ProductTypeDAO implements IOProductTypeService {
 			e.printStackTrace();
 		}
 	}
+
 	@Override
-	public List<ProductType> getAllProductType() {
+	public List<ProductType> getAllProductType() throws Exception {
 		Session session = factory.openSession();
 		try {
-			List<ProductType> productTypes = session.createNativeQuery(
-					"SELECT * FROM product_types",ProductType.class)
-				.list();
+			List<ProductType> productTypes = session.createNativeQuery("SELECT * FROM product_types", ProductType.class)
+					.list();
 			return productTypes;
 		} catch (Exception e) {
 			e.printStackTrace();

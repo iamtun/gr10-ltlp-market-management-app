@@ -1,5 +1,6 @@
 package dao;
 
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -8,18 +9,19 @@ import org.hibernate.Transaction;
 
 import db.MyEMFactory;
 import entity.Product;
-import service.IOProductService;
+import service.IProductService;
 
-public class ProductDAO implements IOProductService {
+public class ProductDAO extends UnicastRemoteObject implements IProductService {
+	private static final long serialVersionUID = 1L;
 	private SessionFactory factory;
 
-	public ProductDAO() {
+	public ProductDAO() throws Exception{
 		super();
 		this.factory = MyEMFactory.getInstance().getEntityManagerFactory();
 	}
 
 	@Override
-	public Product findProductById(int id) {
+	public Product findProductById(int id) throws Exception{
 		Session session = factory.openSession();
 		try {
 			Product product = session.find(Product.class, id);
@@ -32,8 +34,9 @@ public class ProductDAO implements IOProductService {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void addProduct(Product product) {
+	public void addProduct(Product product) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
@@ -46,8 +49,9 @@ public class ProductDAO implements IOProductService {
 		}				
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void updateProduct(Product product) {
+	public void updateProduct(Product product) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
@@ -61,8 +65,9 @@ public class ProductDAO implements IOProductService {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void deleteProduct(Product product) {
+	public void deleteProduct(Product product) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
@@ -77,7 +82,7 @@ public class ProductDAO implements IOProductService {
 	}
 
 	@Override
-	public List<Product> getAllProduct() {
+	public List<Product> getAllProduct() throws Exception{
 		Session session = factory.openSession();
 		try {
 			List<Product> products = session.createNativeQuery(
@@ -91,7 +96,7 @@ public class ProductDAO implements IOProductService {
 	}
 
 	@Override
-	public List<Product> getAllProductByProductTypeId(int product_type_id) {
+	public List<Product> getAllProductByProductTypeId(int product_type_id) throws Exception{
 		Session session = factory.openSession();
 		try {
 			List<Product> entities = session.createNativeQuery(

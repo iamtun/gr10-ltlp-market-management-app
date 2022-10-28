@@ -1,29 +1,27 @@
 package dao;
 
-import java.util.ArrayList;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
+
 
 import db.MyEMFactory;
 import entity.OrderDetail;
-import service.IOOrderDetailService;
-import service.IOProductTypeService;
+import service.IOrderDetailService;
 
-public class OrderDetailDAO implements IOOrderDetailService {
-
+public class OrderDetailDAO extends UnicastRemoteObject implements IOrderDetailService {
+	private static final long serialVersionUID = 1L;
 	private SessionFactory factory;
 
-	public OrderDetailDAO() {
+	public OrderDetailDAO() throws Exception{
 		this.factory = MyEMFactory.getInstance().getEntityManagerFactory();
 	}
 
 	@Override
-	public OrderDetail findOrderDetailById(int order_id, int product_id) {
+	public OrderDetail findOrderDetailById(int order_id, int product_id) throws Exception{
 		Session session = factory.openSession();
 		try {
 			List<OrderDetail> entities = session.createNativeQuery(
@@ -44,8 +42,9 @@ public class OrderDetailDAO implements IOOrderDetailService {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void addOrderDetail(OrderDetail orderDetail) {
+	public void addOrderDetail(OrderDetail orderDetail) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
@@ -58,13 +57,14 @@ public class OrderDetailDAO implements IOOrderDetailService {
 		}	
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void deleteOrderDetail(OrderDetail orderDetail) {
+	public void deleteOrderDetail(OrderDetail orderDetail) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
-			session.delete(orderDetail);;
+			session.delete(orderDetail);
 			transaction.commit();
 		} catch (Exception e) {
 			transaction.rollback();
@@ -73,8 +73,9 @@ public class OrderDetailDAO implements IOOrderDetailService {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void updateOrderDetail(OrderDetail orderDetail) {
+	public void updateOrderDetail(OrderDetail orderDetail) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
@@ -88,7 +89,7 @@ public class OrderDetailDAO implements IOOrderDetailService {
 	}
 
 	@Override
-	public List<OrderDetail> getAllOrderDetail() {
+	public List<OrderDetail> getAllOrderDetail() throws Exception{
 		Session session = factory.openSession();
 		try {
 			List<OrderDetail> entities = session.createNativeQuery(
@@ -103,7 +104,7 @@ public class OrderDetailDAO implements IOOrderDetailService {
 	}
 
 	@Override
-	public List<OrderDetail> getAllByOrderId(int order_id) {
+	public List<OrderDetail> getAllByOrderId(int order_id) throws Exception{
 		Session session = factory.openSession();
 		try {
 			System.out.println(order_id);
