@@ -7,12 +7,13 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import service.IOrderService;
-import service.impl.OrderServiceImpl;
+import service.impl.OrderServiecImpl;
+
 
 public class Server {
 	public static void main(String[] args) {
 		try {
-			IOrderService orderService = new OrderServiceImpl();
+			IOrderService orderService = new OrderServiecImpl();
 			Hashtable<String, String> hashtable = new Hashtable<String, String>();
 			hashtable.put("java.sercurity.policy", "policy.policy");
 			Context context = new InitialContext(hashtable);

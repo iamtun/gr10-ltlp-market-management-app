@@ -1,70 +1,66 @@
 package dao;
 
+import java.io.Serializable;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import db.MyEMFactory;
-import entity.Order;
-import service.IOrderService;
+import entity.Staff;
+import service.IOStaffService;
 
-public class OrderDAO implements IOrderService{
+public class StaffDAO implements IOStaffService {
+
 	private SessionFactory factory;
-
-	public OrderDAO() {
+	
+	public StaffDAO() {
 		this.factory = MyEMFactory.getInstance().getEntityManagerFactory();
 	}
-
+	
 	@Override
-	public void addOrder(Order order) {
+	public Staff findStaffById(String id) {
+		// TODO Auto-generated method stub
 		Session session = factory.openSession();
 		try {
 			session.getTransaction().begin();
-			session.persist(order);
+			Staff staff = session.find(Staff.class, id);
 			session.getTransaction().commit();
 			session.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-		
-	}
-
-	@Override
-	public void deleteOrder(Order order) {
-		Session session = factory.openSession();
-		try {
-			session.getTransaction().begin();
-			session.delete(order);
-			session.getTransaction().commit();
-			session.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-		
-	}
-
-	@Override
-	public void updateOrder(Order order) {
-		Session session = factory.openSession();
-		try {
-			session.getTransaction().begin();
-			session.update(order);
-			session.getTransaction().commit();
-			session.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-		
-	}
-
-	@Override
-	public Order findOrderById(int id) {
-		Session session = factory.openSession();
-		try {
-			Order order = session.find(Order.class, id);
-			return order;
-		} catch (Exception e) {
+			return staff;
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+
+	@Override
+	public boolean addStaff(Staff staff) {
+		// TODO Auto-generated method stub
+		Session session = factory.openSession();
+		try {
+			session.getTransaction().begin();
+			session.persist(staff);
+			session.getTransaction().commit();;
+			session.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public void updateStaff(Staff staff) {
+		Session session = factory.openSession();
+		try {
+			session.getTransaction().begin();
+			session.update(staff);
+			session.getTransaction().commit();
+			session.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

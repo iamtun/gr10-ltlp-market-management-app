@@ -1,9 +1,10 @@
 package service;
 
-import java.rmi.Remote;
-
 import entity.Order;
 
-public interface IOrderService extends Remote{
-	public Order findOrderById(int id) throws Exception;
+public interface IOrderService {
+	public Order findOrderById(int id);
+	public void addOrder(Order order);
+	public void deleteOrder(Order order);
+	public void updateOrder(Order order);
 }

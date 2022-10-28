@@ -4,24 +4,24 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import db.MyEMFactory;
-import entity.Product;
-import service.IOProductService;
+import entity.Account;
+import entity.Staff;
+import service.IOAccountService;
 
-public class ProductDAO implements IOProductService {
+public class AccountDAO implements IOAccountService {
 	private SessionFactory factory;
-
-	public ProductDAO() {
-		super();
+	
+	public AccountDAO() {
 		this.factory = MyEMFactory.getInstance().getEntityManagerFactory();
 	}
-
+	
 	@Override
-	public Product findProductById(String id) {
+	public Account findAccountByUserName(String id) {
 		Session session = factory.openSession();
 		try {
-			Product product = session.find(Product.class, id);
+			Account account = session.find(Account.class, id);
 			session.close();
-			return product;
+			return account;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -30,46 +30,47 @@ public class ProductDAO implements IOProductService {
 	}
 
 	@Override
-	public void addProduct(Product product) {
+	public void changePassWord(Account account) {
 		Session session = factory.openSession();
 		try {
 			session.getTransaction().begin();
-			session.persist(product);
+			session.update(account);
 			session.getTransaction().commit();
 			session.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}				
+		}
 	}
 
 	@Override
-	public void updateProduct(Product product) {
+	public void addAccount(Account account) {
+		// TODO Auto-generated method stub
 		Session session = factory.openSession();
 		try {
 			session.getTransaction().begin();
-			session.update(product);
+			session.persist(account);
 			session.getTransaction().commit();
 			session.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
-	public void deleteProduct(Product product) {
+	public boolean deleteAccount(Account account) {
+		// TODO Auto-generated method stub
 		Session session = factory.openSession();
 		try {
 			session.getTransaction().begin();
-			session.delete(product);
+			session.delete(account);;
 			session.getTransaction().commit();
 			session.close();
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		return false;
 	}
-	
-	
-	
+
 }
