@@ -6,6 +6,7 @@ package market.app.client.ui.manager;
 
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
 
 
 /**
@@ -17,10 +18,17 @@ public class frmItemType extends javax.swing.JFrame {
     /**
      * Creates new form frmItemType
      */
+    
+    private ConnectServer connectServer;
     private final DefaultTableModel modelTableStaffList = new DefaultTableModel();
-    private final String[] colums = new String[] {"Mã loại mặt hàng", "Tên loại mặt hàng"};
+    private final String[] colums = new String[] {"Số thứ tự", "Tên loại mặt hàng", "Đơn vị"};
+    
     public frmItemType() {
         initComponents();
+        
+        // connect RMI
+        connectServer.getProductTypeService();
+        
         setLocationRelativeTo(null);
         Config.initColTable(tblItemTypeList, modelTableStaffList, colums);
     }
@@ -39,8 +47,10 @@ public class frmItemType extends javax.swing.JFrame {
         btnChange = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         lblIItemTypeName = new javax.swing.JLabel();
-        txtItemTypeName = new javax.swing.JTextField();
+        txtProductType = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        txtUnit = new javax.swing.JTextField();
         pnItemTypeList = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblItemTypeList = new javax.swing.JTable();
@@ -75,6 +85,8 @@ public class frmItemType extends javax.swing.JFrame {
         btnSearch.setForeground(new java.awt.Color(255, 255, 255));
         btnSearch.setText("Tìm");
 
+        jLabel1.setText("Đơn vị:");
+
         javax.swing.GroupLayout pnActionLayout = new javax.swing.GroupLayout(pnAction);
         pnAction.setLayout(pnActionLayout);
         pnActionLayout.setHorizontalGroup(
@@ -82,12 +94,10 @@ public class frmItemType extends javax.swing.JFrame {
             .addGroup(pnActionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnActionLayout.createSequentialGroup()
-                        .addComponent(lblIItemTypeName)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(pnActionLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnActionLayout.createSequentialGroup()
                         .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtItemTypeName)
+                            .addComponent(txtUnit, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtProductType)
                             .addGroup(pnActionLayout.createSequentialGroup()
                                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
@@ -95,7 +105,12 @@ public class frmItemType extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
+                            .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
+                    .addGroup(pnActionLayout.createSequentialGroup()
+                        .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblIItemTypeName)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnActionLayout.setVerticalGroup(
@@ -103,15 +118,19 @@ public class frmItemType extends javax.swing.JFrame {
             .addGroup(pnActionLayout.createSequentialGroup()
                 .addComponent(lblIItemTypeName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtItemTypeName, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                    .addComponent(txtProductType))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnChange, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnItemTypeList.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Danh sách loại mặt hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
@@ -142,7 +161,7 @@ public class frmItemType extends javax.swing.JFrame {
             pnItemTypeListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnItemTypeListLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(235, 235, 235))
         );
 
@@ -165,11 +184,11 @@ public class frmItemType extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(pnAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(372, Short.MAX_VALUE))
+                .addContainerGap(301, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(175, 175, 175)
-                    .addComponent(pnItemTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(246, 246, 246)
+                    .addComponent(pnItemTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
@@ -195,11 +214,13 @@ public class frmItemType extends javax.swing.JFrame {
     private javax.swing.JButton btnChange;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblIItemTypeName;
     private javax.swing.JPanel pnAction;
     private javax.swing.JPanel pnItemTypeList;
     private javax.swing.JTable tblItemTypeList;
-    private javax.swing.JTextField txtItemTypeName;
+    private javax.swing.JTextField txtProductType;
+    private javax.swing.JTextField txtUnit;
     // End of variables declaration//GEN-END:variables
 }
