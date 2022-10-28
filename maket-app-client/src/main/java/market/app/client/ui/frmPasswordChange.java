@@ -4,18 +4,29 @@
  */
 package market.app.client.ui;
 
+import entity.Account;
+import javax.swing.JOptionPane;
+import market.app.client.connect.ConnectServer;
+import service.IAccountService;
+
 /**
  *
  * @author Le Tuan
  */
 public class frmPasswordChange extends javax.swing.JFrame {
 
+    private Account _account;
+
     /**
      * Creates new form frmChangePassword
+     *
+     * @param account
      */
-    public frmPasswordChange() {
+    public frmPasswordChange(Account account) {
         initComponents();
         setLocationRelativeTo(null);
+
+        _account = account;
     }
 
     /**
@@ -51,6 +62,11 @@ public class frmPasswordChange extends javax.swing.JFrame {
         btnConfirm.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnConfirm.setForeground(new java.awt.Color(255, 255, 255));
         btnConfirm.setText("Xác nhận");
+        btnConfirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -93,18 +109,54 @@ public class frmPasswordChange extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+    private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
+        // TODO add your handling code here:
+        String oldPass = new String(txtCurrentPass.getPassword());
+        String newPass = new String(txtNewPass.getPassword());
+        String confimNewPass = new String(txtConfirmPass.getPassword());
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmPasswordChange().setVisible(true);
+        if (oldPass.trim().equals("") || newPass.trim().equals("") || confimNewPass.trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Bạn vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+
+            if (_account.getPassword().equals(oldPass)) {
+                if (newPass.length() > 7) {
+                    if (newPass.equals(confimNewPass)) {
+                        _account.setPassword(newPass);
+                        try {
+                            IAccountService accountService = ConnectServer.getInstance().getAccountService();
+                            accountService.changePassWord(_account);
+                            JOptionPane.showMessageDialog(this, "Cập nhật mật khẩu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                            this.dispose();
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(this, "Cập nhật mật khẩu không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                            e.printStackTrace();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không chính xác, vui lòng nhập lại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Mật khẩu phải lớn hơn 8 ký tự!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Mật khẩu cũ không đúng, vui lòng nhập lại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             }
-        });
-    }
+        }
+    }//GEN-LAST:event_btnConfirmActionPerformed
+
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new frmPasswordChange().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirm;

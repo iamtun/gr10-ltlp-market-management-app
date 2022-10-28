@@ -172,7 +172,7 @@ public class frmMenuStaff extends javax.swing.JFrame {
 
     private void btnViewInforActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInforActionPerformed
         // TODO add your handling code here:
-        frmViewInfor viewInfor = new frmViewInfor();
+        frmViewInfor viewInfor = new frmViewInfor(_account);
         Config.openComponent(viewInfor, pnContent);
         Config.handleButtonClick(buttons, btnViewInfor);
     }//GEN-LAST:event_btnViewInforActionPerformed
