@@ -4,6 +4,7 @@
  */
 package market.app.client.ui.manager;
 
+import entity.Account;
 import market.app.client.ui.frmViewInfor;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,18 +17,22 @@ import market.app.client.ui.frmLogin;
  * @author Le Tuan
  */
 public class frmMenuManager extends javax.swing.JFrame {
-
+    private Account _account;
     /**
      * Creates new form frmHomeManager
      */
     //buttons support handle click menu item
     private JButton[] buttons = null;
     
-    public frmMenuManager() {
+    public frmMenuManager(Account account) {
         initComponents();
         Config.startPanel(new frmManageItem(), pnContent, btnManageItem);
         this.buttons = new JButton[]{btnLogout, btnManageItem, btnManageOrder, btnManageStaff, btnViewInfor};
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        
+        //login send;
+        _account = account;
+        lblNameAndID.setText(_account.getStaff().getId() + " - " + account.getStaff().getName());
     }
 
     /**
@@ -239,18 +244,18 @@ public class frmMenuManager extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLogoutActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmMenuManager().setVisible(true);
-            }
-        });
-    }
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new frmMenuManager().setVisible(true);
+//            }
+//        });
+//    }
 
     
     
