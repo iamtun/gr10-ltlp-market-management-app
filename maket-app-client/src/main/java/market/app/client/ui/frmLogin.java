@@ -4,16 +4,22 @@
  */
 package market.app.client.ui;
 
+import entity.Account;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
 import market.app.client.ui.manager.frmMenuManager;
 import market.app.client.ui.staff.frmMenuStaff;
+import service.IAccountService;
 
 /**
  *
  * @author Le Tuan
  */
 public class frmLogin extends javax.swing.JFrame {
+
+    private IAccountService accountService;
 
     /**
      * Creates new form frmLogin
@@ -22,6 +28,7 @@ public class frmLogin extends javax.swing.JFrame {
         initComponents();
         //set full size
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        accountService = ConnectServer.getInstance().getAccountService();
     }
 
     /**
@@ -138,15 +145,27 @@ public class frmLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         String userName = txtUserName.getText().trim();
         String password = new String(txtPassword.getPassword()).trim();
-        
-        if("Tên đăng nhập".equals(userName) && "123".equals(password)){
-            new frmMenuStaff().setVisible(true);
-        }else if("admin".equals(userName) && "admin".equals(password)){
-            new frmMenuManager().setVisible(true);
+        try {
+            Account account = accountService.findAccountByUserName(userName);
+
+            if (account != null && account.getStaff().getId().equals(userName) && account.getPassword().equals(password)) {
+                if (account.getStaff().getId().startsWith("NV")) {
+                    new frmMenuStaff(account).setVisible(true);
+                } else if (account.getStaff().getId().startsWith("QL")) {
+                    new frmMenuManager(account).setVisible(true);
+                }else {
+                    JOptionPane.showMessageDialog(this, "Loại tài khoản này không được phân quyền vào hệ thống!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+                //close form
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi xử lý đăng nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
-        
-        //close form
-           this.dispose();
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -159,8 +178,8 @@ public class frmLogin extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the FlatLaf look and feel */
-        
-        /* Create and display the form */
+
+ /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new frmLogin().setVisible(true);
         });

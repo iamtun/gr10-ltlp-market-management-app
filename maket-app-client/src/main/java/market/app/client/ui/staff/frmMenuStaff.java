@@ -4,6 +4,7 @@
  */
 package market.app.client.ui.staff;
 
+import entity.Account;
 import market.app.client.ui.frmViewInfor;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -19,17 +20,22 @@ import market.app.client.ui.frmLogin;
  * @author Le Tuan
  */
 public class frmMenuStaff extends javax.swing.JFrame {
-
+    private Account _account;
     /**
      * Creates new form frmHomeStaff
      */
     private JButton[] buttons = null;
 
-    public frmMenuStaff() {
+    public frmMenuStaff(Account account) {
         initComponents();
         Config.startPanel(new frmSale(), pnContent, btnSale);
         this.buttons = new JButton[]{btnLogout, btnSale, btnViewInfor};
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        
+        //login send
+        _account = account;
+        
+        lblNameAndID.setText(_account.getStaff().getId() + " - " + account.getStaff().getName());
     }
 
     /**
@@ -186,18 +192,18 @@ public class frmMenuStaff extends javax.swing.JFrame {
         Config.closeForm(this);
     }//GEN-LAST:event_formWindowClosing
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmMenuStaff().setVisible(true);
-            }
-        });
-    }
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new frmMenuStaff().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogout;
