@@ -31,11 +31,12 @@ public class MarketAppClient {
         /* Set the FlatLaf look and feel */
         Config.setLookAndFeelUI();
         try {
-//            // Test thì chạy cái này
-//            Staff staff = new Staff("QL001", "Lê Tuấn", "123321", "0343220577", "255 Quang Trung", true, true, true);
+//          Test thì chạy cái này
+//          position true -> manager
+//            Staff staff = new Staff("US0002", "Lê Thị Thủy", "1233213", "0343220570", "287 Quang Trung", false, true, true);
 //            IStaffService staffService = ConnectServer.getInstance().getStaffService();
 //            staffService.addStaff(staff);
-//
+
 //            Account account = new Account(staff, "121312");
 //            IAccountService accountService = ConnectServer.getInstance().getAccountService();
 //            accountService.addAccount(account);
@@ -46,17 +47,16 @@ public class MarketAppClient {
 //            Order order = new Order(new Date(), staff);
 //            IOrderService orderService = ConnectServer.getInstance().getOrderService();
 //            orderService.addOrder(order);
-
 //            Order _order = orderService.findOrderById(1);
 //            System.err.println(_order.getTotal());
-//
 //            Product _product = productService.findProductById(2);
 //            System.err.println(_product);
 //            IOrderDetailService orderDetailService = ConnectServer.getInstance().getOrderDetailService();
 //            OrderDetail detail = orderDetailService.findOrderDetailById(1, 1);
 //            detail.setQuantity(3);
-//            OrderDetail detail = new OrderDetail(_product, _order, 3);
-////            orderDetailService.addOrderDetail(detail);
+//            OrderDetail detail = new OrderDetail(_product, _order, 1);
+//            orderDetailService.addOrderDetail(detail);
+            // main run
             ConnectServer.getInstance();
             java.awt.EventQueue.invokeLater(() -> {
                 new frmLogin().setVisible(true);

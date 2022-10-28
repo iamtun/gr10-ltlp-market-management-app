@@ -4,6 +4,8 @@
  */
 package market.app.client.ui;
 
+import entity.Account;
+import entity.Staff;
 import market.app.client.Config;
 
 /**
@@ -12,12 +14,42 @@ import market.app.client.Config;
  */
 public class frmViewInfor extends javax.swing.JInternalFrame {
 
+    private Account _account;
+
     /**
      * Creates new form frmViewInfor
+     * @param account
      */
-    public frmViewInfor() {
+    public frmViewInfor(Account account) {
         initComponents();
         Config.hideTitleBarInternalFrame(this);
+
+        _account = account;
+        loadUserInfoToInput(_account);
+    }
+
+    private void loadUserInfoToInput(Account account) {
+        //cancel event edit text
+        txtStaffID.setEditable(false);
+        txtGender.setEditable(false);
+        txtAddress.setEditable(false);
+        txtPhoneNumber.setEditable(false);
+        txtPosition.setEditable(false);
+        txtStaffIdentification.setEditable(false);
+        txtStaffName.setEditable(false);
+        txtSalary.setEditable(false);
+
+        //load info
+        Staff staff = account.getStaff();
+        txtStaffID.setText(staff.getId());
+        txtGender.setText(staff.isGender() == false ? "Nữ" : "Nam");
+        txtAddress.setText(staff.getAddress());
+        txtPhoneNumber.setText(staff.getPhone());
+        txtPosition.setText(!staff.isPosition() ? "Nhân viên bán hàng" : "Quản lý");
+        txtSalary.setText(staff.isPosition() ? "10.000.000 VNĐ" :  "7.000.000 VNĐ");
+        txtStaffIdentification.setText(staff.getIdentify());
+        txtStaffName.setText(staff.getName());
+        
     }
 
     /**
@@ -204,7 +236,7 @@ public class frmViewInfor extends javax.swing.JInternalFrame {
 
     private void btnPasswordChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPasswordChangeActionPerformed
         // TODO add your handling code here:
-        new frmPasswordChange().setVisible(true);
+        new frmPasswordChange(_account).setVisible(true);
     }//GEN-LAST:event_btnPasswordChangeActionPerformed
 
 

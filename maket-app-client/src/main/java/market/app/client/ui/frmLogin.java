@@ -69,7 +69,6 @@ public class frmLogin extends javax.swing.JFrame {
         lblTiltle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTiltle.setText("Đăng nhập");
 
-        txtUserName.setText("Tên đăng nhập");
         txtUserName.setToolTipText("");
 
         btnLogin.setBackground(new java.awt.Color(69, 123, 157));
@@ -148,19 +147,21 @@ public class frmLogin extends javax.swing.JFrame {
         try {
             Account account = accountService.findAccountByUserName(userName);
 
-            if (account != null && account.getStaff().getId().equals(userName) && account.getPassword().equals(password)) {
-                if (account.getStaff().getId().startsWith("NV")) {
-                    new frmMenuStaff(account).setVisible(true);
-                } else if (account.getStaff().getId().startsWith("QL")) {
-                    new frmMenuManager(account).setVisible(true);
-                }else {
-                    JOptionPane.showMessageDialog(this, "Loại tài khoản này không được phân quyền vào hệ thống!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                }
-
-                //close form
-                this.dispose();
+            if (userName.trim().equals("") || password.trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Bạn vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                if (account != null && account.getStaff().getId().equals(userName) && account.getPassword().equals(password)) {
+                    if (!account.getStaff().isPosition()) {
+                        new frmMenuStaff(account).setVisible(true);
+                    } else {
+                        new frmMenuManager(account).setVisible(true);
+                    }
+
+                    //close form
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi xử lý đăng nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
