@@ -31,21 +31,21 @@ public class MarketAppClient {
         /* Set the FlatLaf look and feel */
         Config.setLookAndFeelUI();
         try {
-            // Test thì chạy cái này
-            Staff staff = new Staff("NV007", "Lê Tuấn Thanh", "12312312", "034822123166", "255 Quang Trung", true, true, true);
-            IStaffService staffService = ConnectServer.getInstance().getStaffService();
-            staffService.addStaff(staff);
-
-            Account account = new Account(staff, "121312");
-            IAccountService accountService = ConnectServer.getInstance().getAccountService();
-            accountService.addAccount(account);
-            ProductType productType = new ProductType("Bánh", "Bịch");
-            Product product = new Product("Oxi Cay", 100, 5000, productType);
-            IProductService productService = ConnectServer.getInstance().getProductService();
-            productService.addProduct(product);
-            Order order = new Order(new Date(), staff);
-            IOrderService orderService = ConnectServer.getInstance().getOrderService();
-            orderService.addOrder(order);
+//            // Test thì chạy cái này
+//            Staff staff = new Staff("QL001", "Lê Tuấn", "123321", "0343220577", "255 Quang Trung", true, true, true);
+//            IStaffService staffService = ConnectServer.getInstance().getStaffService();
+//            staffService.addStaff(staff);
+//
+//            Account account = new Account(staff, "121312");
+//            IAccountService accountService = ConnectServer.getInstance().getAccountService();
+//            accountService.addAccount(account);
+//            ProductType productType = new ProductType("Bánh", "Bịch");
+//            Product product = new Product("Oxi Cay", 100, 5000, productType);
+//            IProductService productService = ConnectServer.getInstance().getProductService();
+//            productService.addProduct(product);
+//            Order order = new Order(new Date(), staff);
+//            IOrderService orderService = ConnectServer.getInstance().getOrderService();
+//            orderService.addOrder(order);
 
 //            Order _order = orderService.findOrderById(1);
 //            System.err.println(_order.getTotal());
@@ -56,13 +56,13 @@ public class MarketAppClient {
 //            OrderDetail detail = orderDetailService.findOrderDetailById(1, 1);
 //            detail.setQuantity(3);
 //            OrderDetail detail = new OrderDetail(_product, _order, 3);
-//            orderDetailService.addOrderDetail(detail);
+////            orderDetailService.addOrderDetail(detail);
+            ConnectServer.getInstance();
+            java.awt.EventQueue.invokeLater(() -> {
+                new frmLogin().setVisible(true);
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        java.awt.EventQueue.invokeLater(() -> {
-//            new frmLogin().setVisible(true);
-//        });
     }
 }
