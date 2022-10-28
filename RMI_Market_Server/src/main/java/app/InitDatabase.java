@@ -41,7 +41,8 @@ public class InitDatabase {
 //			IOStaffService staffService = new StaffServiceImpl();
 			IOOrderDetailService orderDetail = new OrderDetailServiceImpl();
 			OrderDetail detail = orderDetail.findOrderDetailById(1,1);
-//			System.out.println(detail.toString());
+			orderDetail.deleteOrderDetail(detail);
+			System.out.println(detail.getProduct().toString());
 //			for(int i = 0 ; i < detail.size() ; i++) {
 //				System.out.println(detail[i]);
 //			}

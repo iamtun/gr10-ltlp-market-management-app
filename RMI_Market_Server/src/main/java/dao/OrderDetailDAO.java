@@ -27,13 +27,11 @@ public class OrderDetailDAO implements IOOrderDetailService {
 		try {
 			session.getTransaction().begin();
 			List<OrderDetail> persons = session.createNativeQuery(
-					"SELECT * FROM order_details")
+					"SELECT * FROM order_details where order_id= :order_id")
 					.addEntity(OrderDetail.class)
 					.list();
 			for (OrderDetail phone : persons) {
-				System.out.println(phone.getQuantity());
-				System.out.println(phone.getOrder().getId());
-				System.out.println(phone.getProduct().getName());
+				return phone;
 			}
 			session.getTransaction().commit();
 			return null;
@@ -66,6 +64,7 @@ public class OrderDetailDAO implements IOOrderDetailService {
 			session.delete(orderDetail);
 			session.getTransaction().commit();
 			session.close();
+			System.out.println("Oke");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
