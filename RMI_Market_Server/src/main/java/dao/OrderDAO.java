@@ -1,10 +1,14 @@
 package dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import db.MyEMFactory;
 import entity.Order;
+import entity.OrderDetail;
 import service.IOrderService;
 
 public class OrderDAO implements IOrderService{
@@ -16,13 +20,14 @@ public class OrderDAO implements IOrderService{
 
 	@Override
 	public void addOrder(Order order) {
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
-			session.persist(order);
-			session.getTransaction().commit();
-			session.close();
+			transaction.begin();
+			session.save(order);
+			transaction.commit();
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}	
 		
@@ -30,13 +35,14 @@ public class OrderDAO implements IOrderService{
 
 	@Override
 	public void deleteOrder(Order order) {
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
+			transaction.begin();
 			session.delete(order);
-			session.getTransaction().commit();
-			session.close();
+			transaction.commit();
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}	
 		
@@ -44,13 +50,14 @@ public class OrderDAO implements IOrderService{
 
 	@Override
 	public void updateOrder(Order order) {
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
+			transaction.begin();
 			session.update(order);
-			session.getTransaction().commit();
-			session.close();
+			transaction.commit();
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}	
 		
@@ -62,6 +69,21 @@ public class OrderDAO implements IOrderService{
 		try {
 			Order order = session.find(Order.class, id);
 			return order;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Order> getAllOrder() {
+		Session session = factory.openSession();
+		try {
+			List<Order> entities = session.createNativeQuery(
+					"SELECT * " +
+					"FROM orders ", Order.class)
+				.list();
+			return entities;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

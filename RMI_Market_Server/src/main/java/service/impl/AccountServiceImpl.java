@@ -1,5 +1,7 @@
 package service.impl;
 
+import java.util.List;
+
 import dao.AccountDAO;
 import entity.Account;
 import entity.Staff;
@@ -36,6 +38,12 @@ public class AccountServiceImpl implements IOAccountService {
 	public boolean deleteAccount(Account account) {
 		// TODO Auto-generated method stub
 		return dao.deleteAccount(account);
+	}
+
+	@Override
+	public List<Account> getAllAccount() {
+		// TODO Auto-generated method stub
+		return dao.getAllAccount();
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
@@ -25,47 +26,48 @@ public class OrderDetailDAO implements IOOrderDetailService {
 	public OrderDetail findOrderDetailById(int order_id, int product_id) {
 		Session session = factory.openSession();
 		try {
-			session.getTransaction().begin();
-			List<OrderDetail> persons = session.createNativeQuery(
-					"SELECT * FROM order_details where order_id= :order_id")
-					.addEntity(OrderDetail.class)
-					.list();
-			for (OrderDetail phone : persons) {
+			List<OrderDetail> entities = session.createNativeQuery(
+					"SELECT * " +
+					"FROM order_details " +
+					"WHERE order_id = :order_id and product_id = :product_id", OrderDetail.class)
+					.setParameter("order_id", order_id)
+					.setParameter("product_id", product_id)
+				.list();
+			for (OrderDetail phone : entities) {
+				System.out.println(phone.getQuantity());
+				session.close();
 				return phone;
 			}
-			session.getTransaction().commit();
-			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-//		return null;
 		return null;
 	}
 
 	@Override
 	public void addOrderDetail(OrderDetail orderDetail) {
-		// TODO Auto-generated method stub
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
-			session.persist(orderDetail);
-			session.getTransaction().commit();
-			session.close();
+			transaction.begin();
+			session.save(orderDetail);
+			transaction.commit();
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}	
 	}
 
 	@Override
 	public void deleteOrderDetail(OrderDetail orderDetail) {
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
-			session.delete(orderDetail);
-			session.getTransaction().commit();
-			session.close();
-			System.out.println("Oke");
+			transaction.begin();
+			session.delete(orderDetail);;
+			transaction.commit();
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}	
 		
@@ -73,16 +75,49 @@ public class OrderDetailDAO implements IOOrderDetailService {
 
 	@Override
 	public void updateOrderDetail(OrderDetail orderDetail) {
-		// TODO Auto-generated method stub
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
+			transaction.begin();
 			session.update(orderDetail);
-			session.getTransaction().commit();
-			session.close();
+			transaction.commit();
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}	
+	}
+
+	@Override
+	public List<OrderDetail> getAllOrderDetail() {
+		Session session = factory.openSession();
+		try {
+			List<OrderDetail> entities = session.createNativeQuery(
+					"SELECT * " +
+					"FROM order_details ", OrderDetail.class)
+				.list();
+			return entities;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<OrderDetail> getAllByOrderId(int order_id) {
+		Session session = factory.openSession();
+		try {
+			System.out.println(order_id);
+			List<OrderDetail> entities = session.createNativeQuery(
+					"SELECT * " +
+					"FROM order_details " +
+					"WHERE order_id = :order_id", OrderDetail.class)
+					.setParameter("order_id", order_id)
+				.list();
+			return entities;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

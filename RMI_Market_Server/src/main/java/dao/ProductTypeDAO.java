@@ -1,9 +1,13 @@
 package dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import db.MyEMFactory;
+import entity.Product;
 import entity.ProductType;
 import service.IOProductTypeService;
 
@@ -14,7 +18,7 @@ public class ProductTypeDAO implements IOProductTypeService {
 		this.factory = MyEMFactory.getInstance().getEntityManagerFactory();
 	}
 	@Override
-	public ProductType findProductTypeById(String id) {
+	public ProductType findProductTypeById(int id) {
 		Session session = factory.openSession();
 		try {
 			ProductType productType = session.find(ProductType.class, id);
@@ -28,26 +32,28 @@ public class ProductTypeDAO implements IOProductTypeService {
 
 	@Override
 	public void addProductType(ProductType productType) {
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
-			session.persist(productType);
-			session.getTransaction().commit();
-			session.close();
+			transaction.begin();
+			session.save(productType);
+			transaction.commit();
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void updateProductType(ProductType productType) {
-		Session session = factory.openSession();
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
 		try {
-			session.getTransaction().begin();
+			transaction.begin();
 			session.update(productType);
-			session.getTransaction().commit();
-			session.close();
+			transaction.commit();
 		} catch (Exception e) {
+			transaction.rollback();
 			e.printStackTrace();
 		}
 		
@@ -55,15 +61,29 @@ public class ProductTypeDAO implements IOProductTypeService {
 
 	@Override
 	public void deleteProductType(ProductType productType) {
+		Session session = factory.getCurrentSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			session.delete(productType);
+			transaction.commit();
+		} catch (Exception e) {
+			transaction.rollback();
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public List<ProductType> getAllProductType() {
 		Session session = factory.openSession();
 		try {
-			session.getTransaction().begin();
-			session.delete(productType);
-			session.getTransaction().commit();
-			session.close();
+			List<ProductType> productTypes = session.createNativeQuery(
+					"SELECT * FROM product_types",ProductType.class)
+				.list();
+			return productTypes;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 }

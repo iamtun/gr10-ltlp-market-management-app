@@ -1,5 +1,7 @@
 package service.impl;
 
+import java.util.List;
+
 import dao.StaffDAO;
 import entity.Staff;
 import service.IOStaffService;
@@ -29,6 +31,18 @@ public class StaffServiceImpl implements IOStaffService {
 	public void updateStaff(Staff staff) {
 		// TODO Auto-generated method stub
 		dao.updateStaff(staff);
+	}
+
+	@Override
+	public List<Staff> getAllStaff() {
+		// TODO Auto-generated method stub
+		return dao.getAllStaff();
+	}
+
+	@Override
+	public boolean deleteStaff(Staff staff) {
+		// TODO Auto-generated method stub
+		return dao.deleteStaff(staff);
 	}
 
 }
