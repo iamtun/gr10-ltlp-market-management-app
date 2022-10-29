@@ -69,6 +69,7 @@ public class frmLogin extends javax.swing.JFrame {
         lblTiltle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTiltle.setText("Đăng nhập");
 
+        txtUserName.setText("NV007");
         txtUserName.setToolTipText("");
 
         btnLogin.setBackground(new java.awt.Color(69, 123, 157));
@@ -84,6 +85,8 @@ public class frmLogin extends javax.swing.JFrame {
                 btnLoginActionPerformed(evt);
             }
         });
+
+        txtPassword.setText("121312");
 
         javax.swing.GroupLayout pnLoginLayout = new javax.swing.GroupLayout(pnLogin);
         pnLogin.setLayout(pnLoginLayout);
