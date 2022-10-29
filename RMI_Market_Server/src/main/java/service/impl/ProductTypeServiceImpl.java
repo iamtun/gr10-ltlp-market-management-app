@@ -22,20 +22,14 @@ public class ProductTypeServiceImpl extends UnicastRemoteObject implements IProd
 	}
 
 	@Override
-	public void addProductType(ProductType productType) throws Exception {
-		dao.addProductType(productType);
+	public boolean addOrUpdateProductType(ProductType productType) throws Exception {
+		return dao.addOrUpdateProductType(productType);
 		
 	}
 
 	@Override
-	public void updateProductType(ProductType productType) throws Exception {
-		dao.updateProductType(productType);
-		
-	}
-
-	@Override
-	public void deleteProductType(ProductType productType) throws Exception {
-		dao.deleteProductType(productType);	
+	public boolean deleteProductType(ProductType productType) throws Exception {
+		return dao.deleteProductType(productType);	
 	}
 
 	@Override

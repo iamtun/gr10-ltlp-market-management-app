@@ -26,25 +26,10 @@ public class OrderServiecImpl extends UnicastRemoteObject implements IOrderServi
 
 
 	@Override
-	public void addOrder(Order order) throws Exception {
+	public int addOrUpdateOrder(Order order) throws Exception {
 		// TODO Auto-generated method stub
-		dao.addOrder(order);
+		return dao.addOrUpdateOrder(order);
 	}
-
-
-	@Override
-	public void deleteOrder(Order order) throws Exception {
-		// TODO Auto-generated method stub
-		dao.deleteOrder(order);
-	}
-
-
-	@Override
-	public void updateOrder(Order order) throws Exception {
-		// TODO Auto-generated method stub
-		dao.updateOrder(order);
-	}
-
 
 	@Override
 	public List<Order> getAllOrder() throws Exception {

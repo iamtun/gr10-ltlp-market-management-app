@@ -35,48 +35,39 @@ public class ProductTypeDAO extends UnicastRemoteObject implements IProductTypeS
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void addProductType(ProductType productType) throws Exception {
+	public boolean addOrUpdateProductType(ProductType productType) throws Exception {
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
-			session.save(productType);
+			session.merge(productType);
 			transaction.commit();
+			return true;
 		} catch (Exception e) {
 			transaction.rollback();
 			e.printStackTrace();
 		}
+		
+		return false;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void updateProductType(ProductType productType) throws Exception {
-		Session session = factory.getCurrentSession();
-		Transaction transaction = session.getTransaction();
-		try {
-			transaction.begin();
-			session.update(productType);
-			transaction.commit();
-		} catch (Exception e) {
-			transaction.rollback();
-			e.printStackTrace();
-		}
-
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void deleteProductType(ProductType productType) throws Exception {
+	public boolean deleteProductType(ProductType productType) throws Exception {
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
 			session.delete(productType);
 			transaction.commit();
+			
+			return false;
 		} catch (Exception e) {
 			transaction.rollback();
 			e.printStackTrace();
 		}
+		
+		return true;
 	}
 
 	@Override

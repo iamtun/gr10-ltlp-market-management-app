@@ -10,9 +10,7 @@ public interface IAccountService extends Remote {
 
 	public Account findAccountByUserName(String username) throws Exception;
 
-	public void changePassWord(Account account) throws Exception;
+	public boolean changePassWord(Account account) throws Exception;
 
-	public void addAccount(Account account) throws Exception;
-
-	public boolean deleteAccount(Account account) throws Exception;
+	public boolean addAccount(Account account) throws Exception;
 }

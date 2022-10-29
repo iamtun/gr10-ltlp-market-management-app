@@ -22,7 +22,6 @@ public class StaffDAO extends UnicastRemoteObject implements IStaffService {
 
 	@Override
 	public Staff findStaffById(String id) throws Exception {
-		// TODO Auto-generated method stub
 		Session session = factory.openSession();
 		try {
 			Staff staff = session.find(Staff.class, id);
@@ -36,12 +35,12 @@ public class StaffDAO extends UnicastRemoteObject implements IStaffService {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean addStaff(Staff staff) throws Exception {
+	public boolean addOrUpdateStaff(Staff staff) throws Exception {
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
-			session.save(staff);
+			session.merge(staff);
 			transaction.commit();
 			return true;
 		} catch (Exception e) {
@@ -49,21 +48,6 @@ public class StaffDAO extends UnicastRemoteObject implements IStaffService {
 			e.printStackTrace();
 		}
 		return false;
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void updateStaff(Staff staff) throws Exception {
-		Session session = factory.getCurrentSession();
-		Transaction transaction = session.getTransaction();
-		try {
-			transaction.begin();
-			session.update(staff);
-			transaction.commit();
-		} catch (Exception e) {
-			transaction.rollback();
-			e.printStackTrace();
-		}
 	}
 
 	@Override

@@ -12,9 +12,7 @@ public interface IProductService extends Remote {
 
 	public Product findProductById(int id) throws Exception;
 
-	public void addProduct(Product product) throws Exception;
+	public boolean addOrUpdateProduct(Product product) throws Exception;
 
-	public void updateProduct(Product product) throws Exception;
-
-	public void deleteProduct(Product product) throws Exception;
+	public boolean deleteProduct(Product product) throws Exception;
 }
