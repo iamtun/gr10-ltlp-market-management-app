@@ -24,11 +24,15 @@ public class ProductType implements Serializable {
 
 	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String unit;
+	
+	@Column(name = "buying")
+	private boolean isBuying;
 
 	public ProductType(String name, String unit) {
 		super();
 		this.name = name;
 		this.unit = unit;
+		this.isBuying = true;
 	}
 
 	public ProductType() {
@@ -57,6 +61,14 @@ public class ProductType implements Serializable {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public boolean isBuying() {
+		return isBuying;
+	}
+
+	public void setBuying(boolean isBuying) {
+		this.isBuying = isBuying;
 	}
 
 	public static long getSerialversionuid() {

@@ -36,6 +36,9 @@ public class Product implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "product_type_id")
 	private ProductType type;
+	
+	@Column(name = "buying")
+	private boolean isBuying;
 
 	public Product(String name, int number, double price, ProductType type) {
 		super();
@@ -43,6 +46,7 @@ public class Product implements Serializable {
 		this.number = number;
 		this.price = price;
 		this.type = type;
+		this.isBuying = true;
 	}
 
 	public Product() {
@@ -87,6 +91,14 @@ public class Product implements Serializable {
 
 	public void setType(ProductType type) {
 		this.type = type;
+	}
+
+	public boolean isBuying() {
+		return isBuying;
+	}
+
+	public void setBuying(boolean isBuying) {
+		this.isBuying = isBuying;
 	}
 
 	public static long getSerialversionuid() {

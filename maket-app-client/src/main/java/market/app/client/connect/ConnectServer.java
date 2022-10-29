@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import javax.swing.JOptionPane;
+import market.app.client.ui.frmLogin;
 import service.IAccountService;
 import service.IOrderDetailService;
 import service.IOrderService;
@@ -39,14 +41,18 @@ public class ConnectServer {
             staffService = (IStaffService) Naming.lookup("rmi://localhost:8989/IStaffService");
 
             System.out.println("Connect server successfully ...");
+            java.awt.EventQueue.invokeLater(() -> {
+                new frmLogin().setVisible(true);
+            });
         } catch (MalformedURLException | NotBoundException | RemoteException e) {
             System.out.println("Connect server fail ...");
+            JOptionPane.showMessageDialog(null, "Không kết nối được với server, vui lòng thử lại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             e.printStackTrace();
         }
     }
-    
+
     public static ConnectServer getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new ConnectServer();
         }
         return instance;
@@ -75,7 +81,5 @@ public class ConnectServer {
     public IStaffService getStaffService() {
         return staffService;
     }
-    
-    
-    
+
 }

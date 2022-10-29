@@ -74,7 +74,7 @@ public class ProductTypeDAO extends UnicastRemoteObject implements IProductTypeS
 	public List<ProductType> getAllProductType() throws Exception {
 		Session session = factory.openSession();
 		try {
-			List<ProductType> productTypes = session.createNativeQuery("SELECT * FROM product_types", ProductType.class)
+			List<ProductType> productTypes = session.createNativeQuery("SELECT * FROM product_types where buying != 0", ProductType.class)
 					.list();
 			return productTypes;
 		} catch (Exception e) {

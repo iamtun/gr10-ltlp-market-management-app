@@ -152,14 +152,19 @@ public class frmLogin extends javax.swing.JFrame {
 //                System.err.println(account);
                 if (account != null) {
                     if (account.getStaff().getId().equals(userName) && account.getPassword().equals(password)) {
-                        if (!account.getStaff().isPosition()) {
-                            new frmMenuStaff(account).setVisible(true);
+                        if (account.getStaff().isStatus()) {
+                            if (!account.getStaff().isPosition()) {
+                                new frmMenuStaff(account).setVisible(true);
+                            } else {
+                                new frmMenuManager(account).setVisible(true);
+                            }
+
+                            //close form
+                            this.dispose();
                         } else {
-                            new frmMenuManager(account).setVisible(true);
+                            JOptionPane.showMessageDialog(this, "Tài khoản này không có quyền đăng nhập!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                         }
 
-                        //close form
-                        this.dispose();
                     } else {
                         JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     }
