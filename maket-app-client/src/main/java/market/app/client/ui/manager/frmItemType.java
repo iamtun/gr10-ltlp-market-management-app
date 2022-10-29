@@ -5,6 +5,7 @@
 package market.app.client.ui.manager;
 
 import entity.ProductType;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -100,6 +101,11 @@ public class frmItemType extends javax.swing.JFrame {
         btnSearch.setBackground(new java.awt.Color(69, 123, 157));
         btnSearch.setForeground(new java.awt.Color(255, 255, 255));
         btnSearch.setText("Tìm");
+        btnSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                btnSearchKeyReleased(evt);
+            }
+        });
 
         jLabel1.setText("Đơn vị:");
 
@@ -182,8 +188,8 @@ public class frmItemType extends javax.swing.JFrame {
             pnItemTypeListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnItemTypeListLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(235, 235, 235))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(260, 260, 260))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -265,6 +271,14 @@ public class frmItemType extends javax.swing.JFrame {
         ProductType productType = new ProductType(prodType, unit);
 
         try {
+            // check exist product type
+            for (ProductType prod : productTypeService.getAllProductType()) {
+                if (prodType.equals(prod.getName()) && unit.equals(prod.getUnit())) {
+                    JOptionPane.showMessageDialog(this, "Loại sản phẩm này đã tồn tại. Vui lòng nhập loại sản phẩm khác!");
+                    return;
+                }
+            }
+
             productTypeService.addProductType(productType);
 
             JOptionPane.showMessageDialog(this, "Thêm loại sản phẩm thành công.");
@@ -279,6 +293,8 @@ public class frmItemType extends javax.swing.JFrame {
 
     // Button update
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+        String prodType = txtProductType.getText();
+        String unit = txtUnit.getText();
         int selected = tblItemTypeList.getSelectedRow();
         ProductType productType = null;
 
@@ -293,8 +309,16 @@ public class frmItemType extends javax.swing.JFrame {
                 productType = productTypeService.findProductTypeById(index);
 
                 if (productType != null) {
-                    productType.setName(txtProductType.getText());
-                    productType.setUnit(txtUnit.getText());
+                    productType.setName(prodType);
+                    productType.setUnit(unit);
+
+                    // check exist product type
+                    for (ProductType prod : productTypeService.getAllProductType()) {
+                        if (prodType.equals(prod.getName()) && unit.equals(prod.getUnit())) {
+                            JOptionPane.showMessageDialog(this, "Loại sản phẩm này đã tồn tại. Vui lòng nhập loại sản phẩm khác!");
+                            return;
+                        }
+                    }
 
                     productTypeService.updateProductType(productType);
                     JOptionPane.showMessageDialog(this, "Cập nhật thành công loại sản phẩm.");
@@ -313,10 +337,10 @@ public class frmItemType extends javax.swing.JFrame {
         ProductType productType = null;
 
         // check inputs
-        if(checkInputs()) {
+        if (checkInputs()) {
             return;
         }
-        
+
         try {
             if (selected >= 0) {
                 int index = (int) tblItemTypeList.getValueAt(selected, 0);
@@ -360,6 +384,10 @@ public class frmItemType extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_tblItemTypeListMouseClicked
+
+    private void btnSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnSearchKeyReleased
+        
+    }//GEN-LAST:event_btnSearchKeyReleased
 
     /**
      * @param args the command line arguments
