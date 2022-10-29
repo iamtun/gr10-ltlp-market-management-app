@@ -279,7 +279,7 @@ public class frmItemType extends javax.swing.JFrame {
                 }
             }
 
-            productTypeService.addProductType(productType);
+            productTypeService.addOrUpdateProductType(productType);
 
             JOptionPane.showMessageDialog(this, "Thêm loại sản phẩm thành công.");
             clearInputs();
@@ -320,7 +320,7 @@ public class frmItemType extends javax.swing.JFrame {
                         }
                     }
 
-                    productTypeService.updateProductType(productType);
+                    productTypeService.addOrUpdateProductType(productType);
                     JOptionPane.showMessageDialog(this, "Cập nhật thành công loại sản phẩm.");
                     loadDataToListView();
                     clearInputs();
@@ -350,7 +350,8 @@ public class frmItemType extends javax.swing.JFrame {
                 for (ProductType prod : productTypeService.getAllProductType()) {
                     if (productType.getId() == prod.getId()) {
                         if (choise == JOptionPane.YES_OPTION) {
-                            productTypeService.deleteProductType(productType);
+                            productType.setBuying(false);
+                            productTypeService.addOrUpdateProductType(productType);
 
                             JOptionPane.showMessageDialog(this, "Xóa loại sản phẩm thành công.");
                             clearInputs();

@@ -23,15 +23,9 @@ public class StaffServiceImpl extends UnicastRemoteObject implements IStaffServi
 	}
 
 	@Override
-	public boolean addStaff(Staff staff) throws Exception {
+	public boolean addOrUpdateStaff(Staff staff) throws Exception {
 		// TODO Auto-generated method stub
-		return dao.addStaff(staff);
-	}
-
-	@Override
-	public void updateStaff(Staff staff) throws Exception {
-		// TODO Auto-generated method stub
-		dao.updateStaff(staff);
+		return dao.addOrUpdateStaff(staff);
 	}
 
 	@Override

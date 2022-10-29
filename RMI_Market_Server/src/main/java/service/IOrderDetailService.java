@@ -12,9 +12,7 @@ public interface IOrderDetailService extends Remote {
 
 	public OrderDetail findOrderDetailById(int idOrder, int idProduct) throws Exception;
 
-	public void addOrderDetail(OrderDetail orderDetail) throws Exception;
+	public boolean addOrUpdateOrderDetail(OrderDetail orderDetail) throws Exception;
 
-	public void deleteOrderDetail(OrderDetail orderDetail) throws Exception;
-
-	public void updateOrderDetail(OrderDetail orderDetail) throws Exception;
+	public boolean deleteOrderDetail(OrderDetail orderDetail) throws Exception;
 }

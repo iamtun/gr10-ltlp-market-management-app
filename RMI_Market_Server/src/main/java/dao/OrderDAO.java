@@ -21,49 +21,21 @@ public class OrderDAO extends UnicastRemoteObject implements IOrderService{
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void addOrder(Order order) throws Exception{
+	public int addOrUpdateOrder(Order order) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
-			session.save(order);
+			session.merge(order);
 			transaction.commit();
+			
+			return order.getId();
 		} catch (Exception e) {
 			transaction.rollback();
 			e.printStackTrace();
 		}	
 		
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void deleteOrder(Order order) throws Exception{
-		Session session = factory.getCurrentSession();
-		Transaction transaction = session.getTransaction();
-		try {
-			transaction.begin();
-			session.delete(order);
-			transaction.commit();
-		} catch (Exception e) {
-			transaction.rollback();
-			e.printStackTrace();
-		}	
-		
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void updateOrder(Order order) throws Exception{
-		Session session = factory.getCurrentSession();
-		Transaction transaction = session.getTransaction();
-		try {
-			transaction.begin();
-			session.update(order);
-			transaction.commit();
-		} catch (Exception e) {
-			transaction.rollback();
-			e.printStackTrace();
-		}	
+		return -1;
 		
 	}
 

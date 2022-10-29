@@ -5,8 +5,10 @@
 package market.app.client.ui.staff;
 
 import entity.Account;
+import entity.OrderDetail;
 import entity.Product;
 import entity.Staff;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -29,18 +31,19 @@ public class frmSale extends javax.swing.JInternalFrame {
     private Staff staff;
     private Account _account;
     private List<Product> products;
+    private List<OrderDetail> details;
     /**
      * Creates new form frmSale
      */
     private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
-    private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
+    private final String[] colums = new String[]{"STT", "Tên mặt hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
 
     public frmSale(Account account) {
         initComponents();
         Config.initColTable(tblOrderDetail, modelTableOrderDetail, colums);
         Config.hideTitleBarInternalFrame(this);
         productService = ConnectServer.getInstance().getProductService();
-
+        details = new ArrayList<>();
         //give from login
         _account = account;
         products = getAllProduct();
@@ -90,9 +93,9 @@ public class frmSale extends javax.swing.JInternalFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if(!field.getText().trim().equals("")){
+                if (!field.getText().trim().equals("")) {
                     handleGiveInput(field);
-                }else {
+                } else {
                     txtItemName.setText("");
                     btnConfirm.setEnabled(false);
                 }
@@ -104,6 +107,45 @@ public class frmSale extends javax.swing.JInternalFrame {
                 System.err.println("change update");
             }
         });
+    }
+
+    //load order detail to list
+    private void loadOrderDetailToList(List<OrderDetail> details) {
+        modelTableOrderDetail.setRowCount(0);
+        for (int i = 0; i < details.size(); ++i) {
+            Product product = details.get(i).getProduct();
+            Object[] objects = new Object[]{i + 1, product.getName(), product.getType().getUnit(), details.get(i).getQuantity(), details.get(i).getTotalOrderDetail()};
+            modelTableOrderDetail.addRow(objects);
+        }
+    }
+
+    //cal money
+    private double calTotalMoneyByListOrderDetail(List<OrderDetail> details) {
+        double total = 0;
+        for (OrderDetail detail : details) {
+            total += detail.getTotalOrderDetail();
+        }
+
+        return total;
+    }
+
+    //check order detail exists then update quatity
+    private OrderDetail isExist(List<OrderDetail> details, Product product, int number) {
+        for (OrderDetail detail : details) {
+            if (detail.getProduct().getId() == product.getId()) {
+                detail.setQuantity(detail.getQuantity() + number);
+
+                return detail;
+            }
+        }
+
+        return null;
+    }
+
+    private void clearInput() {
+        txtItemID.setText("");
+        txtItemName.setText("");
+        txtNumber.setText("");
     }
 
     /**
@@ -123,6 +165,7 @@ public class frmSale extends javax.swing.JInternalFrame {
         lblNumber = new javax.swing.JLabel();
         txtNumber = new javax.swing.JTextField();
         btnConfirm = new javax.swing.JButton();
+        btnDel = new javax.swing.JButton();
         pnItemList = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblOrderDetail = new javax.swing.JTable();
@@ -148,24 +191,39 @@ public class frmSale extends javax.swing.JInternalFrame {
         btnConfirm.setBackground(new java.awt.Color(69, 123, 157));
         btnConfirm.setForeground(new java.awt.Color(255, 255, 255));
         btnConfirm.setText("Xác nhận");
+        btnConfirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmActionPerformed(evt);
+            }
+        });
+
+        btnDel.setBackground(new java.awt.Color(69, 123, 157));
+        btnDel.setForeground(new java.awt.Color(255, 255, 255));
+        btnDel.setText("Xóa");
+        btnDel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnInputLayout = new javax.swing.GroupLayout(pnInput);
         pnInput.setLayout(pnInputLayout);
         pnInputLayout.setHorizontalGroup(
             pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnInputLayout.createSequentialGroup()
+            .addGroup(pnInputLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnConfirm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtNumber)
-                    .addComponent(txtItemName)
-                    .addComponent(txtItemID, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnInputLayout.createSequentialGroup()
+                .addGroup(pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnConfirm, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtNumber, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtItemName, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtItemID)
+                    .addGroup(pnInputLayout.createSequentialGroup()
                         .addGroup(pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblItemID)
                             .addComponent(lblItemName)
                             .addComponent(lblNumber))
-                        .addGap(0, 227, Short.MAX_VALUE)))
+                        .addGap(0, 227, Short.MAX_VALUE))
+                    .addComponent(btnDel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnInputLayout.setVerticalGroup(
@@ -185,7 +243,9 @@ public class frmSale extends javax.swing.JInternalFrame {
                 .addComponent(txtNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnDel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pnItemList.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Danh sách mặt hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
@@ -278,6 +338,38 @@ public class frmSale extends javax.swing.JInternalFrame {
         new frmOrder().setVisible(true);
     }//GEN-LAST:event_btnCreateOrderActionPerformed
 
+    private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
+        int id = Integer.parseInt(txtItemID.getText());
+        try {
+            int number = Integer.parseInt(txtNumber.getText());
+            try {
+                Product product = productService.findProductById(id);
+                OrderDetail detail = isExist(details, product, number);
+                if (detail == null) {
+                    OrderDetail _detail = new OrderDetail(product, null, number);
+                    details.add(_detail);
+                }
+
+                loadOrderDetailToList(details);
+                lblTotalMoney.setText(calTotalMoneyByListOrderDetail(details) + "");
+                clearInput();
+            } catch (Exception ex) {
+                System.err.println("Lỗi tìm kiếm sản phẩm khi xác nhận thêm sản phẩm vào chi tiết hóa đơn!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Vui lòng số lượng là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnConfirmActionPerformed
+
+    private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
+        int index = tblOrderDetail.getSelectedRow();
+        if (index > -1) {
+            details.remove(index);
+            loadOrderDetailToList(details);
+            lblTotalMoney.setText(calTotalMoneyByListOrderDetail(details) + "");
+        }
+    }//GEN-LAST:event_btnDelActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -285,6 +377,7 @@ public class frmSale extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirm;
     private javax.swing.JButton btnCreateOrder;
+    private javax.swing.JButton btnDel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblItemID;
     private javax.swing.JLabel lblItemName;

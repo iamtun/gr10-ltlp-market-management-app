@@ -20,23 +20,16 @@ public class ProductServiceImpl extends UnicastRemoteObject implements IProductS
 	}
 
 	@Override
-	public void addProduct(Product product) throws Exception {
+	public boolean addOrUpdateProduct(Product product) throws Exception {
 		// TODO Auto-generated method stub
-		dao.addProduct(product);
+		return dao.addOrUpdateProduct(product);
 		
 	}
 
 	@Override
-	public void updateProduct(Product product) throws Exception {
+	public boolean deleteProduct(Product product) throws Exception {
 		// TODO Auto-generated method stub
-		dao.updateProduct(product);
-		
-	}
-
-	@Override
-	public void deleteProduct(Product product) throws Exception {
-		// TODO Auto-generated method stub
-		dao.deleteProduct(product);
+		return dao.deleteProduct(product);
 		
 	}
 	@Override

@@ -24,21 +24,15 @@ public class AccountServiceImpl extends UnicastRemoteObject implements IAccountS
 	}
 
 	@Override
-	public void changePassWord(Account account) throws Exception {
+	public boolean changePassWord(Account account) throws Exception {
 		// TODO Auto-generated method stub
-		dao.changePassWord(account);
+		return dao.changePassWord(account);
 	}
 
 	@Override
-	public void addAccount(Account account) throws Exception {
+	public boolean addAccount(Account account) throws Exception {
 		// TODO Auto-generated method stub
-		dao.addAccount(account);
-	}
-
-	@Override
-	public boolean deleteAccount(Account account) throws Exception {
-		// TODO Auto-generated method stub
-		return dao.deleteAccount(account);
+		return dao.addAccount(account);
 	}
 
 	@Override

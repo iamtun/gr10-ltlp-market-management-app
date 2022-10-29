@@ -12,9 +12,6 @@ import entity.Account;
 import service.IAccountService;
 
 public class AccountDAO extends UnicastRemoteObject  implements IAccountService {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private SessionFactory factory;
 
@@ -37,47 +34,37 @@ public class AccountDAO extends UnicastRemoteObject  implements IAccountService 
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void changePassWord(Account account) throws Exception{
+	public boolean changePassWord(Account account) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
 			session.update(account);
 			transaction.commit();
+			
+			return true;
 		} catch (Exception e) {
 			transaction.rollback();
 			e.printStackTrace();
 		}
+		
+		return false;
 	}
 
 	@Override
-	public void addAccount(Account account) throws Exception{
+	public boolean addAccount(Account account) throws Exception{
 		Session session = factory.getCurrentSession();
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
 			session.persist(account);
 			transaction.commit();
-		} catch (Exception e) {
-			transaction.rollback();
-			e.printStackTrace();
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public boolean deleteAccount(Account account) throws Exception{
-		Session session = factory.getCurrentSession();
-		Transaction transaction = session.getTransaction();
-		try {
-			transaction.begin();
-			session.delete(account);
-			transaction.commit();
 			return true;
 		} catch (Exception e) {
 			transaction.rollback();
 			e.printStackTrace();
 		}
+		
 		return false;
 	}
 
