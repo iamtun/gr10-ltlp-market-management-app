@@ -26,7 +26,7 @@ public class OrderDAO extends UnicastRemoteObject implements IOrderService{
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
-			session.merge(order);
+			session.saveOrUpdate(order); // save or saveOrUpdate -> have order.getId else 0
 			transaction.commit();
 			
 			return order.getId();

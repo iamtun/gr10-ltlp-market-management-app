@@ -4,8 +4,19 @@
  */
 package market.app.client.ui;
 
+import entity.Account;
+import entity.Order;
+import entity.OrderDetail;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
+import service.IOrderDetailService;
+import service.IOrderService;
 
 /**
  *
@@ -13,17 +24,47 @@ import market.app.client.Config;
  */
 public class frmOrder extends javax.swing.JFrame {
 
+    private List<OrderDetail> _details;
+    private Account _account;
+
+    private IOrderService orderService = ConnectServer.getInstance().getOrderService();
+    private Date now = new Date();
     /**
      * Creates new form frmOrder
      */
     private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
-    private final String[] colums = new String[] {"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
-    
-    public frmOrder() {
+    private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
+
+    public frmOrder(List<OrderDetail> details, Account account) {
         initComponents();
         Config.initColTable(tblOrderDetail4, modelTableOrderDetail, colums);
-        
+
         setLocationRelativeTo(null);
+        //form sale send
+        _details = details;
+        _account = account;
+        try {
+            int countOrder = orderService.getAllOrder().size();
+            lblOrderNumber.setText("HĐ số: " + (countOrder + 1) + "");
+            lblDateTime.setText("Ngày: " + Config.converDateToString(now));
+            lblStaffName.setText("Bán hàng: " + account.getStaff().getName());
+
+            Config.loadOrderDetailToList(modelTableOrderDetail, _details);
+            lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(_details) + "");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Lỗi lấy số hóa đơn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
+    public frmOrder(Order order) {
+        initComponents();
+        Config.initColTable(tblOrderDetail4, modelTableOrderDetail, colums);
+
+        setLocationRelativeTo(null);
+
+        Config.loadOrderDetailToList(modelTableOrderDetail, order.getDetails());
+        lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(order.getDetails()) + "");
     }
 
     /**
@@ -132,6 +173,11 @@ public class frmOrder extends javax.swing.JFrame {
         btnPaySuccess.setBackground(new java.awt.Color(69, 123, 157));
         btnPaySuccess.setForeground(new java.awt.Color(255, 255, 255));
         btnPaySuccess.setText("Hoàn tất thanh toán");
+        btnPaySuccess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPaySuccessActionPerformed(evt);
+            }
+        });
 
         btnPrintOrder.setBackground(new java.awt.Color(29, 146, 183));
         btnPrintOrder.setForeground(new java.awt.Color(255, 255, 255));
@@ -162,13 +208,13 @@ public class frmOrder extends javax.swing.JFrame {
                             .addComponent(lblAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(lblStaffName, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(btnPaySuccess, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnPrintOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(btnPrintOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblStaffName, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -202,6 +248,35 @@ public class frmOrder extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void updateOrderIdAndInsertOrderDetail(List<OrderDetail> details, Order orderFinded) {
+        try {
+            IOrderDetailService orderDetailService = ConnectServer.getInstance().getOrderDetailService();
+            details.forEach(detail -> {
+                detail.setOrder(orderFinded);
+                try {
+                    orderDetailService.addOrUpdateOrderDetail(detail);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Lỗi thêm chi tiết hóa đơn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+            JOptionPane.showMessageDialog(null, "Bạn đã hoàn thành thanh toán cho hóa đơn này!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi thêm cập nhật chi tiết hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void btnPaySuccessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaySuccessActionPerformed
+        try {
+            Order _order = new Order(now, _account.getStaff());
+            int orderId = orderService.addOrUpdateOrder(_order);
+            Order orderFinded = orderService.findOrderById(orderId);
+            updateOrderIdAndInsertOrderDetail(_details, orderFinded);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Lỗi thêm hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnPaySuccessActionPerformed
+
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -218,26 +293,6 @@ public class frmOrder extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPaySuccess;
     private javax.swing.JButton btnPrintOrder;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblDateTime;
@@ -250,10 +305,6 @@ public class frmOrder extends javax.swing.JFrame {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblTotalMoney;
     private javax.swing.JPanel pnOrderDetailInOrder;
-    private javax.swing.JTable tblOrderDetail;
-    private javax.swing.JTable tblOrderDetail1;
-    private javax.swing.JTable tblOrderDetail2;
-    private javax.swing.JTable tblOrderDetail3;
     private javax.swing.JTable tblOrderDetail4;
     // End of variables declaration//GEN-END:variables
 }

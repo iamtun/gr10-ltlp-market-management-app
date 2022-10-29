@@ -77,7 +77,7 @@ public class ProductDAO extends UnicastRemoteObject implements IProductService {
 	public List<Product> getAllProduct() throws Exception {
 		Session session = factory.openSession();
 		try {
-			List<Product> products = session.createNativeQuery("SELECT * FROM products where buying != 0", Product.class).list();
+			List<Product> products = session.createNativeQuery("SELECT * FROM products where selling != 0", Product.class).list();
 			return products;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,7 +90,7 @@ public class ProductDAO extends UnicastRemoteObject implements IProductService {
 		Session session = factory.openSession();
 		try {
 			List<Product> entities = session
-					.createNativeQuery("SELECT *  FROM products WHERE product_type_id = :product_type_id and buying != 0",Product.class)
+					.createNativeQuery("SELECT *  FROM products WHERE product_type_id = :product_type_id and selling != 0",Product.class)
 					.setParameter("product_type_id", product_type_id)
 					.list();
 			return entities;

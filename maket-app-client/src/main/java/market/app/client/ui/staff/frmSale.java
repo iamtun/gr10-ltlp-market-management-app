@@ -7,7 +7,6 @@ package market.app.client.ui.staff;
 import entity.Account;
 import entity.OrderDetail;
 import entity.Product;
-import entity.Staff;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -28,7 +27,6 @@ public class frmSale extends javax.swing.JInternalFrame {
 
     private IProductService productService;
 
-    private Staff staff;
     private Account _account;
     private List<Product> products;
     private List<OrderDetail> details;
@@ -109,28 +107,8 @@ public class frmSale extends javax.swing.JInternalFrame {
         });
     }
 
-    //load order detail to list
-    private void loadOrderDetailToList(List<OrderDetail> details) {
-        modelTableOrderDetail.setRowCount(0);
-        for (int i = 0; i < details.size(); ++i) {
-            Product product = details.get(i).getProduct();
-            Object[] objects = new Object[]{i + 1, product.getName(), product.getType().getUnit(), details.get(i).getQuantity(), details.get(i).getTotalOrderDetail()};
-            modelTableOrderDetail.addRow(objects);
-        }
-    }
-
-    //cal money
-    private double calTotalMoneyByListOrderDetail(List<OrderDetail> details) {
-        double total = 0;
-        for (OrderDetail detail : details) {
-            total += detail.getTotalOrderDetail();
-        }
-
-        return total;
-    }
-
     //check order detail exists then update quatity
-    private OrderDetail isExist(List<OrderDetail> details, Product product, int number) {
+    public static OrderDetail isExist(List<OrderDetail> details, Product product, int number) {
         for (OrderDetail detail : details) {
             if (detail.getProduct().getId() == product.getId()) {
                 detail.setQuantity(detail.getQuantity() + number);
@@ -334,8 +312,11 @@ public class frmSale extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateOrderActionPerformed
-        // TODO add your handling code here:
-        new frmOrder().setVisible(true);
+       if(details.size() > 0) {
+            new frmOrder(details, _account).setVisible(true);
+       }else {
+           JOptionPane.showMessageDialog(null, "Vui lòng thêm sản phẩm rồi mới thanh toán!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+       }
     }//GEN-LAST:event_btnCreateOrderActionPerformed
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
@@ -350,8 +331,8 @@ public class frmSale extends javax.swing.JInternalFrame {
                     details.add(_detail);
                 }
 
-                loadOrderDetailToList(details);
-                lblTotalMoney.setText(calTotalMoneyByListOrderDetail(details) + "");
+                Config.loadOrderDetailToList(modelTableOrderDetail, details);
+                lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(details) + "");
                 clearInput();
             } catch (Exception ex) {
                 System.err.println("Lỗi tìm kiếm sản phẩm khi xác nhận thêm sản phẩm vào chi tiết hóa đơn!");
@@ -365,8 +346,8 @@ public class frmSale extends javax.swing.JInternalFrame {
         int index = tblOrderDetail.getSelectedRow();
         if (index > -1) {
             details.remove(index);
-            loadOrderDetailToList(details);
-            lblTotalMoney.setText(calTotalMoneyByListOrderDetail(details) + "");
+            Config.loadOrderDetailToList(modelTableOrderDetail, details);
+            lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(details) + "");
         }
     }//GEN-LAST:event_btnDelActionPerformed
 
