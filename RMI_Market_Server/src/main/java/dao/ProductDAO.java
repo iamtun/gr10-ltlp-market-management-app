@@ -88,6 +88,7 @@ public class ProductDAO extends UnicastRemoteObject implements IProductService {
 			List<Product> products = session.createNativeQuery(
 					"SELECT * FROM products",Product.class)
 				.list();
+			System.out.println(products);
 			return products;
 		} catch (Exception e) {
 			e.printStackTrace();

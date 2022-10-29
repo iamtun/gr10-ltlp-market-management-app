@@ -50,4 +50,11 @@ public class Account implements Serializable {
 		this.staff = staff;
 	}
 
+	@Override
+	public String toString() {
+		return "Account [password=" + password + ", staff=" + staff + "]";
+	}
+	
+	
+
 }
