@@ -7,6 +7,7 @@ package market.app.client.ui.staff;
 import entity.Account;
 import entity.OrderDetail;
 import entity.Product;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -312,11 +313,21 @@ public class frmSale extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateOrderActionPerformed
-       if(details.size() > 0) {
-            new frmOrder(details, _account).setVisible(true);
-       }else {
-           JOptionPane.showMessageDialog(null, "Vui lòng thêm sản phẩm rồi mới thanh toán!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-       }
+        if (details.size() > 0) {
+            frmOrder forder = new frmOrder(details, _account);
+            forder.setVisible(true);
+            //listening close form
+            forder.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    details.clear();
+                    Config.loadOrderDetailToList(modelTableOrderDetail, details);
+                    lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(details) + "");
+                }
+            });
+        } else {
+            JOptionPane.showMessageDialog(null, "Vui lòng thêm sản phẩm rồi mới thanh toán!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnCreateOrderActionPerformed
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
