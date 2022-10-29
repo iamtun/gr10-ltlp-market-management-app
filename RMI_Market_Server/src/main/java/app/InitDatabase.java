@@ -55,6 +55,8 @@ public class InitDatabase {
 			IProductTypeService ioProductTypeService = new ProductTypeServiceImpl();
 			
 			
+//			System.out.println(ioProductService.getAllProduct());
+			
 //			
 //			List<OrderDetail> list = new ArrayList<>();
 //			list = ioOrderDetailIO.getAllOrderDetail();
