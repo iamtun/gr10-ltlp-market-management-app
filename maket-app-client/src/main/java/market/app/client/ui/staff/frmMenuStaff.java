@@ -28,12 +28,12 @@ public class frmMenuStaff extends javax.swing.JFrame {
 
     public frmMenuStaff(Account account) {
         initComponents();
-        Config.startPanel(new frmSale(), pnContent, btnSale);
         this.buttons = new JButton[]{btnLogout, btnSale, btnViewInfor};
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         
         //login send
         _account = account;
+         Config.startPanel(new frmSale(_account), pnContent, btnSale);
         
         lblNameAndID.setText(_account.getStaff().getId() + " - " + account.getStaff().getName());
     }
@@ -166,7 +166,7 @@ public class frmMenuStaff extends javax.swing.JFrame {
 
     private void btnSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleActionPerformed
         // TODO add your handling code here:
-        Config.startPanel(new frmSale(), pnContent, btnSale);
+        Config.startPanel(new frmSale(_account), pnContent, btnSale);
         Config.handleButtonClick(buttons, btnSale);
     }//GEN-LAST:event_btnSaleActionPerformed
 

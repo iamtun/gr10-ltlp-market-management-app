@@ -4,10 +4,19 @@
  */
 package market.app.client.ui.staff;
 
+import entity.Account;
+import entity.Product;
+import entity.Staff;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
 import market.app.client.ui.frmOrder;
-
+import service.IProductService;
 
 /**
  *
@@ -15,19 +24,88 @@ import market.app.client.ui.frmOrder;
  */
 public class frmSale extends javax.swing.JInternalFrame {
 
+    private IProductService productService;
+
+    private Staff staff;
+    private Account _account;
+    private List<Product> products;
     /**
      * Creates new form frmSale
      */
     private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
-    private final String[] colums = new String[] {"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
-    
-    public frmSale() {
+    private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
+
+    public frmSale(Account account) {
         initComponents();
         Config.initColTable(tblOrderDetail, modelTableOrderDetail, colums);
         Config.hideTitleBarInternalFrame(this);
+        productService = ConnectServer.getInstance().getProductService();
+
+        //give from login
+        _account = account;
+        products = getAllProduct();
+        txtItemName.setEditable(false);
+        getTextChangeInput(txtItemID);
     }
-    
-    
+
+    private List<Product> getAllProduct() {
+        try {
+            return productService.getAllProduct();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi ở lấy dữ liệu tất cả sản phẩm");
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    //handle input value change
+    private void handleGiveInput(JTextField field) {
+        try {
+            int id = Integer.parseInt(field.getText());
+            try {
+                Product product = productService.findProductById(id);
+                if (product != null) {
+                    txtItemName.setText(product.getName());
+                    btnConfirm.setEnabled(true);
+                } else {
+                    txtItemName.setText("Sản phẩm này không tồn tại");
+                    btnConfirm.setEnabled(false);
+                }
+            } catch (Exception ex) {
+                System.err.println("Lỗi tìm kiếm sản phẩm trong event textChange");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã sản phẩm là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    //give input value change
+    private void getTextChangeInput(JTextField field) {
+        field.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                handleGiveInput(field);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if(!field.getText().trim().equals("")){
+                    handleGiveInput(field);
+                }else {
+                    txtItemName.setText("");
+                    btnConfirm.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                //handleGiveInput(field);
+                System.err.println("change update");
+            }
+        });
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -203,7 +281,6 @@ public class frmSale extends javax.swing.JInternalFrame {
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirm;

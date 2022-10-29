@@ -33,30 +33,31 @@ public class MarketAppClient {
         try {
 //          Test thì chạy cái này
 //          position true -> manager
-//            Staff staff = new Staff("US0002", "Lê Thị Thủy", "1233213", "0343220570", "287 Quang Trung", false, true, true);
+//            Staff staff = new Staff("US0003", "Nguyễn Vỹ Hoàng", "215619582", "0343220594", "288 Quang Trung", true, false, true);
 //            IStaffService staffService = ConnectServer.getInstance().getStaffService();
 //            staffService.addStaff(staff);
-
+//
 //            Account account = new Account(staff, "121312");
 //            IAccountService accountService = ConnectServer.getInstance().getAccountService();
 //            accountService.addAccount(account);
-//            ProductType productType = new ProductType("Bánh", "Bịch");
-//            Product product = new Product("Oxi Cay", 100, 5000, productType);
+//            ProductType productType = new ProductType("Nước giải khát", "chai");
+//            Product product = new Product("Sting", 100, 10000, productType);
 //            IProductService productService = ConnectServer.getInstance().getProductService();
 //            productService.addProduct(product);
 //            Order order = new Order(new Date(), staff);
 //            IOrderService orderService = ConnectServer.getInstance().getOrderService();
 //            orderService.addOrder(order);
-//            Order _order = orderService.findOrderById(1);
+
+//            Order _order = orderService.findOrderById(2);
 //            System.err.println(_order.getTotal());
-//            Product _product = productService.findProductById(2);
+//            Product _product = productService.findProductById(1);
 //            System.err.println(_product);
 //            IOrderDetailService orderDetailService = ConnectServer.getInstance().getOrderDetailService();
 //            OrderDetail detail = orderDetailService.findOrderDetailById(1, 1);
 //            detail.setQuantity(3);
-//            OrderDetail detail = new OrderDetail(_product, _order, 1);
+//            OrderDetail detail = new OrderDetail(_product, _order, 3);
 //            orderDetailService.addOrderDetail(detail);
-            // main run
+//             main run
             ConnectServer.getInstance();
             java.awt.EventQueue.invokeLater(() -> {
                 new frmLogin().setVisible(true);
