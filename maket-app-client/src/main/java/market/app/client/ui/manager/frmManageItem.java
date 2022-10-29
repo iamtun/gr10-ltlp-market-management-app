@@ -24,48 +24,47 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmManagemeItem
      */
-    
     private IProductService productService;
     private IProductTypeService productTypeService;
     private final DefaultTableModel modelTableProductList = new DefaultTableModel();
-    private String[] colums = new String[] {"Mã mặt hàng", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
-    
+    private String[] colums = new String[]{"Mã mặt hàng", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
+
     public frmManageItem() throws Exception {
         // connect rmi
         productService = ConnectServer.getInstance().getProductService();
         productTypeService = ConnectServer.getInstance().getProductTypeService();
-        
+
         // init
         initComponents();
         Config.hideTitleBarInternalFrame(this);
         Config.initColTable(tblProductList, modelTableProductList, colums);
-        
+
         // load data
         loadDataToCombobox();
-        loadDataToListView();
+//        loadDataToListView();
     }
-    
+
     // load data to list view
     private void loadDataToListView() throws Exception {
         modelTableProductList.setRowCount(0);
-        for(Product prod : productService.getAllProduct()) {
-            Object[] obj = new Object[] {
+        for (Product prod : productService.getAllProduct()) {
+            Object[] obj = new Object[]{
                 prod.getId(), prod.getName(), prod.getType().getName(), prod.getType().getUnit(), prod.getNumber(), prod.getPrice()
             };
             modelTableProductList.addRow(obj);
         }
-        
+
         modelTableProductList.fireTableDataChanged();
     }
-    
+
     // load data to combobox
     private void loadDataToCombobox() throws Exception {
-        for(ProductType prod : productTypeService.getAllProductType()) {
+        for (ProductType prod : productTypeService.getAllProductType()) {
             cboProductType.addItem(prod.getName());
             cboItemUnit.addItem(prod.getUnit());
         }
     }
-    
+
     // clear inputs
     private void clearInputs() {
         txtProductName.setText("");
@@ -75,21 +74,21 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         txtPrice.setText("");
         txtProductName.requestFocus();
     }
-    
+
     // check inputs
     private boolean checkInputs() {
         String productName = txtProductName.getText();
 //        int number = Integer.parseInt(txtNumber.getText());
 //        double price = Double.parseDouble(txtPrice.getText());
-        
-        if(productName.equals("")) {
+
+        if (productName.equals("")) {
             JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -341,36 +340,50 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // button add product
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         String productName = txtProductName.getText();
+
         String productTypeName = cboProductType.getSelectedItem().toString();
         String productUnit = cboItemUnit.getSelectedItem().toString();
+
         int number = Integer.parseInt(txtNumber.getText());
         double price = Double.parseDouble(txtPrice.getText());
-        
+
+        ProductType productType = null;
+
         // check inputs
-        if(checkInputs()) {
+        if (checkInputs()) {
             return;
         }
-        
-        Product product = new Product(productName, number, price, new ProductType(productTypeName, productUnit));
-        
+
+        try {
+            for (ProductType prodType : productTypeService.getAllProductType()) {
+                productType = productTypeService.findProductTypeById(prodType.getId());
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         try {
             // check exits product
-            for(Product prod : productService.getAllProduct()) {
-                if(productName.equals(prod.getName()) && productTypeName.equals(prod.getType().getName())) {
+            for (Product prod : productService.getAllProduct()) {
+                if (productName.equals(prod.getName()) && productTypeName.equals(prod.getType().getName())) {
                     JOptionPane.showMessageDialog(this, "Sản phẩm này đã tồn tại. Bạn có thể thực hiện chức năng sửa số lượng sản phẩm!");
+                    clearInputs();
                     return;
                 }
             }
-            
-            productService.addProduct(product);
-            
+
+//            if (productType.getName().equals(productTypeName) && productType.getUnit().equals(ABORT)) {
+//                Product product = new Product(productName, number, price, productType);
+//                productService.addOrUpdateProduct(product);
+//            }
+
             JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
             clearInputs();
             loadDataToListView();
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnOpenFrmItemTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFrmItemTypeActionPerformed
@@ -381,20 +394,20 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // clicked list view
     private void tblProductListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductListMouseClicked
         int selected = tblProductList.getSelectedRow();
-        
-        if(selected >= 0) {
+
+        if (selected >= 0) {
             int index = (int) tblProductList.getValueAt(selected, 0);
             Product product = null;
-            
+
             try {
                 product = productService.findProductById(index);
-                
-                if(product != null) {
+
+                if (product != null) {
                     txtProductName.setText(product.getName());
                     cboProductType.setSelectedItem(product.getType().getName());
                     cboItemUnit.setSelectedItem(product.getType().getUnit());
-                    txtNumber.setText(product.getNumber()+"");
-                    txtPrice.setText(product.getPrice()+"");
+                    txtNumber.setText(product.getNumber() + "");
+                    txtPrice.setText(product.getPrice() + "");
                 }
             } catch (Exception ex) {
                 Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);

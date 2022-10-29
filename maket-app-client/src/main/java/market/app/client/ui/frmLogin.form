@@ -98,9 +98,12 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtUserName">
           <Properties>
-            <Property name="text" type="java.lang.String" value="NV007"/>
+            <Property name="text" type="java.lang.String" value="US002"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtUserNameActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnLogin">
           <Properties>
@@ -131,7 +134,7 @@
         </Component>
         <Component class="javax.swing.JPasswordField" name="txtPassword">
           <Properties>
-            <Property name="text" type="java.lang.String" value="121312"/>
+            <Property name="text" type="java.lang.String" value="123456"/>
           </Properties>
         </Component>
       </SubComponents>

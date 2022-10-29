@@ -275,6 +275,7 @@ public class frmItemType extends javax.swing.JFrame {
             for (ProductType prod : productTypeService.getAllProductType()) {
                 if (prodType.equals(prod.getName()) && unit.equals(prod.getUnit())) {
                     JOptionPane.showMessageDialog(this, "Loại sản phẩm này đã tồn tại. Vui lòng nhập loại sản phẩm khác!");
+                    clearInputs();
                     return;
                 }
             }
@@ -316,6 +317,7 @@ public class frmItemType extends javax.swing.JFrame {
                     for (ProductType prod : productTypeService.getAllProductType()) {
                         if (prodType.equals(prod.getName()) && unit.equals(prod.getUnit())) {
                             JOptionPane.showMessageDialog(this, "Loại sản phẩm này đã tồn tại. Vui lòng nhập loại sản phẩm khác!");
+                            clearInputs();
                             return;
                         }
                     }

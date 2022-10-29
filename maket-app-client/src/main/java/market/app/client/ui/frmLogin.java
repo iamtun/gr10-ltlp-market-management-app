@@ -69,8 +69,13 @@ public class frmLogin extends javax.swing.JFrame {
         lblTiltle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTiltle.setText("Đăng nhập");
 
-        txtUserName.setText("NV007");
+        txtUserName.setText("US002");
         txtUserName.setToolTipText("");
+        txtUserName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUserNameActionPerformed(evt);
+            }
+        });
 
         btnLogin.setBackground(new java.awt.Color(69, 123, 157));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -86,7 +91,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
 
-        txtPassword.setText("121312");
+        txtPassword.setText("123456");
 
         javax.swing.GroupLayout pnLoginLayout = new javax.swing.GroupLayout(pnLogin);
         pnLogin.setLayout(pnLoginLayout);
@@ -186,6 +191,11 @@ public class frmLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         Config.closeForm(this);
     }//GEN-LAST:event_formWindowClosing
+
+    // Lỡ tay bấm. sr
+    private void txtUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUserNameActionPerformed
 
     /**
      * @param args the command line arguments
