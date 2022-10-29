@@ -4,6 +4,9 @@
  */
 package market.app.client.ui.manager;
 
+import entity.Account;
+import entity.OrderDetail;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
 import market.app.client.ui.frmOrder;
@@ -14,6 +17,8 @@ import market.app.client.ui.frmOrder;
  */
 public class frmManageOrder extends javax.swing.JInternalFrame {
 
+    private List<OrderDetail> _details;
+    private Account _account;
     /**
      * Creates new form frmManageOrder
      */
@@ -21,6 +26,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
     private final DefaultTableModel modelTableOrder = new DefaultTableModel();
     private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
     private final String[] orderColumns = new String[]{"Mã HÐ", "Tổng Tiền", "Ngày Lập HD"};
+
     public frmManageOrder() {
         initComponents();
         Config.hideTitleBarInternalFrame(this);
@@ -273,7 +279,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        new frmOrder().setVisible(true);
+        new frmOrder(_details, _account).setVisible(true);
     }//GEN-LAST:event_btnAddActionPerformed
 
 

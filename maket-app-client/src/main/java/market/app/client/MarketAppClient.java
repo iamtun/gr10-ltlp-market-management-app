@@ -33,17 +33,17 @@ public class MarketAppClient {
         try {
 //          Test thì chạy cái này
 //          position true -> manager
-//            Staff staff = new Staff("US002", "Nguyễn Vỹ Hoàng", "215619581", "0343220556", "288 Quang Trung", true, true);
+//            Staff staff = new Staff("US002", "Lê Tuấn", "215619582", "0343220587", "278 Quang Trung", true, true);
 //            IStaffService staffService = ConnectServer.getInstance().getStaffService();
 //            staffService.addOrUpdateStaff(staff);
-////
+//////
 //            Account account = new Account(staff, "123456");
 //            IAccountService accountService = ConnectServer.getInstance().getAccountService();
 //            accountService.addAccount(account);
 //            ProductType productType = new ProductType("Nước giải khát", "chai");
 //            IProductTypeService productTypeService = ConnectServer.getInstance().getProductTypeService();
 //            ProductType productType = productTypeService.findProductTypeById(1);
-//            Product product = new Product("Oxi Snack Bơ", 100, 12000, productType);
+//            Product product = new Product("Sting", 100, 10000, productType);
 //            IProductService productService = ConnectServer.getInstance().getProductService();
 //            productService.addOrUpdateProduct(product);
 //            Order order = new Order(new Date(), staff);

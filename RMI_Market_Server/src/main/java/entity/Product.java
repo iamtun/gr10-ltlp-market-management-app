@@ -24,7 +24,7 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(nullable = false,columnDefinition = "nvarchar(255)")
+	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String name;
 
 	@Column(nullable = false)
@@ -36,9 +36,9 @@ public class Product implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "product_type_id")
 	private ProductType type;
-	
-	@Column(name = "buying")
-	private boolean isBuying;
+
+	@Column(name = "selling")
+	private boolean isSelling;
 
 	public Product(String name, int number, double price, ProductType type) {
 		super();
@@ -46,7 +46,7 @@ public class Product implements Serializable {
 		this.number = number;
 		this.price = price;
 		this.type = type;
-		this.isBuying = true;
+		this.isSelling = true;
 	}
 
 	public Product() {
@@ -93,16 +93,12 @@ public class Product implements Serializable {
 		this.type = type;
 	}
 
-	public boolean isBuying() {
-		return isBuying;
+	public boolean isSelling() {
+		return isSelling;
 	}
 
-	public void setBuying(boolean isBuying) {
-		this.isBuying = isBuying;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setSelling(boolean isSelling) {
+		this.isSelling = isSelling;
 	}
 
 	@Override
