@@ -236,6 +236,20 @@ public class frmItemType extends javax.swing.JFrame {
     private void clearInputs() {
         txtProductType.setText("");
         txtUnit.setText("");
+        txtProductType.requestFocus();
+    }
+
+    // Check inputs
+    private boolean checkInputs() {
+        String prodType = txtProductType.getText();
+        String unit = txtUnit.getText();
+
+        if (prodType.equals("") || unit.equals("")) {
+            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
+            return true;
+        }
+
+        return false;
     }
 
     // Button add product type
@@ -243,11 +257,17 @@ public class frmItemType extends javax.swing.JFrame {
         String prodType = txtProductType.getText();
         String unit = txtUnit.getText();
 
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
         ProductType productType = new ProductType(prodType, unit);
 
         try {
             productTypeService.addProductType(productType);
 
+            JOptionPane.showMessageDialog(this, "Thêm loại sản phẩm thành công.");
             clearInputs();
             loadDataToListView();
         } catch (Exception ex) {
@@ -259,17 +279,62 @@ public class frmItemType extends javax.swing.JFrame {
 
     // Button update
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
-        // TODO add your handling code here:
+        int selected = tblItemTypeList.getSelectedRow();
+        ProductType productType = null;
+
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        try {
+            if (selected >= 0) {
+                int index = (int) tblItemTypeList.getValueAt(selected, 0);
+                productType = productTypeService.findProductTypeById(index);
+
+                if (productType != null) {
+                    productType.setName(txtProductType.getText());
+                    productType.setUnit(txtUnit.getText());
+
+                    productTypeService.updateProductType(productType);
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công loại sản phẩm.");
+                    loadDataToListView();
+                    clearInputs();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnChangeActionPerformed
 
     // Button delete
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selected = tblItemTypeList.getSelectedRow();
         ProductType productType = null;
+
+        // check inputs
+        if(checkInputs()) {
+            return;
+        }
         
         try {
-//            for(ProductType productType : productTypeService.getAllProductType()) {
-//                if(productTypeService.findProductTypeById(productType.getId()) )
-//            }
+            if (selected >= 0) {
+                int index = (int) tblItemTypeList.getValueAt(selected, 0);
+                int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa loại sản phẩm này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+                productType = productTypeService.findProductTypeById(index);
+
+                for (ProductType prod : productTypeService.getAllProductType()) {
+                    if (productType.getId() == prod.getId()) {
+                        if (choise == JOptionPane.YES_OPTION) {
+                            productTypeService.deleteProductType(productType);
+
+                            JOptionPane.showMessageDialog(this, "Xóa loại sản phẩm thành công.");
+                            clearInputs();
+                            loadDataToListView();
+                        }
+                    }
+                }
+            }
         } catch (Exception ex) {
             Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
         }
