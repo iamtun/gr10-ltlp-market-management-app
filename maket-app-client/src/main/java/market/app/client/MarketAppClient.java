@@ -41,9 +41,11 @@ public class MarketAppClient {
 //            IAccountService accountService = ConnectServer.getInstance().getAccountService();
 //            accountService.addAccount(account);
 //            ProductType productType = new ProductType("Nước giải khát", "chai");
-//            Product product = new Product("Sting", 100, 10000, productType);
+//            IProductTypeService productTypeService = ConnectServer.getInstance().getProductTypeService();
+//            ProductType productType = productTypeService.findProductTypeById(1);
+//            Product product = new Product("Oxi Snack Bơ", 100, 12000, productType);
 //            IProductService productService = ConnectServer.getInstance().getProductService();
-//            productService.addProduct(product);
+//            productService.addOrUpdateProduct(product);
 //            Order order = new Order(new Date(), staff);
 //            IOrderService orderService = ConnectServer.getInstance().getOrderService();
 //            orderService.addOrder(order);
