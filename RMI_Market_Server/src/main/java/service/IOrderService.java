@@ -10,9 +10,5 @@ public interface IOrderService extends Remote {
 
 	public Order findOrderById(int id) throws Exception;
 
-	public void addOrder(Order order) throws Exception;
-
-	public void deleteOrder(Order order) throws Exception;
-
-	public void updateOrder(Order order) throws Exception;
+	public int addOrUpdateOrder(Order order) throws Exception;
 }

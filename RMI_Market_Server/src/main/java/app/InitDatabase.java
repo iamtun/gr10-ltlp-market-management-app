@@ -54,7 +54,11 @@ public class InitDatabase {
 			IProductService ioProductService = new ProductServiceImpl();
 			IProductTypeService ioProductTypeService = new ProductTypeServiceImpl();
 			
-			
+//			
+//			Staff staff = ioStaffService.findStaffById("US0001");
+//			System.out.println(staff);
+//			Order order = new Order(new Date(), staff);
+//			ioOrderService.addOrUpdateOrder(order);
 //			System.out.println(ioProductService.getAllProduct());
 			
 //			
@@ -64,11 +68,11 @@ public class InitDatabase {
 //				System.out.println("all" + detail.getQuantity());
 //			}
 			
-			List<OrderDetail> list2 = new ArrayList<>();
-			list2 = ioOrderDetailIO.getAllByOrderId(2);
-			for(OrderDetail detail : list2) {
-				System.out.println("id = 2" + detail.getQuantity());
-			}
+//			List<OrderDetail> list2 = new ArrayList<>();
+//			list2 = ioOrderDetailIO.getAllByOrderId(2);
+//			for(OrderDetail detail : list2) {
+//				System.out.println("id = 2" + detail.getQuantity());
+//			}
 //			List<Product> accounts = new ArrayList<>();
 //			accounts = ioAccountService.get();
 //			accounts = ioProductService.getAllProductByProductTypeId(1);

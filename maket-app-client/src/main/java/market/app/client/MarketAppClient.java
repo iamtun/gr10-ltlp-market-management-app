@@ -33,17 +33,19 @@ public class MarketAppClient {
         try {
 //          Test thì chạy cái này
 //          position true -> manager
-//            Staff staff = new Staff("US0003", "Nguyễn Vỹ Hoàng", "215619582", "0343220594", "288 Quang Trung", true, false, true);
+//            Staff staff = new Staff("US002", "Nguyễn Vỹ Hoàng", "215619581", "0343220556", "288 Quang Trung", true, true);
 //            IStaffService staffService = ConnectServer.getInstance().getStaffService();
-//            staffService.addStaff(staff);
-//
-//            Account account = new Account(staff, "121312");
+//            staffService.addOrUpdateStaff(staff);
+////
+//            Account account = new Account(staff, "123456");
 //            IAccountService accountService = ConnectServer.getInstance().getAccountService();
 //            accountService.addAccount(account);
 //            ProductType productType = new ProductType("Nước giải khát", "chai");
-//            Product product = new Product("Sting", 100, 10000, productType);
+//            IProductTypeService productTypeService = ConnectServer.getInstance().getProductTypeService();
+//            ProductType productType = productTypeService.findProductTypeById(1);
+//            Product product = new Product("Oxi Snack Bơ", 100, 12000, productType);
 //            IProductService productService = ConnectServer.getInstance().getProductService();
-//            productService.addProduct(product);
+//            productService.addOrUpdateProduct(product);
 //            Order order = new Order(new Date(), staff);
 //            IOrderService orderService = ConnectServer.getInstance().getOrderService();
 //            orderService.addOrder(order);
@@ -59,9 +61,7 @@ public class MarketAppClient {
 //            orderDetailService.addOrderDetail(detail);
 //             main run
             ConnectServer.getInstance();
-            java.awt.EventQueue.invokeLater(() -> {
-                new frmLogin().setVisible(true);
-            });
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
