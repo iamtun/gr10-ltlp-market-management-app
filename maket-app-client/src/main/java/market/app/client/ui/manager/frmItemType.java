@@ -5,7 +5,6 @@
 package market.app.client.ui.manager;
 
 import entity.ProductType;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -352,7 +351,7 @@ public class frmItemType extends javax.swing.JFrame {
                 for (ProductType prod : productTypeService.getAllProductType()) {
                     if (productType.getId() == prod.getId()) {
                         if (choise == JOptionPane.YES_OPTION) {
-                            productType.setBuying(false);
+                            productType.setSelling(false);
                             productTypeService.addOrUpdateProductType(productType);
 
                             JOptionPane.showMessageDialog(this, "Xóa loại sản phẩm thành công.");

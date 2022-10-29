@@ -24,15 +24,15 @@ public class ProductType implements Serializable {
 
 	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String unit;
-	
-	@Column(name = "buying")
-	private boolean isBuying;
+
+	@Column(name = "selling")
+	private boolean isSelling;
 
 	public ProductType(String name, String unit) {
 		super();
 		this.name = name;
 		this.unit = unit;
-		this.isBuying = true;
+		this.isSelling = true;
 	}
 
 	public ProductType() {
@@ -63,16 +63,12 @@ public class ProductType implements Serializable {
 		this.unit = unit;
 	}
 
-	public boolean isBuying() {
-		return isBuying;
+	public boolean isSelling() {
+		return isSelling;
 	}
 
-	public void setBuying(boolean isBuying) {
-		this.isBuying = isBuying;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setSelling(boolean isSelling) {
+		this.isSelling = isSelling;
 	}
 
 	@Override
