@@ -5,14 +5,27 @@
 package market.app.client;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TextAlignment;
 import entity.OrderDetail;
 import entity.Product;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -33,9 +46,10 @@ import javax.swing.table.DefaultTableModel;
  */
 // Variables and functions use in app
 public class Config {
-
+    
     public static final Color colorButtonClick = new Color(69, 123, 157);
     public static final Color colorButtonUnClick = new Color(255, 255, 255);
+    public static final String ARIALFONT = "src/resources/fonts/arial.ttf";
 
     //functions:
     public static void closeForm(JFrame frame) {
@@ -45,7 +59,7 @@ public class Config {
             System.exit(0);
         }
     }
-
+    
     public static void setLookAndFeelUI() {
         try {
             FlatLightLaf.setup();
@@ -54,7 +68,7 @@ public class Config {
             System.err.println("Failed to initialize LaF");
         }
     }
-
+    
     public static void handleButtonClick(JButton[] buttons, JButton button) {
         for (JButton btn : buttons) {
             if (btn.equals(button)) {
@@ -64,7 +78,7 @@ public class Config {
             }
         }
     }
-
+    
     public static void openComponent(JInternalFrame frame, JPanel pnParrent) {
         Component[] components = pnParrent.getComponents();
         Component component;
@@ -78,22 +92,22 @@ public class Config {
         pnParrent.add(frame);
         frame.setVisible(true);
     }
-
+    
     public static void startPanel(JInternalFrame frm, JPanel pnParrent, JButton btn) {
         openComponent(frm, pnParrent);
         btn.setBackground(Config.colorButtonClick);
     }
-
+    
     public static void hideTitleBarInternalFrame(JInternalFrame frame) {
         //hide title bar
         ((javax.swing.plaf.basic.BasicInternalFrameUI) frame.getUI()).setNorthPane(null);
     }
-
+    
     public static void initColTable(JTable table, DefaultTableModel model, String[] names) {
         model.setColumnIdentifiers(names);
         table.setModel(model);
     }
-
+    
     public static void initComboBox(JComboBox cbo, DefaultComboBoxModel model, String[] types) {
         for (String type : types) {
             model.addElement(type);
@@ -108,7 +122,7 @@ public class Config {
         for (OrderDetail detail : details) {
             total += detail.getTotalOrderDetail();
         }
-
+        
         return total;
     }
 
@@ -117,14 +131,130 @@ public class Config {
         model.setRowCount(0);
         for (int i = 0; i < details.size(); ++i) {
             Product product = details.get(i).getProduct();
-            Object[] objects = new Object[]{i + 1, product.getName(), product.getType().getUnit(), details.get(i).getQuantity(), details.get(i).getTotalOrderDetail()};
+            Object[] objects = new Object[]{i + 1, product.getName(), product.getType().getUnit(), 
+                               details.get(i).getQuantity(), formatMoney(details.get(i).getTotalOrderDetail())};
             model.addRow(objects);
         }
     }
     
-    public static String converDateToString(Date date){
+    public static String converDateToString(Date date) {
         DateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         String dateFormated = format.format(date);
         return dateFormated;
+    }
+
+    //format money
+    public static String formatMoney(Double money) {
+        DecimalFormat decimalFormat = new DecimalFormat("#,### VNĐ");
+        String moneyFormated = decimalFormat.format(money);
+        return moneyFormated;
+    }
+
+    //print order
+    public static void printOrder(Date now, List<OrderDetail> _details, int numberOrder, String nameStaff) {
+        try {
+            String dest = "C:/orders/" + Config.converDateToString(now).replace(":", "_") + ".pdf";
+            PdfWriter writer = new PdfWriter(dest);
+            
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.addNewPage();
+            
+            Document document = new Document(pdfDocument);
+
+            //Settings font -> UTF8
+            FontProgram fontProgram = FontProgramFactory.createFont(ARIALFONT);
+            PdfFont font = PdfFontFactory.createFont(fontProgram, PdfEncodings.IDENTITY_H, true);
+            document.setFont(font);
+            float columWith[] = {280F, 280F};
+            
+            Table table = new Table(columWith);
+            table.addCell(
+                    new Cell(1, 2).add(new Paragraph("Siêu Thị Kmart")
+                            .setFontSize(24)
+                            .setTextAlignment(TextAlignment.CENTER)
+                            .setBold())
+                            .setBorder(Border.NO_BORDER)
+            );
+            table.addCell(
+                    new Cell(1, 2).add(new Paragraph("22 Nguyễn Văn Bảo, Q. Gò Vấp,  TP. HCM")
+                            .setFontSize(16)
+                            .setTextAlignment(TextAlignment.CENTER))
+                            .setBorder(Border.NO_BORDER)
+            );
+            table.addCell(
+                    new Cell(1, 2).add(new Paragraph("ĐT: 0343237897")
+                            .setFontSize(16)
+                            .setTextAlignment(TextAlignment.CENTER))
+                            .setBorder(Border.NO_BORDER)
+            );
+            
+            table.addCell(
+                    new Cell(3, 2).add(new Paragraph("Hóa đơn bán lẻ")
+                            .setFontSize(24)
+                            .setTextAlignment(TextAlignment.CENTER)
+                            .setBold())
+                            .setBorder(Border.NO_BORDER)
+            );
+            
+            table.addCell(
+                    new Cell().add(new Paragraph("HĐ số: " + numberOrder)
+                            .setFontSize(14)
+                            .setTextAlignment(TextAlignment.LEFT))
+                            .setBorder(Border.NO_BORDER)
+            );
+            
+            table.addCell(
+                    new Cell().add(new Paragraph("Ngày: " + converDateToString(now))
+                            .setFontSize(14)
+                            .setTextAlignment(TextAlignment.RIGHT))
+                            .setBorder(Border.NO_BORDER)
+            );
+            
+            table.addCell(
+                    new Cell(1, 2).add(new Paragraph("Bán hàng: " + nameStaff)
+                            .setFontSize(14)
+                            .setTextAlignment(TextAlignment.LEFT))
+                            .setBorder(Border.NO_BORDER)
+            );
+
+            //list order detail:
+            float columWithOrderDetails[] = {60F, 125F, 125F, 125F, 125F};
+            Table orderDetails = new Table(columWithOrderDetails);
+            orderDetails
+                    .addCell(new Cell().add(new Paragraph("STT")))
+                    .addCell(new Cell().add(new Paragraph("Tên mặt hàng")))
+                    .addCell(new Cell().add(new Paragraph("Đơn vị tính")))
+                    .addCell(new Cell().add(new Paragraph("Số lượng")))
+                    .addCell(new Cell().add(new Paragraph("Thành tiền")));
+            
+            for (int i = 0; i < _details.size(); ++i) {
+                orderDetails
+                        .addCell(new Cell().add(new Paragraph(i + 1 + "")))
+                        .addCell(new Cell().add(new Paragraph(_details.get(i).getProduct().getName())))
+                        .addCell(new Cell().add(new Paragraph(_details.get(i).getProduct().getType().getUnit())))
+                        .addCell(new Cell().add(new Paragraph(_details.get(i).getQuantity() + "")))
+                        .addCell(new Cell().add(new Paragraph(_details.get(i).getTotalOrderDetail() + "")));
+            }
+            table.addCell(new Cell(1, 2).add(orderDetails));
+            table.addCell(
+                    new Cell(1, 2).add(new Paragraph("Tổng tiền:        " + calTotalMoneyByListOrderDetail(_details))
+                            .setFontSize(14)
+                            .setBold()
+                            .setTextAlignment(TextAlignment.RIGHT))
+                            .setBorder(Border.NO_BORDER)
+            );
+            table.addCell(
+                    new Cell(1, 2).add(new Paragraph("Cảm ơn Quý Khách!")
+                            .setFontSize(18)
+                            .setTextAlignment(TextAlignment.CENTER))
+                            .setBorder(Border.NO_BORDER)
+            );
+            document.add(table);
+            document.close();
+            JOptionPane.showMessageDialog(null, "Xuất hóa đơn thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi in hóa đơn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
