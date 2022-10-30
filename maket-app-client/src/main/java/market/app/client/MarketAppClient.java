@@ -33,7 +33,7 @@ public class MarketAppClient {
         try {
 //          Test thì chạy cái này
 //          position true -> manager
-//            Staff staff = new Staff("US002", "Lê Tuấn", "215619582", "0343220587", "278 Quang Trung", true, true);
+//            Staff staff = new Staff("NV001", "Bảo Trấn", "12354688", "0353810415", "278 Quang Trung", true, false);
 //            IStaffService staffService = ConnectServer.getInstance().getStaffService();
 //            staffService.addOrUpdateStaff(staff);
 //////

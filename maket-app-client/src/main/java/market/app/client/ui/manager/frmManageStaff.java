@@ -4,8 +4,14 @@
  */
 package market.app.client.ui.manager;
 
+import entity.Staff;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
+import service.IStaffService;
 
 /**
  *
@@ -16,13 +22,107 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmManageItem
      */
+    private IStaffService staffService;
     private DefaultTableModel modelTableStaffList = new DefaultTableModel();
-    private String[] colums = new String[] {"Mã nhân viên", "Tên nhân viên", "CMND/ CCCD", "Số điện thoại", "Địa chỉ", "Giới tính", "Chức vụ", "Trạng thái"};
-    
+    private String[] colums = new String[]{"Mã nhân viên", "Tên nhân viên", "CMND/ CCCD", "Số điện thoại", "Địa chỉ", "Giới tính", "Chức vụ", "Trạng thái"};
+
     public frmManageStaff() {
         initComponents();
+
+        // connect rmi
+        staffService = ConnectServer.getInstance().getStaffService();
+
         Config.initColTable(tblStaffList, modelTableStaffList, colums);
         Config.hideTitleBarInternalFrame(this);
+
+        // load data
+        loadDataToCbo();
+        loadDataToListView();
+    }
+
+    // load data to combobox
+    private void loadDataToCbo() {
+        cboGender.addItem("Nam");
+        cboGender.addItem("Nữ");
+        cboPosition.addItem("Quản lý");
+        cboPosition.addItem("Nhân viên");
+        cboStatus.addItem("Ðang làm");
+        cboStatus.addItem("Ðã nghỉ");
+    }
+
+    // load data to list view
+    private void loadDataToListView() {
+        modelTableStaffList.setRowCount(0);
+        try {
+            for (Staff staff : staffService.getAllStaff()) {
+                if (staff.isStatus() && !staff.isPosition()) {
+                    Object[] obj = new Object[]{
+                        staff.getId(),
+                        staff.getName(),
+                        staff.getIdentify(),
+                        staff.getPhone(),
+                        staff.getAddress(),
+                        staff.isGender() == true ? "Nam" : "Nữ",
+                        staff.isPosition() == true ? "Quản lý" : "Nhân viên",
+                        staff.isStatus() == true ? "Ðang làm" : "Ðã nghỉ"
+                    };
+                    modelTableStaffList.addRow(obj);
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        modelTableStaffList.fireTableDataChanged();
+    }
+
+    // check inputs
+    private boolean checkInputs() {
+        String staffName = txtStaffName.getText();
+        String identification = txtIdentification.getText();
+        String phone = txtPhoneNumber.getText();
+        String address = txtAddress.getText();
+        String gender = cboGender.getSelectedItem().toString();
+        String position = cboPosition.getSelectedItem().toString();
+        String status = cboStatus.getSelectedItem().toString();
+
+        if (staffName.equals("") || identification.equals("") || phone.equals("") || address.equals("") || gender.equals("")
+                || position.equals("") || status.equals("")) {
+            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
+            return true;
+        }
+
+        return false;
+    }
+
+    // clear inputs
+    private void clearInputs() {
+        txtStaffName.setText("");
+        txtIdentification.setText("");
+        txtPhoneNumber.setText("");
+        txtAddress.setText("");
+        cboGender.setSelectedIndex(0);
+        cboPosition.setSelectedIndex(0);
+        cboStatus.setSelectedIndex(0);
+        txtStaffName.requestFocus();
+    }
+
+    // create staff id
+    private String createStaffId() {
+        String start = "NV";
+        try {
+            int number = staffService.getAllStaff().size();
+
+            if (number < 9) {
+                start = start + "00" + (number + 1);
+            } else {
+                start = start + "0" + (number + 1);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return start;
     }
 
     /**
@@ -48,7 +148,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         lblPosition = new javax.swing.JLabel();
         cboPosition = new javax.swing.JComboBox<>();
         lblStatus = new javax.swing.JLabel();
-        txtStatus = new javax.swing.JComboBox<>();
+        cboStatus = new javax.swing.JComboBox<>();
         pnAction = new javax.swing.JPanel();
         btnAdd = new javax.swing.JButton();
         btnChange = new javax.swing.JButton();
@@ -75,15 +175,9 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         lblGender.setText("Giới tính: ");
 
-        cboGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         lblPosition.setText("Chức vụ: ");
 
-        cboPosition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         lblStatus.setText("Trạng thái: ");
-
-        txtStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout pnStaffInforLayout = new javax.swing.GroupLayout(pnStaffInfor);
         pnStaffInfor.setLayout(pnStaffInforLayout);
@@ -92,7 +186,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStaffInforLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnStaffInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cboStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cboPosition, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cboGender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtAddress)
@@ -141,7 +235,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblStatus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -159,10 +253,20 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         btnChange.setBackground(new java.awt.Color(69, 123, 157));
         btnChange.setForeground(new java.awt.Color(255, 255, 255));
         btnChange.setText("Sửa");
+        btnChange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangeActionPerformed(evt);
+            }
+        });
 
         btnDelete.setBackground(new java.awt.Color(69, 123, 157));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnActionLayout = new javax.swing.GroupLayout(pnAction);
         pnAction.setLayout(pnActionLayout);
@@ -200,6 +304,11 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblStaffList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblStaffListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblStaffList);
 
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -268,9 +377,191 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // button add staff
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        String staffName = txtStaffName.getText();
+        String identification = txtIdentification.getText();
+        String phone = txtPhoneNumber.getText();
+        String address = txtAddress.getText();
+        
+        String gender = cboGender.getSelectedItem().toString();
+        boolean gen = false;
+        if(gender.equals("Nam")) {
+            gen = true;
+        } else if(gender.equals("Nữ")) {
+            gen = false;
+        }
+        
+        String position = cboPosition.getSelectedItem().toString();
+        boolean pos = false;
+        if(position.equals("Quản lý")) {
+            pos = true;
+        } else if(position.equals("Nhân viên")) {
+            pos = false;
+        }
+
+        Staff staff = new Staff(createStaffId(), staffName, identification, phone, address, gen, pos);
+        try {
+            // check exits staff
+            for(Staff st : staffService.getAllStaff()) {
+                if(identification.equals(st.getIdentify()) || phone.equals(st.getPhone())) {
+                    JOptionPane.showMessageDialog(this, "Nhân viên này đã tồn tại!");
+                    return;
+                }
+            }
+            staffService.addOrUpdateStaff(staff);
+
+            JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công.");
+            clearInputs();
+            loadDataToListView();
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnAddActionPerformed
+
+    // clicked list view
+    private void tblStaffListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblStaffListMouseClicked
+        int selected = tblStaffList.getSelectedRow();
+        Staff staff = null;
+
+        if (selected >= 0) {
+            String index = (String) tblStaffList.getValueAt(selected, 0);
+
+            try {
+                staff = staffService.findStaffById(index);
+
+                if (staff != null) {
+                    txtStaffName.setText(staff.getName());
+                    txtIdentification.setText(staff.getIdentify());
+                    txtPhoneNumber.setText(staff.getPhone());
+                    txtAddress.setText(staff.getAddress());
+                    cboGender.setSelectedItem(staff.isGender() == true ? "Nam" : "Nữ");
+                    cboPosition.setSelectedItem(staff.isPosition() == true ? "Quản lý" : "Nhân viên");
+                    cboStatus.setSelectedItem(staff.isStatus() == true ? "Ðang làm" : "Ðã nghỉ");
+
+                    txtIdentification.setEnabled(false);
+                    txtPhoneNumber.setEnabled(false);
+                    cboStatus.setEnabled(false);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            if (staff != null) {
+
+            }
+        }
+    }//GEN-LAST:event_tblStaffListMouseClicked
+
+    // button delete staff
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        int selected = tblStaffList.getSelectedRow();
+        Staff staff = null;
+
+        try {
+            if (selected >= 0) {
+                String index = (String) tblStaffList.getValueAt(selected, 0);
+                int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa nhân viên này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+                staff = staffService.findStaffById(index);
+
+                for (Staff st : staffService.getAllStaff()) {
+                    if (st.getId().equals(staff.getId())) {
+                        if (choise == JOptionPane.YES_OPTION) {
+                            staff.setStatus(false);
+                            staffService.addOrUpdateStaff(staff);
+
+                            JOptionPane.showMessageDialog(this, "Xóa nhân viên thành công.");
+                            clearInputs();
+                            loadDataToListView();
+                            
+                            txtIdentification.setEnabled(true);
+                            txtPhoneNumber.setEnabled(true);
+                            cboStatus.setEnabled(true);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    // button update staff
+    private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        String staffName = txtStaffName.getText();
+        String identification = txtIdentification.getText();
+        String phone = txtPhoneNumber.getText();
+        String address = txtAddress.getText();
+        
+        String gender = cboGender.getSelectedItem().toString();
+        boolean gen = false;
+        if(gender.equals("Nam")) {
+            gen = true;
+        } else if(gender.equals("Nữ")) {
+            gen = false;
+        }
+        
+        String position = cboPosition.getSelectedItem().toString();
+        boolean pos = false;
+        if(position.equals("Quản lý")) {
+            pos = true;
+        } else if(position.equals("Nhân viên")) {
+            pos = false;
+        }
+
+        int selected = tblStaffList.getSelectedRow();
+        Staff staff = null;
+
+        try {
+            if (selected >= 0) {
+                String index = (String) tblStaffList.getValueAt(selected, 0);
+                staff = staffService.findStaffById(index);
+
+                if (staff != null) {
+                    for (Staff st : staffService.getAllStaff()) {
+                        if (staff.getId().equals(st.getId())) {
+                            staff.setName(staffName);
+                            staff.setIdentify(identification);
+                            staff.setPhone(phone);
+                            staff.setAddress(address);
+                            staff.setGender(gen);
+                            staff.setPosition(pos);
+
+                            staffService.addOrUpdateStaff(staff);
+                            System.out.println("[staff]: " + staff);
+                            JOptionPane.showMessageDialog(this, "Cập nhật thành công nhân viên.");
+                            loadDataToListView();
+                            clearInputs();
+
+                            txtIdentification.setEnabled(true);
+                            txtPhoneNumber.setEnabled(true);
+                            cboStatus.setEnabled(true);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cập nhật không thành công nhân viên!");
+                    clearInputs();
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnChangeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -280,6 +571,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cboGender;
     private javax.swing.JComboBox<String> cboPosition;
+    private javax.swing.JComboBox<String> cboStatus;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblGender;
@@ -298,6 +590,5 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtPhoneNumber;
     private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtStaffName;
-    private javax.swing.JComboBox<String> txtStatus;
     // End of variables declaration//GEN-END:variables
 }
