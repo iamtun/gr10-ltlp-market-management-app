@@ -4,10 +4,16 @@
  */
 package market.app.client.ui.manager;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
+import entity.Product;
+import entity.ProductType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
+import service.IProductService;
+import service.IProductTypeService;
 
 /**
  *
@@ -18,19 +24,84 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmManagemeItem
      */
-    private final DefaultTableModel modelTableItemList = new DefaultTableModel();
-    private final DefaultComboBoxModel<String> modelComboItemType = new DefaultComboBoxModel<>();
-    private String[] colums = new String[] {"Mã mặt hàng", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
-    private String[] itemTypes = new String[] {"Bánh", "Nước ngọt"};//get from database
-    
+    private IProductService productService;
+    private IProductTypeService productTypeService;
+    private final DefaultTableModel modelTableProductList = new DefaultTableModel();
+    private String[] colums = new String[]{"Mã mặt hàng", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
+
     public frmManageItem() {
         initComponents();
+
+        // connect rmi
+        productService = ConnectServer.getInstance().getProductService();
+        productTypeService = ConnectServer.getInstance().getProductTypeService();
+
         Config.hideTitleBarInternalFrame(this);
-        Config.initColTable(tblStaffList, modelTableItemList, colums);
-        Config.initComboBox(cboItemType, modelComboItemType, itemTypes);
+        Config.initColTable(tblProductList, modelTableProductList, colums);
+
+        // load data
+        loadDataToCombobox();
+        loadDataToListView();
     }
-    
-    
+
+    // load data to list view
+    private void loadDataToListView() {
+        modelTableProductList.setRowCount(0);
+        try {
+            for (Product prod : productService.getAllProduct()) {
+                Object[] obj = new Object[]{
+                    prod.getId(),
+                    prod.getName(),
+                    productService.findProductById(prod.getId()).getType().getName(),
+                    productService.findProductById(prod.getId()).getType().getUnit(),
+                    prod.getNumber(),
+                    prod.getPrice()
+                };
+                modelTableProductList.addRow(obj);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        modelTableProductList.fireTableDataChanged();
+    }
+
+    // load data to combobox
+    private void loadDataToCombobox() {
+        try {
+            for (ProductType prod : productTypeService.getAllProductType()) {
+                cboProductType.addItem(prod.getName());
+                cboItemUnit.addItem(prod.getUnit());
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    // clear inputs
+    private void clearInputs() {
+        txtProductName.setText("");
+        cboProductType.setSelectedIndex(0);
+        cboItemUnit.setSelectedIndex(0);
+        txtNumber.setText("");
+        txtPrice.setText("");
+        txtProductName.requestFocus();
+    }
+
+    // check inputs
+    private boolean checkInputs() {
+        String productName = txtProductName.getText();
+        String number = txtNumber.getText();
+        String price = txtPrice.getText();
+
+        if (productName.equals("") || number.equals("") || price.equals("")) {
+            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,13 +113,13 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
         pnItemInfor = new javax.swing.JPanel();
         lblItemName = new javax.swing.JLabel();
-        txtItemName = new javax.swing.JTextField();
+        txtProductName = new javax.swing.JTextField();
         lblItemType = new javax.swing.JLabel();
-        txtItemPrice = new javax.swing.JTextField();
+        txtPrice = new javax.swing.JTextField();
         lblItemPrice = new javax.swing.JLabel();
-        cboItemType = new javax.swing.JComboBox<>();
+        cboProductType = new javax.swing.JComboBox<>();
         lblItemNumber = new javax.swing.JLabel();
-        txtItemNumber = new javax.swing.JTextField();
+        txtNumber = new javax.swing.JTextField();
         lblItemUnit = new javax.swing.JLabel();
         cboItemUnit = new javax.swing.JComboBox<>();
         pnAction = new javax.swing.JPanel();
@@ -57,7 +128,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         btnDelete = new javax.swing.JButton();
         pnItemList = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblStaffList = new javax.swing.JTable();
+        tblProductList = new javax.swing.JTable();
         txtSearch = new javax.swing.JTextField();
         lblSearch = new javax.swing.JLabel();
         btnSearch = new javax.swing.JButton();
@@ -74,15 +145,11 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         lblItemPrice.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemPrice.setText("Giá mặt hàng: ");
 
-        cboItemType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         lblItemNumber.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemNumber.setText("Số lượng:");
 
         lblItemUnit.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemUnit.setText("Đơn vị tính:");
-
-        cboItemUnit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout pnItemInforLayout = new javax.swing.GroupLayout(pnItemInfor);
         pnItemInfor.setLayout(pnItemInforLayout);
@@ -94,22 +161,22 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                     .addGroup(pnItemInforLayout.createSequentialGroup()
                         .addComponent(lblItemNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(7, 7, 7)
-                        .addComponent(txtItemNumber))
+                        .addComponent(txtNumber))
                     .addGroup(pnItemInforLayout.createSequentialGroup()
                         .addComponent(lblItemName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnItemInforLayout.createSequentialGroup()
                         .addComponent(lblItemPrice)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtItemPrice))
+                        .addComponent(txtPrice))
                     .addGroup(pnItemInforLayout.createSequentialGroup()
                         .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblItemType)
                             .addComponent(lblItemUnit))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cboItemType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboProductType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cboItemUnit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -119,10 +186,10 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblItemName)
-                    .addComponent(txtItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboItemType, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboProductType, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblItemType))
                 .addGap(13, 13, 13)
                 .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,11 +198,11 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblItemNumber)
-                    .addComponent(txtItemNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblItemPrice)
-                    .addComponent(txtItemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24))
         );
 
@@ -153,10 +220,20 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         btnChange.setBackground(new java.awt.Color(69, 123, 157));
         btnChange.setForeground(new java.awt.Color(255, 255, 255));
         btnChange.setText("Sửa");
+        btnChange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangeActionPerformed(evt);
+            }
+        });
 
         btnDelete.setBackground(new java.awt.Color(69, 123, 157));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnActionLayout = new javax.swing.GroupLayout(pnAction);
         pnAction.setLayout(pnActionLayout);
@@ -183,7 +260,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
         pnItemList.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Danh sách mặt hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
 
-        tblStaffList.setModel(new javax.swing.table.DefaultTableModel(
+        tblProductList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -194,7 +271,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tblStaffList);
+        tblProductList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProductListMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblProductList);
 
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblSearch.setText("Tìm kiếm: ");
@@ -278,8 +360,46 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // button add product
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        String productName = txtProductName.getText();
+        String productTypeName = cboProductType.getSelectedItem().toString();
+        String productUnit = cboItemUnit.getSelectedItem().toString();
+        int number = Integer.parseInt(txtNumber.getText());
+        double price = Double.parseDouble(txtPrice.getText());
+
+        try {
+            // check exits product
+            for (Product prod : productService.getAllProduct()) {
+                if (productName.equals(prod.getName())) {
+                    JOptionPane.showMessageDialog(this, "Sản phẩm này đã tồn tại. Bạn có thể thực hiện chức năng sửa số lượng sản phẩm!");
+                    clearInputs();
+                    return;
+                }
+            }
+
+            // add product
+            for (ProductType proType : productTypeService.getAllProductType()) {
+                if (productTypeName.equals(proType.getName()) && productUnit.equals(proType.getUnit())) {
+                    ProductType productType = productTypeService.findProductTypeById(proType.getId());
+
+                    Product product = new Product(productName, number, price, productType);
+
+                    productService.addOrUpdateProduct(product);
+                    JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
+                    clearInputs();
+                    loadDataToListView();
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnOpenFrmItemTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFrmItemTypeActionPerformed
@@ -287,6 +407,117 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         new frmItemType().setVisible(true);
     }//GEN-LAST:event_btnOpenFrmItemTypeActionPerformed
 
+    // clicked list view
+    private void tblProductListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductListMouseClicked
+        int selected = tblProductList.getSelectedRow();
+
+        if (selected >= 0) {
+            int index = (int) tblProductList.getValueAt(selected, 0);
+            Product product = null;
+
+            try {
+                product = productService.findProductById(index);
+
+                if (product != null) {
+                    txtProductName.setText(product.getName());
+                    cboProductType.setSelectedItem(product.getType().getName());
+                    cboItemUnit.setSelectedItem(product.getType().getUnit());
+                    txtNumber.setText(product.getNumber() + "");
+                    txtPrice.setText(product.getPrice() + "");
+
+                    cboProductType.setEnabled(false);
+                    cboItemUnit.setEnabled(false);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_tblProductListMouseClicked
+
+    // button delete product
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        int selected = tblProductList.getSelectedRow();
+        Product product = null;
+
+        try {
+            if (selected >= 0) {
+                int index = (int) tblProductList.getValueAt(selected, 0);
+                int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa sản phẩm này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+                product = productService.findProductById(index);
+
+                for (Product prod : productService.getAllProduct()) {
+                    if (product.getId() == prod.getId()) {
+                        if (choise == JOptionPane.YES_OPTION) {
+                            product.setSelling(false);
+                            productService.addOrUpdateProduct(product);
+
+                            JOptionPane.showMessageDialog(this, "Xóa sản phẩm thành công.");
+                            clearInputs();
+                            loadDataToListView();
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    // button update product
+    private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        String productName = txtProductName.getText();
+        //String productTypeName = cboProductType.getSelectedItem().toString();
+        //String unit = cboItemUnit.getSelectedItem().toString();
+        int number = Integer.parseInt(txtNumber.getText());
+        double price = Double.parseDouble(txtPrice.getText());
+
+        int selected = tblProductList.getSelectedRow();
+        Product product = null;
+
+        try {
+            int index = (int) tblProductList.getValueAt(selected, 0);
+            product = productService.findProductById(index);
+
+            if (product != null) {
+                product.setName(productName);
+
+//                for (ProductType prType : productTypeService.getAllProductType()) {
+//                    if (prType.getId() == product.getId()) {
+//                        prType.setName(productTypeName);
+//                        prType.setUnit(unit);
+//                        product.setType(prType);
+//                    }
+//                }
+                product.setNumber(number);
+                product.setPrice(price);
+
+                productService.addOrUpdateProduct(product);
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công sản phẩm.");
+                loadDataToListView();
+                clearInputs();
+
+                cboProductType.setEnabled(true);
+                cboItemUnit.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật không thành công sản phẩm!");
+                clearInputs();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_btnChangeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
@@ -294,8 +525,8 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnOpenFrmItemType;
     private javax.swing.JButton btnSearch;
-    private javax.swing.JComboBox<String> cboItemType;
     private javax.swing.JComboBox<String> cboItemUnit;
+    private javax.swing.JComboBox<String> cboProductType;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblItemName;
     private javax.swing.JLabel lblItemNumber;
@@ -306,10 +537,10 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     private javax.swing.JPanel pnAction;
     private javax.swing.JPanel pnItemInfor;
     private javax.swing.JPanel pnItemList;
-    private javax.swing.JTable tblStaffList;
-    private javax.swing.JTextField txtItemName;
-    private javax.swing.JTextField txtItemNumber;
-    private javax.swing.JTextField txtItemPrice;
+    private javax.swing.JTable tblProductList;
+    private javax.swing.JTextField txtNumber;
+    private javax.swing.JTextField txtPrice;
+    private javax.swing.JTextField txtProductName;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

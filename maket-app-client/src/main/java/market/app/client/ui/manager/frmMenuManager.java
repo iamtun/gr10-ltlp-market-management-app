@@ -5,6 +5,8 @@
 package market.app.client.ui.manager;
 
 import entity.Account;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import market.app.client.ui.frmViewInfor;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,7 +26,7 @@ public class frmMenuManager extends javax.swing.JFrame {
     //buttons support handle click menu item
     private JButton[] buttons = null;
     
-    public frmMenuManager(Account account) {
+    public frmMenuManager(Account account) throws Exception {
         initComponents();
         Config.startPanel(new frmManageItem(), pnContent, btnManageItem);
         this.buttons = new JButton[]{btnLogout, btnManageItem, btnManageOrder, btnManageStaff, btnViewInfor};
@@ -202,8 +204,12 @@ public class frmMenuManager extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnManageItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageItemActionPerformed
-        // TODO add your handling code here:
-        Config.startPanel(new frmManageItem(), pnContent, btnManageItem);
+        try {
+            // TODO add your handling code here:
+            Config.startPanel(new frmManageItem(), pnContent, btnManageItem);
+        } catch (Exception ex) {
+            Logger.getLogger(frmMenuManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Config.handleButtonClick(buttons, btnManageItem);
     }//GEN-LAST:event_btnManageItemActionPerformed
 
