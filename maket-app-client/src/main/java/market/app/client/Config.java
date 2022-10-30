@@ -23,6 +23,7 @@ import entity.Product;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -46,7 +47,7 @@ import javax.swing.table.DefaultTableModel;
  */
 // Variables and functions use in app
 public class Config {
-    
+
     public static final Color colorButtonClick = new Color(69, 123, 157);
     public static final Color colorButtonUnClick = new Color(255, 255, 255);
     public static final String ARIALFONT = "src/resources/fonts/arial.ttf";
@@ -59,7 +60,7 @@ public class Config {
             System.exit(0);
         }
     }
-    
+
     public static void setLookAndFeelUI() {
         try {
             FlatLightLaf.setup();
@@ -68,7 +69,7 @@ public class Config {
             System.err.println("Failed to initialize LaF");
         }
     }
-    
+
     public static void handleButtonClick(JButton[] buttons, JButton button) {
         for (JButton btn : buttons) {
             if (btn.equals(button)) {
@@ -78,7 +79,7 @@ public class Config {
             }
         }
     }
-    
+
     public static void openComponent(JInternalFrame frame, JPanel pnParrent) {
         Component[] components = pnParrent.getComponents();
         Component component;
@@ -92,22 +93,22 @@ public class Config {
         pnParrent.add(frame);
         frame.setVisible(true);
     }
-    
+
     public static void startPanel(JInternalFrame frm, JPanel pnParrent, JButton btn) {
         openComponent(frm, pnParrent);
         btn.setBackground(Config.colorButtonClick);
     }
-    
+
     public static void hideTitleBarInternalFrame(JInternalFrame frame) {
         //hide title bar
         ((javax.swing.plaf.basic.BasicInternalFrameUI) frame.getUI()).setNorthPane(null);
     }
-    
+
     public static void initColTable(JTable table, DefaultTableModel model, String[] names) {
         model.setColumnIdentifiers(names);
         table.setModel(model);
     }
-    
+
     public static void initComboBox(JComboBox cbo, DefaultComboBoxModel model, String[] types) {
         for (String type : types) {
             model.addElement(type);
@@ -122,7 +123,7 @@ public class Config {
         for (OrderDetail detail : details) {
             total += detail.getTotalOrderDetail();
         }
-        
+
         return total;
     }
 
@@ -136,7 +137,7 @@ public class Config {
             model.addRow(objects);
         }
     }
-    
+
     public static String converDateToString(Date date) {
         DateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         String dateFormated = format.format(date);
@@ -153,12 +154,21 @@ public class Config {
     //print order
     public static void printOrder(Date now, List<OrderDetail> _details, int numberOrder, String nameStaff) {
         try {
+            File directory = new File("C:/orders/");
+            if (!directory.exists()) {
+                if (directory.mkdir()) {
+                    System.err.println("create folder success!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Bạn cần tạo folder [orders] trong ổ đĩa C để chứa hóa đơn", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+            }
             String dest = "C:/orders/" + Config.converDateToString(now).replace(":", "_") + ".pdf";
             PdfWriter writer = new PdfWriter(dest);
-            
+
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.addNewPage();
-            
+
             Document document = new Document(pdfDocument);
 
             //Settings font -> UTF8
@@ -166,7 +176,7 @@ public class Config {
             PdfFont font = PdfFontFactory.createFont(fontProgram, PdfEncodings.IDENTITY_H, true);
             document.setFont(font);
             float columWith[] = {280F, 280F};
-            
+
             Table table = new Table(columWith);
             table.addCell(
                     new Cell(1, 2).add(new Paragraph("Siêu Thị Kmart")
@@ -187,7 +197,7 @@ public class Config {
                             .setTextAlignment(TextAlignment.CENTER))
                             .setBorder(Border.NO_BORDER)
             );
-            
+
             table.addCell(
                     new Cell(3, 2).add(new Paragraph("Hóa đơn bán lẻ")
                             .setFontSize(24)
@@ -195,21 +205,21 @@ public class Config {
                             .setBold())
                             .setBorder(Border.NO_BORDER)
             );
-            
+
             table.addCell(
                     new Cell().add(new Paragraph("HĐ số: " + numberOrder)
                             .setFontSize(14)
                             .setTextAlignment(TextAlignment.LEFT))
                             .setBorder(Border.NO_BORDER)
             );
-            
+
             table.addCell(
                     new Cell().add(new Paragraph("Ngày: " + converDateToString(now))
                             .setFontSize(14)
                             .setTextAlignment(TextAlignment.RIGHT))
                             .setBorder(Border.NO_BORDER)
             );
-            
+
             table.addCell(
                     new Cell(1, 2).add(new Paragraph("Bán hàng: " + nameStaff)
                             .setFontSize(14)
@@ -226,7 +236,7 @@ public class Config {
                     .addCell(new Cell().add(new Paragraph("Đơn vị tính")))
                     .addCell(new Cell().add(new Paragraph("Số lượng")))
                     .addCell(new Cell().add(new Paragraph("Thành tiền")));
-            
+
             for (int i = 0; i < _details.size(); ++i) {
                 orderDetails
                         .addCell(new Cell().add(new Paragraph(i + 1 + "")))
