@@ -29,39 +29,52 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     private final DefaultTableModel modelTableProductList = new DefaultTableModel();
     private String[] colums = new String[]{"Mã mặt hàng", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
 
-    public frmManageItem() throws Exception {
+    public frmManageItem() {
+        initComponents();
+
         // connect rmi
         productService = ConnectServer.getInstance().getProductService();
         productTypeService = ConnectServer.getInstance().getProductTypeService();
 
-        // init
-        initComponents();
         Config.hideTitleBarInternalFrame(this);
         Config.initColTable(tblProductList, modelTableProductList, colums);
 
         // load data
         loadDataToCombobox();
-//        loadDataToListView();
+        loadDataToListView();
     }
 
     // load data to list view
-    private void loadDataToListView() throws Exception {
+    private void loadDataToListView() {
         modelTableProductList.setRowCount(0);
-        for (Product prod : productService.getAllProduct()) {
-            Object[] obj = new Object[]{
-                prod.getId(), prod.getName(), prod.getType().getName(), prod.getType().getUnit(), prod.getNumber(), prod.getPrice()
-            };
-            modelTableProductList.addRow(obj);
+        try {
+            for (Product prod : productService.getAllProduct()) {
+                Object[] obj = new Object[]{
+                    prod.getId(),
+                    prod.getName(),
+                    productService.findProductById(prod.getId()).getType().getName(),
+                    productService.findProductById(prod.getId()).getType().getUnit(),
+                    prod.getNumber(),
+                    prod.getPrice()
+                };
+                modelTableProductList.addRow(obj);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         modelTableProductList.fireTableDataChanged();
     }
 
     // load data to combobox
-    private void loadDataToCombobox() throws Exception {
-        for (ProductType prod : productTypeService.getAllProductType()) {
-            cboProductType.addItem(prod.getName());
-            cboItemUnit.addItem(prod.getUnit());
+    private void loadDataToCombobox() {
+        try {
+            for (ProductType prod : productTypeService.getAllProductType()) {
+                cboProductType.addItem(prod.getName());
+                cboItemUnit.addItem(prod.getUnit());
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -78,10 +91,10 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // check inputs
     private boolean checkInputs() {
         String productName = txtProductName.getText();
-//        int number = Integer.parseInt(txtNumber.getText());
-//        double price = Double.parseDouble(txtPrice.getText());
+        String number = txtNumber.getText();
+        String price = txtPrice.getText();
 
-        if (productName.equals("")) {
+        if (productName.equals("") || number.equals("") || price.equals("")) {
             JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
             return true;
         }
@@ -207,10 +220,20 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         btnChange.setBackground(new java.awt.Color(69, 123, 157));
         btnChange.setForeground(new java.awt.Color(255, 255, 255));
         btnChange.setText("Sửa");
+        btnChange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangeActionPerformed(evt);
+            }
+        });
 
         btnDelete.setBackground(new java.awt.Color(69, 123, 157));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnActionLayout = new javax.swing.GroupLayout(pnAction);
         pnAction.setLayout(pnActionLayout);
@@ -339,47 +362,40 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     // button add product
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        String productName = txtProductName.getText();
-
-        String productTypeName = cboProductType.getSelectedItem().toString();
-        String productUnit = cboItemUnit.getSelectedItem().toString();
-
-        int number = Integer.parseInt(txtNumber.getText());
-        double price = Double.parseDouble(txtPrice.getText());
-
-        ProductType productType = null;
-
         // check inputs
         if (checkInputs()) {
             return;
         }
 
-        try {
-            for (ProductType prodType : productTypeService.getAllProductType()) {
-                productType = productTypeService.findProductTypeById(prodType.getId());
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String productName = txtProductName.getText();
+        String productTypeName = cboProductType.getSelectedItem().toString();
+        String productUnit = cboItemUnit.getSelectedItem().toString();
+        int number = Integer.parseInt(txtNumber.getText());
+        double price = Double.parseDouble(txtPrice.getText());
 
         try {
             // check exits product
             for (Product prod : productService.getAllProduct()) {
-                if (productName.equals(prod.getName()) && productTypeName.equals(prod.getType().getName())) {
+                if (productName.equals(prod.getName())) {
                     JOptionPane.showMessageDialog(this, "Sản phẩm này đã tồn tại. Bạn có thể thực hiện chức năng sửa số lượng sản phẩm!");
                     clearInputs();
                     return;
                 }
             }
 
-//            if (productType.getName().equals(productTypeName) && productType.getUnit().equals(ABORT)) {
-//                Product product = new Product(productName, number, price, productType);
-//                productService.addOrUpdateProduct(product);
-//            }
+            // add product
+            for (ProductType proType : productTypeService.getAllProductType()) {
+                if (productTypeName.equals(proType.getName()) && productUnit.equals(proType.getUnit())) {
+                    ProductType productType = productTypeService.findProductTypeById(proType.getId());
 
-            JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
-            clearInputs();
-            loadDataToListView();
+                    Product product = new Product(productName, number, price, productType);
+
+                    productService.addOrUpdateProduct(product);
+                    JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
+                    clearInputs();
+                    loadDataToListView();
+                }
+            }
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -408,6 +424,9 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                     cboItemUnit.setSelectedItem(product.getType().getUnit());
                     txtNumber.setText(product.getNumber() + "");
                     txtPrice.setText(product.getPrice() + "");
+
+                    cboProductType.setEnabled(false);
+                    cboItemUnit.setEnabled(false);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
@@ -415,6 +434,90 @@ public class frmManageItem extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_tblProductListMouseClicked
+
+    // button delete product
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        int selected = tblProductList.getSelectedRow();
+        Product product = null;
+
+        try {
+            if (selected >= 0) {
+                int index = (int) tblProductList.getValueAt(selected, 0);
+                int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa sản phẩm này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+                product = productService.findProductById(index);
+
+                for (Product prod : productService.getAllProduct()) {
+                    if (product.getId() == prod.getId()) {
+                        if (choise == JOptionPane.YES_OPTION) {
+                            product.setSelling(false);
+                            productService.addOrUpdateProduct(product);
+
+                            JOptionPane.showMessageDialog(this, "Xóa sản phẩm thành công.");
+                            clearInputs();
+                            loadDataToListView();
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    // button update product
+    private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        String productName = txtProductName.getText();
+        //String productTypeName = cboProductType.getSelectedItem().toString();
+        //String unit = cboItemUnit.getSelectedItem().toString();
+        int number = Integer.parseInt(txtNumber.getText());
+        double price = Double.parseDouble(txtPrice.getText());
+
+        int selected = tblProductList.getSelectedRow();
+        Product product = null;
+
+        try {
+            int index = (int) tblProductList.getValueAt(selected, 0);
+            product = productService.findProductById(index);
+
+            if (product != null) {
+                product.setName(productName);
+
+//                for (ProductType prType : productTypeService.getAllProductType()) {
+//                    if (prType.getId() == product.getId()) {
+//                        prType.setName(productTypeName);
+//                        prType.setUnit(unit);
+//                        product.setType(prType);
+//                    }
+//                }
+                product.setNumber(number);
+                product.setPrice(price);
+
+                productService.addOrUpdateProduct(product);
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công sản phẩm.");
+                loadDataToListView();
+                clearInputs();
+
+                cboProductType.setEnabled(true);
+                cboItemUnit.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật không thành công sản phẩm!");
+                clearInputs();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_btnChangeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;

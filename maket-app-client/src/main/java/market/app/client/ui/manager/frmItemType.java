@@ -31,7 +31,6 @@ public class frmItemType extends javax.swing.JFrame {
 
         // connect RMI
         productTypeService = ConnectServer.getInstance().getProductTypeService();
-
         setLocationRelativeTo(null);
         Config.initColTable(tblItemTypeList, modelTableProductTypeList, colums);
 
@@ -279,6 +278,7 @@ public class frmItemType extends javax.swing.JFrame {
                 }
             }
 
+            //productType.setSelling(true);
             productTypeService.addOrUpdateProductType(productType);
 
             JOptionPane.showMessageDialog(this, "Thêm loại sản phẩm thành công.");
@@ -324,6 +324,9 @@ public class frmItemType extends javax.swing.JFrame {
                     productTypeService.addOrUpdateProductType(productType);
                     JOptionPane.showMessageDialog(this, "Cập nhật thành công loại sản phẩm.");
                     loadDataToListView();
+                    clearInputs();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cập nhật không thành công loại sản phẩm!");
                     clearInputs();
                 }
             }
@@ -388,7 +391,7 @@ public class frmItemType extends javax.swing.JFrame {
     }//GEN-LAST:event_tblItemTypeListMouseClicked
 
     private void btnSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnSearchKeyReleased
-        
+
     }//GEN-LAST:event_btnSearchKeyReleased
 
     /**
