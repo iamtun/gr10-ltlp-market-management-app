@@ -23,16 +23,11 @@ public class OrderDetailDAO extends UnicastRemoteObject implements IOrderDetailS
 	public OrderDetail findOrderDetailById(int order_id, int product_id) throws Exception {
 		Session session = factory.openSession();
 		try {
-			List<OrderDetail> entities = session
+			OrderDetail orderDetail = session
 					.createNativeQuery("SELECT * " + "FROM order_details "
 							+ "WHERE order_id = :order_id and product_id = :product_id", OrderDetail.class)
-					.setParameter("order_id", order_id)
-					.setParameter("product_id", product_id)
-					.list();
-			if(entities.size() > 0)
-				return entities.get(0);
-			else
-				return null;
+					.setParameter("order_id", order_id).setParameter("product_id", product_id).getSingleResultOrNull();
+			return orderDetail;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,7 +87,6 @@ public class OrderDetailDAO extends UnicastRemoteObject implements IOrderDetailS
 	public List<OrderDetail> getAllByOrderId(int order_id) throws Exception {
 		Session session = factory.openSession();
 		try {
-			System.out.println(order_id);
 			List<OrderDetail> entities = session
 					.createNativeQuery("SELECT * " + "FROM order_details " + "WHERE order_id = :order_id",
 							OrderDetail.class)

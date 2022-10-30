@@ -54,7 +54,8 @@ public class InitDatabase {
 			IProductService ioProductService = new ProductServiceImpl();
 			IProductTypeService ioProductTypeService = new ProductTypeServiceImpl();
 			
-//			
+//			List<Product> res = ioProductService.getAllProductByProductTypeId(1);
+//			System.out.println(res);
 //			Staff staff = ioStaffService.findStaffById("US0001");
 //			System.out.println(staff);
 //			Order order = new Order(new Date(), staff);

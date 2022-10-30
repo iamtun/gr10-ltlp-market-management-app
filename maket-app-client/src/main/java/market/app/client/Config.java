@@ -131,8 +131,8 @@ public class Config {
         model.setRowCount(0);
         for (int i = 0; i < details.size(); ++i) {
             Product product = details.get(i).getProduct();
-            Object[] objects = new Object[]{i + 1, product.getName(), product.getType().getUnit(), 
-                               details.get(i).getQuantity(), formatMoney(details.get(i).getTotalOrderDetail())};
+            Object[] objects = new Object[]{i + 1, product.getName(), product.getType().getUnit(),
+                details.get(i).getQuantity(), formatMoney(details.get(i).getTotalOrderDetail())};
             model.addRow(objects);
         }
     }
@@ -233,11 +233,11 @@ public class Config {
                         .addCell(new Cell().add(new Paragraph(_details.get(i).getProduct().getName())))
                         .addCell(new Cell().add(new Paragraph(_details.get(i).getProduct().getType().getUnit())))
                         .addCell(new Cell().add(new Paragraph(_details.get(i).getQuantity() + "")))
-                        .addCell(new Cell().add(new Paragraph(_details.get(i).getTotalOrderDetail() + "")));
+                        .addCell(new Cell().add(new Paragraph(formatMoney(_details.get(i).getTotalOrderDetail()) + "")));
             }
             table.addCell(new Cell(1, 2).add(orderDetails));
             table.addCell(
-                    new Cell(1, 2).add(new Paragraph("Tổng tiền:        " + calTotalMoneyByListOrderDetail(_details))
+                    new Cell(1, 2).add(new Paragraph("Tổng tiền:        " + formatMoney(calTotalMoneyByListOrderDetail(_details)))
                             .setFontSize(14)
                             .setBold()
                             .setTextAlignment(TextAlignment.RIGHT))

@@ -17,7 +17,6 @@ public class ProductTypeServiceImpl extends UnicastRemoteObject implements IProd
 	
 	@Override
 	public ProductType findProductTypeById(int id) throws Exception {
-		// TODO Auto-generated method stub
 		return dao.findProductTypeById(id);
 	}
 
@@ -34,8 +33,12 @@ public class ProductTypeServiceImpl extends UnicastRemoteObject implements IProd
 
 	@Override
 	public List<ProductType> getAllProductType() throws Exception {
-		// TODO Auto-generated method stub
 		return dao.getAllProductType();
+	}
+
+	@Override
+	public List<ProductType> findListProductTypeByName(String name) throws Exception {
+		return dao.findListProductTypeByName(name);
 	}
 
 }
