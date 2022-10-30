@@ -7,6 +7,7 @@ package market.app.client.ui.staff;
 import entity.Account;
 import entity.OrderDetail;
 import entity.Product;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -264,13 +265,13 @@ public class frmSale extends javax.swing.JInternalFrame {
             .addGroup(pnItemListLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 833, Short.MAX_VALUE)
                     .addComponent(btnCreateOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnItemListLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lblTagTotalMoney)
                         .addGap(18, 18, 18)
-                        .addComponent(lblTotalMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblTotalMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnItemListLayout.setVerticalGroup(
@@ -312,11 +313,21 @@ public class frmSale extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateOrderActionPerformed
-       if(details.size() > 0) {
-            new frmOrder(details, _account).setVisible(true);
-       }else {
-           JOptionPane.showMessageDialog(null, "Vui lòng thêm sản phẩm rồi mới thanh toán!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-       }
+        if (!details.isEmpty()) {
+            frmOrder forder = new frmOrder(details, _account);
+            forder.setVisible(true);
+            //listening close form
+            forder.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    details.clear();
+                    Config.loadOrderDetailToList(modelTableOrderDetail, details);
+                    lblTotalMoney.setText(Config.formatMoney(Config.calTotalMoneyByListOrderDetail(details)));
+                }
+            });
+        } else {
+            JOptionPane.showMessageDialog(null, "Vui lòng thêm sản phẩm rồi mới thanh toán!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnCreateOrderActionPerformed
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
@@ -332,7 +343,7 @@ public class frmSale extends javax.swing.JInternalFrame {
                 }
 
                 Config.loadOrderDetailToList(modelTableOrderDetail, details);
-                lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(details) + "");
+                lblTotalMoney.setText(Config.formatMoney(Config.calTotalMoneyByListOrderDetail(details)));
                 clearInput();
             } catch (Exception ex) {
                 System.err.println("Lỗi tìm kiếm sản phẩm khi xác nhận thêm sản phẩm vào chi tiết hóa đơn!");
@@ -347,7 +358,7 @@ public class frmSale extends javax.swing.JInternalFrame {
         if (index > -1) {
             details.remove(index);
             Config.loadOrderDetailToList(modelTableOrderDetail, details);
-            lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(details) + "");
+            lblTotalMoney.setText(Config.formatMoney(Config.calTotalMoneyByListOrderDetail(details)));
         }
     }//GEN-LAST:event_btnDelActionPerformed
 

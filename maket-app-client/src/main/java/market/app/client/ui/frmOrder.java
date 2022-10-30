@@ -9,8 +9,6 @@ import entity.Order;
 import entity.OrderDetail;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
@@ -43,17 +41,13 @@ public class frmOrder extends javax.swing.JFrame {
         //form sale send
         _details = details;
         _account = account;
-        try {
-            int countOrder = orderService.getAllOrder().size();
-            lblOrderNumber.setText("HĐ số: " + (countOrder + 1) + "");
-            lblDateTime.setText("Ngày: " + Config.converDateToString(now));
-            lblStaffName.setText("Bán hàng: " + account.getStaff().getName());
 
-            Config.loadOrderDetailToList(modelTableOrderDetail, _details);
-            lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(_details) + "");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Lỗi lấy số hóa đơn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
+        lblOrderNumber.setText("HĐ số: " + (getNumberOrder() + 1) + "");
+        lblDateTime.setText("Ngày: " + Config.converDateToString(now));
+        lblStaffName.setText("Bán hàng: " + _account.getStaff().getName());
+
+        Config.loadOrderDetailToList(modelTableOrderDetail, _details);
+        lblTotalMoney.setText(Config.formatMoney(Config.calTotalMoneyByListOrderDetail(_details)));
 
     }
 
@@ -64,7 +58,7 @@ public class frmOrder extends javax.swing.JFrame {
         setLocationRelativeTo(null);
 
         Config.loadOrderDetailToList(modelTableOrderDetail, order.getDetails());
-        lblTotalMoney.setText(Config.calTotalMoneyByListOrderDetail(order.getDetails()) + "");
+        lblTotalMoney.setText(Config.formatMoney(Config.calTotalMoneyByListOrderDetail(_details)));
     }
 
     /**
@@ -147,11 +141,11 @@ public class frmOrder extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnOrderDetailInOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane5)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnOrderDetailInOrderLayout.createSequentialGroup()
+                    .addGroup(pnOrderDetailInOrderLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lblTagTotalMoney)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblTotalMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTotalMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnOrderDetailInOrderLayout.setVerticalGroup(
@@ -182,6 +176,11 @@ public class frmOrder extends javax.swing.JFrame {
         btnPrintOrder.setBackground(new java.awt.Color(29, 146, 183));
         btnPrintOrder.setForeground(new java.awt.Color(255, 255, 255));
         btnPrintOrder.setText("In hóa đơn");
+        btnPrintOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintOrderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -248,6 +247,18 @@ public class frmOrder extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private int getNumberOrder() {
+
+        try {
+            int countOrder = orderService.getAllOrder().size();
+            return countOrder;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Lỗi lấy số hóa đơn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return -1;
+    }
+
     private void updateOrderIdAndInsertOrderDetail(List<OrderDetail> details, Order orderFinded) {
         try {
             IOrderDetailService orderDetailService = ConnectServer.getInstance().getOrderDetailService();
@@ -276,6 +287,12 @@ public class frmOrder extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Lỗi thêm hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnPaySuccessActionPerformed
+
+    private void btnPrintOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintOrderActionPerformed
+        // TODO add your handling code here:
+        Config.printOrder(now, _details, getNumberOrder(), _account.getStaff().getName());
+
+    }//GEN-LAST:event_btnPrintOrderActionPerformed
 
 //    /**
 //     * @param args the command line arguments

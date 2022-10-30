@@ -24,8 +24,10 @@ public class ProductDAO extends UnicastRemoteObject implements IProductService {
 	public Product findProductById(int id) throws Exception {
 		Session session = factory.openSession();
 		try {
-			Product product = session.find(Product.class, id);
-			session.close();
+			Product product = session
+					.createNativeQuery("SELECT *  FROM products WHERE product_id = :product_id and selling != 0", Product.class)
+					.setParameter("product_id", id).getSingleResultOrNull();
+			System.out.println(product);
 			return product;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -33,8 +35,34 @@ public class ProductDAO extends UnicastRemoteObject implements IProductService {
 
 		return null;
 	}
+	
+	@Override
+	public List<Product> getAllProduct() throws Exception {
+		Session session = factory.openSession();
+		try {
+			List<Product> products = session
+					.createNativeQuery("SELECT * FROM products where selling != 0", Product.class).list();
+			return products;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-	@SuppressWarnings("deprecation")
+	@Override
+	public List<Product> getAllProductByProductTypeId(int product_type_id) throws Exception {
+		Session session = factory.openSession();
+		try {
+			List<Product> entities = session.createNativeQuery(
+					"SELECT *  FROM products WHERE product_type_id = :product_type_id and selling != 0", Product.class)
+					.setParameter("product_type_id", product_type_id).list();
+			return entities;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	@Override
 	public boolean addOrUpdateProduct(Product product) throws Exception {
 		Session session = factory.getCurrentSession();
@@ -73,31 +101,6 @@ public class ProductDAO extends UnicastRemoteObject implements IProductService {
 
 	}
 
-	@Override
-	public List<Product> getAllProduct() throws Exception {
-		Session session = factory.openSession();
-		try {
-			List<Product> products = session.createNativeQuery("SELECT * FROM products where selling != 0", Product.class).list();
-			return products;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public List<Product> getAllProductByProductTypeId(int product_type_id) throws Exception {
-		Session session = factory.openSession();
-		try {
-			List<Product> entities = session
-					.createNativeQuery("SELECT *  FROM products WHERE product_type_id = :product_type_id and selling != 0",Product.class)
-					.setParameter("product_type_id", product_type_id)
-					.list();
-			return entities;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	
 
 }

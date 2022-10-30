@@ -54,5 +54,61 @@
             <artifactId>entity-server</artifactId>
             <version>1.1</version>
         </dependency>
+        
+        <!--export file pdf-->
+        <!-- always needed -->     
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>kernel</artifactId>         
+            <version>7.1.9</version>     
+        </dependency>  
+      
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>io</artifactId>         
+            <version>7.1.9</version>     
+        </dependency>  
+      
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>layout</artifactId>         
+            <version>7.1.9</version>
+        </dependency>  
+      
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>forms</artifactId>         
+            <version>7.1.9</version>    
+        </dependency>  
+      
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>pdfa</artifactId>         
+            <version>7.1.9</version>     
+        </dependency>  
+      
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>sign</artifactId>         
+            <version>7.1.9</version>     
+        </dependency>  
+      
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>barcodes</artifactId>         
+            <version>7.1.9</version>     
+        </dependency>  
+      
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>font-asian</artifactId>         
+            <version>7.0.2</version>     
+        </dependency>  
+      
+        <dependency>         
+            <groupId>com.itextpdf</groupId>         
+            <artifactId>hyph</artifactId>         
+            <version>7.0.2</version>    
+        </dependency> 
     </dependencies>
 </project>
