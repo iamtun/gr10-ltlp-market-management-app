@@ -27,7 +27,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     private IProductService productService;
     private IProductTypeService productTypeService;
     private final DefaultTableModel modelTableProductList = new DefaultTableModel();
-    private String[] colums = new String[]{"Mã mặt hàng", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
+    private String[] colums = new String[]{"STT", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
 
     public frmManageItem() {
         initComponents();

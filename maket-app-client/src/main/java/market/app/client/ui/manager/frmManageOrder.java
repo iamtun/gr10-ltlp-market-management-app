@@ -25,7 +25,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
     private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
     private final DefaultTableModel modelTableOrder = new DefaultTableModel();
     private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
-    private final String[] orderColumns = new String[]{"Mã HÐ", "Tổng Tiền", "Ngày Lập HD"};
+    private final String[] orderColumns = new String[]{"Mã HÐ", "Ngày Lập HD", "Tổng Tiền"};
 
     public frmManageOrder() {
         initComponents();
