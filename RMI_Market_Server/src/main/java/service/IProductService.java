@@ -11,7 +11,9 @@ public interface IProductService extends Remote {
 	public List<Product> getAllProductByProductTypeId(int product_type_id) throws Exception;
 
 	public Product findProductById(int id) throws Exception;
-
+	
+	public Product findProductByName(String name) throws Exception;
+	
 	public boolean addOrUpdateProduct(Product product) throws Exception;
 
 	public boolean deleteProduct(Product product) throws Exception;
