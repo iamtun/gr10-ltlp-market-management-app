@@ -45,7 +45,7 @@ public class frmOrder extends javax.swing.JFrame {
         lblOrderNumber.setText("HĐ số: " + (getNumberOrder() + 1) + "");
         lblDateTime.setText("Ngày: " + Config.converDateToString(now));
         lblStaffName.setText("Bán hàng: " + _account.getStaff().getName());
-
+        btnPaySuccess.setEnabled(false);
         Config.loadOrderDetailToList(modelTableOrderDetail, _details);
         lblTotalMoney.setText(Config.formatMoney(Config.calTotalMoneyByListOrderDetail(_details)));
 
@@ -291,7 +291,7 @@ public class frmOrder extends javax.swing.JFrame {
     private void btnPrintOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintOrderActionPerformed
         // TODO add your handling code here:
         Config.printOrder(now, _details, getNumberOrder(), _account.getStaff().getName());
-
+        btnPaySuccess.setEnabled(true);
     }//GEN-LAST:event_btnPrintOrderActionPerformed
 
 //    /**
