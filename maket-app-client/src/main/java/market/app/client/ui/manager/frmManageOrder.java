@@ -5,11 +5,18 @@
 package market.app.client.ui.manager;
 
 import entity.Account;
+import entity.Order;
 import entity.OrderDetail;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
 import market.app.client.ui.frmOrder;
+import service.IOrderDetailService;
+import service.IOrderService;
 
 /**
  *
@@ -18,7 +25,10 @@ import market.app.client.ui.frmOrder;
 public class frmManageOrder extends javax.swing.JInternalFrame {
 
     private List<OrderDetail> _details;
+    private List<Order> _orders;
     private Account _account;
+    private IOrderService orderService;
+    private IOrderDetailService detailService;
     /**
      * Creates new form frmManageOrder
      */
@@ -32,6 +42,38 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         Config.hideTitleBarInternalFrame(this);
         Config.initColTable(tblOrderDetail, modelTableOrderDetail, colums);
         Config.initColTable(tblOrderList, modelTableOrder, orderColumns);
+
+        //logic
+        _orders = new ArrayList<>();
+        orderService = ConnectServer.getInstance().getOrderService();
+        loadDataToOrderTable();
+    }
+
+    private List<Order> getAllOrderDetailFromServer() {
+        List<Order> orders = new ArrayList<>();
+        try {
+            orderService.getAllOrder().forEach(order -> {
+                try {
+                    System.err.println(order);
+                    orders.add(orderService.findOrderById(order.getId()));
+                } catch (Exception ex) {
+                    System.err.println("Lỗi đọc hóa đơn!");
+                    Logger.getLogger(frmManageOrder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        } catch (Exception e) {
+            Logger.getLogger(frmManageOrder.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        return orders;
+    }
+
+    private void loadDataToOrderTable() {
+        modelTableOrder.setRowCount(0);
+        _orders = getAllOrderDetailFromServer();
+        for (int i = 0; i < _orders.size(); ++i) {
+            modelTableOrder.addRow(new Object[]{i + 1, _orders.get(i).getDate(), _orders.get(i).getTotal()});
+        }
     }
 
     /**
@@ -77,6 +119,11 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblOrderList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblOrderListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblOrderList);
 
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -281,6 +328,19 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         new frmOrder(_details, _account).setVisible(true);
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void tblOrderListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrderListMouseClicked
+        // TODO add your handling code here:
+        int index = tblOrderList.getSelectedRow();
+        if (index > -1) {
+            modelTableOrderDetail.setRowCount(0);
+            Order order = _orders.get(index);
+            _details = order.getDetails();
+            _details.forEach(detail -> {
+                modelTableOrderDetail.addRow(new Object[] {detail.getOrder().getId(), detail.getProduct().getName(), detail.getProduct().getType().getUnit(), detail.getQuantity(), detail.getTotalOrderDetail()});
+            });
+        }
+    }//GEN-LAST:event_tblOrderListMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
