@@ -29,7 +29,7 @@ public class frmSale extends javax.swing.JInternalFrame {
     private IProductService productService;
 
     private Account _account;
-    private List<Product> products;
+    //private List<Product> products;
     private List<OrderDetail> details;
     /**
      * Creates new form frmSale
@@ -43,22 +43,12 @@ public class frmSale extends javax.swing.JInternalFrame {
         Config.hideTitleBarInternalFrame(this);
         productService = ConnectServer.getInstance().getProductService();
         details = new ArrayList<>();
+        btnConfirm.setEnabled(false);
         //give from login
         _account = account;
-        products = getAllProduct();
         txtItemName.setEditable(false);
         getTextChangeInput(txtItemID);
-    }
-
-    private List<Product> getAllProduct() {
-        try {
-            return productService.getAllProduct();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Lỗi ở lấy dữ liệu tất cả sản phẩm");
-            e.printStackTrace();
-        }
-
-        return null;
+        getTextChangeInput(txtNumber);
     }
 
     //handle input value change
@@ -69,16 +59,28 @@ public class frmSale extends javax.swing.JInternalFrame {
                 Product product = productService.findProductById(id);
                 if (product != null) {
                     txtItemName.setText(product.getName());
-                    btnConfirm.setEnabled(true);
+                    txtNumber.setEditable(true);
+                    btnConfirm.setEnabled(false);
                 } else {
                     txtItemName.setText("Sản phẩm này không tồn tại");
                     btnConfirm.setEnabled(false);
+                    txtNumber.setEditable(false);
                 }
             } catch (Exception ex) {
                 System.err.println("Lỗi tìm kiếm sản phẩm trong event textChange");
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã sản phẩm là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            lblNotifiId.setText("phải là số!");
+        }
+    }
+
+    //handle input number
+    private void handleInputNumber(JTextField field) {
+        try {
+            int id = Integer.parseInt(field.getText());
+            btnConfirm.setEnabled(true);
+        } catch (Exception e) {
+            lblNotifiNumber.setText("phải là số!");
         }
     }
 
@@ -87,23 +89,41 @@ public class frmSale extends javax.swing.JInternalFrame {
         field.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                handleGiveInput(field);
+                if (field.equals(txtItemID)) {
+                    lblNotifiId.setText("");
+                    handleGiveInput(field);
+                } else {
+                    lblNotifiNumber.setText("");
+                    handleInputNumber(field);
+                }
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (!field.getText().trim().equals("")) {
-                    handleGiveInput(field);
-                } else {
-                    txtItemName.setText("");
-                    btnConfirm.setEnabled(false);
+                if (field.equals(txtItemID)) {
+                    if (!field.getText().trim().equals("")) {
+                        lblNotifiId.setText("");
+                        handleGiveInput(field);
+                    } else {
+                        lblNotifiId.setText("");
+                        txtItemName.setText("");
+                        btnConfirm.setEnabled(false);
+                    }
+                }else {
+                    if (!field.getText().trim().equals("")) {
+                        lblNotifiNumber.setText("");
+                        handleInputNumber(field);
+                    }else {
+                        lblNotifiNumber.setText("");
+                        btnConfirm.setEnabled(false);
+                    }
                 }
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 //handleGiveInput(field);
-                System.err.println("change update");
+                //System.err.println("change update");
             }
         });
     }
@@ -145,6 +165,8 @@ public class frmSale extends javax.swing.JInternalFrame {
         txtNumber = new javax.swing.JTextField();
         btnConfirm = new javax.swing.JButton();
         btnDel = new javax.swing.JButton();
+        lblNotifiNumber = new javax.swing.JLabel();
+        lblNotifiId = new javax.swing.JLabel();
         pnItemList = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblOrderDetail = new javax.swing.JTable();
@@ -185,6 +207,10 @@ public class frmSale extends javax.swing.JInternalFrame {
             }
         });
 
+        lblNotifiNumber.setForeground(new java.awt.Color(255, 0, 51));
+
+        lblNotifiId.setForeground(new java.awt.Color(255, 0, 51));
+
         javax.swing.GroupLayout pnInputLayout = new javax.swing.GroupLayout(pnInput);
         pnInput.setLayout(pnInputLayout);
         pnInputLayout.setHorizontalGroup(
@@ -196,20 +222,28 @@ public class frmSale extends javax.swing.JInternalFrame {
                     .addComponent(txtNumber, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtItemName, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtItemID)
+                    .addComponent(btnDel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnInputLayout.createSequentialGroup()
+                        .addComponent(lblNumber)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblNotifiNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnInputLayout.createSequentialGroup()
                         .addGroup(pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblItemID)
                             .addComponent(lblItemName)
-                            .addComponent(lblNumber))
-                        .addGap(0, 227, Short.MAX_VALUE))
-                    .addComponent(btnDel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(pnInputLayout.createSequentialGroup()
+                                .addComponent(lblItemID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblNotifiId, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 57, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnInputLayout.setVerticalGroup(
             pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnInputLayout.createSequentialGroup()
                 .addGap(45, 45, 45)
-                .addComponent(lblItemID)
+                .addGroup(pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblItemID)
+                    .addComponent(lblNotifiId, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtItemID, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -217,7 +251,9 @@ public class frmSale extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblNumber)
+                .addGroup(pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNumber)
+                    .addComponent(lblNotifiNumber))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -265,8 +301,8 @@ public class frmSale extends javax.swing.JInternalFrame {
             .addGroup(pnItemListLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 833, Short.MAX_VALUE)
-                    .addComponent(btnCreateOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
+                    .addComponent(btnCreateOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnItemListLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lblTagTotalMoney)
@@ -373,6 +409,8 @@ public class frmSale extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblItemID;
     private javax.swing.JLabel lblItemName;
+    private javax.swing.JLabel lblNotifiId;
+    private javax.swing.JLabel lblNotifiNumber;
     private javax.swing.JLabel lblNumber;
     private javax.swing.JLabel lblTagTotalMoney;
     private javax.swing.JLabel lblTotalMoney;
