@@ -5,11 +5,19 @@
 package market.app.client.ui.manager;
 
 import entity.Account;
+import entity.Order;
 import entity.OrderDetail;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
 import market.app.client.ui.frmOrder;
+import service.IOrderDetailService;
+import service.IOrderService;
 
 /**
  *
@@ -18,20 +26,78 @@ import market.app.client.ui.frmOrder;
 public class frmManageOrder extends javax.swing.JInternalFrame {
 
     private List<OrderDetail> _details;
+    private List<Order> _orders;
     private Account _account;
+    private IOrderService orderService;
+    private IOrderDetailService detailService;
     /**
      * Creates new form frmManageOrder
      */
     private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
     private final DefaultTableModel modelTableOrder = new DefaultTableModel();
     private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
-    private final String[] orderColumns = new String[]{"Mã HÐ", "Tổng Tiền", "Ngày Lập HD"};
+    private final String[] orderColumns = new String[]{"Mã HÐ", "Ngày Lập HD", "Tổng Tiền"};
 
-    public frmManageOrder() {
+    public frmManageOrder(Account _account1) {
         initComponents();
+        _account = _account1;
+
         Config.hideTitleBarInternalFrame(this);
         Config.initColTable(tblOrderDetail, modelTableOrderDetail, colums);
         Config.initColTable(tblOrderList, modelTableOrder, orderColumns);
+
+        //logic
+        _orders = new ArrayList<>();
+        orderService = ConnectServer.getInstance().getOrderService();
+        detailService = ConnectServer.getInstance().getOrderDetailService();
+
+        loadDataToOrderTable();
+    }
+
+    private List<Order> getAllOrderDetailFromServer() {
+        List<Order> orders = new ArrayList<>();
+        try {
+            orderService.getAllOrder().forEach(order -> {
+                try {
+                    System.err.println(order);
+                    orders.add(orderService.findOrderById(order.getId()));
+                } catch (Exception ex) {
+                    System.err.println("Lỗi đọc hóa đơn!");
+                    Logger.getLogger(frmManageOrder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        } catch (Exception e) {
+            Logger.getLogger(frmManageOrder.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        return orders;
+    }
+
+    private void loadDataToOrderTable() {
+        modelTableOrder.setRowCount(0);
+        _orders = getAllOrderDetailFromServer();
+        for (int i = 0; i < _orders.size(); ++i) {
+            modelTableOrder.addRow(new Object[]{i + 1, _orders.get(i).getDate(), _orders.get(i).getTotal()});
+        }
+    }
+
+    private void loadDataToOrderDetailList() {
+        int index = tblOrderList.getSelectedRow();
+        if (index > -1) {
+            modelTableOrderDetail.setRowCount(0);
+            Order order = _orders.get(index);
+            _details = order.getDetails();
+            _details.forEach(detail -> {
+                modelTableOrderDetail.addRow(new Object[]{detail.getOrder().getId(), detail.getProduct().getName(), detail.getProduct().getType().getUnit(), detail.getQuantity(), detail.getTotalOrderDetail()});
+            });
+        }
+    }
+
+    private void clearInput() {
+        txtCode.setText("");
+        txtItemName.setText("");
+        txtItemNumber.setText("");
+        txtSearch.setText("");
     }
 
     /**
@@ -59,7 +125,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         lblItemNumber = new javax.swing.JLabel();
         txtItemNumber = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtCode = new javax.swing.JTextField();
         pnAction = new javax.swing.JPanel();
         btnChange = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
@@ -77,6 +143,11 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblOrderList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblOrderListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblOrderList);
 
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -85,6 +156,11 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         btnSearch.setBackground(new java.awt.Color(69, 123, 157));
         btnSearch.setForeground(new java.awt.Color(255, 255, 255));
         btnSearch.setText("Tìm");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnOrderListLayout = new javax.swing.GroupLayout(pnOrderList);
         pnOrderList.setLayout(pnOrderListLayout);
@@ -130,6 +206,11 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblOrderDetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblOrderDetailMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblOrderDetail);
 
         btnAdd.setBackground(new java.awt.Color(69, 123, 157));
@@ -178,10 +259,20 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         btnChange.setBackground(new java.awt.Color(69, 123, 157));
         btnChange.setForeground(new java.awt.Color(255, 255, 255));
         btnChange.setText("Sửa");
+        btnChange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangeActionPerformed(evt);
+            }
+        });
 
         btnDelete.setBackground(new java.awt.Color(69, 123, 157));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnActionLayout = new javax.swing.GroupLayout(pnAction);
         pnAction.setLayout(pnActionLayout);
@@ -214,7 +305,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                     .addGroup(pnItemInforLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(8, 8, 8)
-                        .addComponent(jTextField1))
+                        .addComponent(txtCode))
                     .addGroup(pnItemInforLayout.createSequentialGroup()
                         .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblItemName)
@@ -233,7 +324,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                 .addGap(10, 10, 10)
                 .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCode, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
                 .addGroup(pnItemInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblItemName)
@@ -279,8 +370,119 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        new frmOrder(_details, _account).setVisible(true);
+        if (_details == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn!!");
+        } else {
+            new frmOrder(_details, _account).setVisible(true);
+        }
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void tblOrderListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrderListMouseClicked
+        // TODO add your handling code here:
+        int index = tblOrderList.getSelectedRow();
+        if (index > -1) {
+            modelTableOrderDetail.setRowCount(0);
+            Order order = _orders.get(index);
+            _details = order.getDetails();
+            _details.forEach(detail -> {
+                modelTableOrderDetail.addRow(new Object[]{detail.getOrder().getId(), detail.getProduct().getName(), detail.getProduct().getType().getUnit(), detail.getQuantity(), detail.getTotalOrderDetail()});
+            });
+        }
+    }//GEN-LAST:event_tblOrderListMouseClicked
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        List<Order> _orders = getAllOrderDetailFromServer();
+        String _text = txtSearch.getText().trim();
+        if (!_text.equals("")) {
+            for (int i = 0; i < _orders.size(); ++i) {
+                Order order = _orders.get(i);
+                if (Integer.parseInt(_text) == order.getId()) {
+                    modelTableOrder.setRowCount(0);
+                    modelTableOrder.addRow(new Object[]{i + 1, _orders.get(i).getDate(), _orders.get(i).getTotal()});
+                    return;
+                }
+            }
+        } else {
+            loadDataToOrderTable();
+        }
+        clearInput();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+        // TODO add your handling code here:
+        int index = tblOrderDetail.getSelectedRow();
+        if (index > -1) {
+            if (txtItemNumber.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng!");
+            } else {
+                int n = JOptionPane.showConfirmDialog(
+                        null,
+                        "Bạn có chắc muốn sửa?",
+                        "Hỏi đáp",
+                        JOptionPane.YES_NO_OPTION);
+                if (n == JOptionPane.YES_OPTION) {
+                    OrderDetail detail = _details.get(index);
+                    int _newQuantity = Integer.parseInt(txtItemNumber.getText());
+                    detail.setQuantity(_newQuantity);
+                    try {
+                        boolean _check = detailService.addOrUpdateOrderDetail(detail);
+                        if (_check) {
+                            JOptionPane.showMessageDialog(null, "Chỉnh sửa thành công!");
+                            loadDataToOrderDetailList();
+                            loadDataToOrderTable();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Chỉnh sửa thất bại!");
+                        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(frmManageOrder.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        clearInput();
+    }//GEN-LAST:event_btnChangeActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        int index = tblOrderDetail.getSelectedRow();
+        if (index > -1) {
+            OrderDetail detail = _details.get(index);
+            try {
+                int n = JOptionPane.showConfirmDialog(
+                        null,
+                        "Bạn có chắc muốn xóa?",
+                        "Hỏi đáp",
+                        JOptionPane.YES_NO_OPTION);
+                if (n == JOptionPane.YES_OPTION) {
+                    boolean _check = detailService.deleteOrderDetail(detail);
+                    if (_check) {
+                        JOptionPane.showMessageDialog(null, "Xóa thành công!");
+                        loadDataToOrderDetailList();
+                        loadDataToOrderTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Xóa thất bại!");
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(frmManageOrder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        clearInput();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tblOrderDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrderDetailMouseClicked
+        // TODO add your handling code here:
+        int index = tblOrderDetail.getSelectedRow();
+        if (index > -1) {
+            OrderDetail detail = _details.get(index);
+            txtCode.setText(String.valueOf(detail.getProduct().getId()));
+            txtItemName.setText(detail.getProduct().getName());
+            txtItemNumber.setText(String.valueOf(detail.getQuantity()));
+            txtCode.setEnabled(false);
+            txtItemName.setEnabled(false);
+        }
+    }//GEN-LAST:event_tblOrderDetailMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -291,7 +493,6 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblItemName;
     private javax.swing.JLabel lblItemNumber;
     private javax.swing.JLabel lblSearch;
@@ -301,6 +502,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
     private javax.swing.JPanel pnOrderList;
     private javax.swing.JTable tblOrderDetail;
     private javax.swing.JTable tblOrderList;
+    private javax.swing.JTextField txtCode;
     private javax.swing.JTextField txtItemName;
     private javax.swing.JTextField txtItemNumber;
     private javax.swing.JTextField txtSearch;

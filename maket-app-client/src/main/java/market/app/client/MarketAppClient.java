@@ -31,27 +31,31 @@ public class MarketAppClient {
         /* Set the FlatLaf look and feel */
         Config.setLookAndFeelUI();
         try {
-//          Test thì chạy cái này
-//          position true -> manager
-//            Staff staff = new Staff("NV001", "Bảo Trấn", "12354688", "0353810415", "278 Quang Trung", true, false);
+          //Test thì chạy cái này
+          //position true -> manager
+//            Staff staff = new Staff("US002", "Lê Tuấn", "12354684", "0353810411", "278 Quang Trung", true, false);
 //            IStaffService staffService = ConnectServer.getInstance().getStaffService();
 //            staffService.addOrUpdateStaff(staff);
 //////
 //            Account account = new Account(staff, "123456");
 //            IAccountService accountService = ConnectServer.getInstance().getAccountService();
 //            accountService.addAccount(account);
-//            ProductType productType = new ProductType("Nước giải khát", "chai");
-//            IProductTypeService productTypeService = ConnectServer.getInstance().getProductTypeService();
-//            ProductType productType = productTypeService.findProductTypeById(1);
-//            Product product = new Product("Sting", 100, 10000, productType);
+//            
+//            ProductType productType = new ProductType("Snack", "Bịch");
+////            IProductTypeService productTypeService = ConnectServer.getInstance().getProductTypeService();
+////            ProductType productType = productTypeService.findProductTypeById(1);
+//            Product product = new Product("Oxi Cay", 100, 5000, productType);
 //            IProductService productService = ConnectServer.getInstance().getProductService();
 //            productService.addOrUpdateProduct(product);
+            
 //            Order order = new Order(new Date(), staff);
 //            IOrderService orderService = ConnectServer.getInstance().getOrderService();
-//            orderService.addOrder(order);
-
-//            Order _order = orderService.findOrderById(2);
+//            orderService.addOrUpdateOrder(order);
+//
+//            Order _order = orderService.findOrderById(1);
 //            System.err.println(_order.getTotal());
+//            double total = Config.calTotalMoneyByListOrderDetail(_order.getDetails());
+//            System.err.println(total);
 //            Product _product = productService.findProductById(1);
 //            System.err.println(_product);
 //            IOrderDetailService orderDetailService = ConnectServer.getInstance().getOrderDetailService();

@@ -101,6 +101,22 @@ public class ProductDAO extends UnicastRemoteObject implements IProductService {
 
 	}
 
+	@Override
+	public Product findProductByName(String name) throws Exception {
+		Session session = factory.openSession();
+		try {
+			Product product = session
+					.createNativeQuery("select * from products where selling != 0 and name like :name", Product.class)
+					.setParameter("name", name).getSingleResultOrNull();
+			System.out.println(product);
+			return product;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	
 
 }

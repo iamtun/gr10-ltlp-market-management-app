@@ -222,7 +222,7 @@ public class frmMenuManager extends javax.swing.JFrame {
 
     private void btnManageOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageOrderActionPerformed
         // TODO add your handling code here:
-        frmManageOrder order = new frmManageOrder();
+        frmManageOrder order = new frmManageOrder(_account);
         Config.openComponent(order, pnContent);
         Config.handleButtonClick(buttons, btnManageOrder);
         

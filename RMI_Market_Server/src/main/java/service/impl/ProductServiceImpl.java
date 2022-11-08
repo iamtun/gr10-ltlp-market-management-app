@@ -42,5 +42,10 @@ public class ProductServiceImpl extends UnicastRemoteObject implements IProductS
 		// TODO Auto-generated method stub
 		return dao.getAllProductByProductTypeId(product_type_id);
 	}
+	@Override
+	public Product findProductByName(String name) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.findProductByName(name);
+	}
 
 }

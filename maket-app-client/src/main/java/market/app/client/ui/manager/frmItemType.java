@@ -24,7 +24,7 @@ public class frmItemType extends javax.swing.JFrame {
      */
     private IProductTypeService productTypeService;
     private final DefaultTableModel modelTableProductTypeList = new DefaultTableModel();
-    private final String[] colums = new String[]{"Số thứ tự", "Tên loại mặt hàng", "Đơn vị"};
+    private final String[] colums = new String[]{"STT", "Tên loại mặt hàng", "Đơn vị"};
 
     public frmItemType() {
         initComponents();
