@@ -145,6 +145,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         lblItemPrice.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemPrice.setText("Giá mặt hàng: ");
 
+        cboProductType.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboProductTypeItemStateChanged(evt);
+            }
+        });
+
         lblItemNumber.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemNumber.setText("Số lượng:");
 
@@ -518,6 +524,23 @@ public class frmManageItem extends javax.swing.JInternalFrame {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, e);
         }
     }//GEN-LAST:event_btnChangeActionPerformed
+
+    // selected change items
+    private void cboProductTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboProductTypeItemStateChanged
+        try {
+            String productType = cboProductType.getSelectedItem().toString();
+            
+            for(ProductType prodType : productTypeService.getAllProductType()) {
+                if(productType.equals(prodType.getName())) {
+                    for(ProductType pr : productTypeService.findListProductTypeByName(productService.findProductById(prodType.getId()).getName())) {
+                        cboItemUnit.addItem(pr.getName());
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cboProductTypeItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;

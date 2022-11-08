@@ -372,21 +372,21 @@ public class frmItemType extends javax.swing.JFrame {
     // Cliked list view
     private void tblItemTypeListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemTypeListMouseClicked
         int selected = tblItemTypeList.getSelectedRow();
-
-        if (selected >= 0) {
-            int index = (int) tblItemTypeList.getValueAt(selected, 0);
-            ProductType productType = null;
-
-            try {
-                productType = productTypeService.findProductTypeById(index);
+        
+        try {
+            if (selected >= 0) {
+                int index = (int) tblItemTypeList.getValueAt(selected, 0);
+                System.out.println("market.app.client.ui.manager.frmItemType.tblItemTypeListMouseClicked()" + index);
+                ProductType productType = productTypeService.findProductTypeById(index);
+                System.out.println("market.app.client.ui.manager.frmItemType.tblItemTypeListMouseClicked()" + productType);
 
                 if (productType != null) {
                     txtProductType.setText(productType.getName());
                     txtUnit.setText(productType.getUnit());
                 }
-            } catch (Exception ex) {
-                Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (Exception ex) {
+            Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_tblItemTypeListMouseClicked
 
