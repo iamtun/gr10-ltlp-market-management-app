@@ -26,7 +26,7 @@ public class ProductTypeDAO extends UnicastRemoteObject implements IProductTypeS
 		Session session = factory.openSession();
 		try {
 			ProductType productType = session
-					.createNativeQuery("SELECT * FROM products where selling != 0 and product_type_id = :id",
+					.createNativeQuery("SELECT * FROM product_types where selling != 0 and product_type_id = :id",
 							ProductType.class)
 					.setParameter("id", id).getSingleResult();
 			return productType;
@@ -41,7 +41,7 @@ public class ProductTypeDAO extends UnicastRemoteObject implements IProductTypeS
 		Session session = factory.openSession();
 		try {
 			List<ProductType> listProductType = session
-					.createNativeQuery("SELECT * FROM products where selling != 0 and type_name like :name",
+					.createNativeQuery("SELECT * FROM product_types where selling != 0 and type_name like :name",
 							ProductType.class)
 					.setParameter("name", name)
 					.list();

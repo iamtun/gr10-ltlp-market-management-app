@@ -54,7 +54,11 @@ public class InitDatabase {
 			IProductService ioProductService = new ProductServiceImpl();
 			IProductTypeService ioProductTypeService = new ProductTypeServiceImpl();
 			
-			System.out.println(ioProductService.findProductByName("Cafe"));
+			System.out.println(ioOrderService.getAllOrderDateNow("2022-11-09"));
+//			System.out.println(ioOrderService.filter("2022-11-02", "2022-11-08"));
+//			System.out.println(ioProductService.findProductByName("Bánh bao"));
+//			System.out.println(ioProductTypeService.findListProductTypeByName("Nước giải khát"));
+			//System.out.println(ioProductService.findProductByName("Cafe"));
 //			List<Product> res = ioProductService.getAllProductByProductTypeId(1);
 //			System.out.println(res);
 //			Staff staff = ioStaffService.findStaffById("US0001");
