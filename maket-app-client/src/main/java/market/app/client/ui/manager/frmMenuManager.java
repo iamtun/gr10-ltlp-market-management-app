@@ -19,22 +19,24 @@ import market.app.client.ui.frmLogin;
  * @author Le Tuan
  */
 public class frmMenuManager extends javax.swing.JFrame {
+
     private Account _account;
     /**
      * Creates new form frmHomeManager
      */
     //buttons support handle click menu item
     private JButton[] buttons = null;
-    
+
     public frmMenuManager(Account account) throws Exception {
         initComponents();
         Config.startPanel(new frmManageItem(), pnContent, btnManageItem);
         this.buttons = new JButton[]{btnLogout, btnManageItem, btnManageOrder, btnManageStaff, btnViewInfor};
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        
+
         //login send;
         _account = account;
         lblNameAndID.setText(_account.getStaff().getId() + " - " + account.getStaff().getName());
+        Config.timeChange(lblTime);
     }
 
     /**
@@ -46,7 +48,6 @@ public class frmMenuManager extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jInternalFrame1 = new javax.swing.JInternalFrame();
         pnMenu = new javax.swing.JPanel();
         btnManageItem = new javax.swing.JButton();
         btnManageStaff = new javax.swing.JButton();
@@ -56,21 +57,9 @@ public class frmMenuManager extends javax.swing.JFrame {
         lblNameAndID = new javax.swing.JLabel();
         btnViewInfor = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
+        lblTime = new javax.swing.JLabel();
         pnContent = new javax.swing.JPanel();
         pnMenuSale = new javax.swing.JPanel();
-
-        jInternalFrame1.setVisible(true);
-
-        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
-        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
-        jInternalFrame1Layout.setHorizontalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jInternalFrame1Layout.setVerticalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -130,43 +119,51 @@ public class frmMenuManager extends javax.swing.JFrame {
             }
         });
 
+        lblTime.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTime.setForeground(new java.awt.Color(0, 204, 102));
+        lblTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTime.setText("jLabel1");
+
         javax.swing.GroupLayout pnMenuLayout = new javax.swing.GroupLayout(pnMenu);
         pnMenu.setLayout(pnMenuLayout);
         pnMenuLayout.setHorizontalGroup(
             pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMenuLayout.createSequentialGroup()
+            .addGroup(pnMenuLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnViewInfor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblNameAndID, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnManageOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnManageStaff, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                    .addComponent(btnManageItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblLogo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblPosition, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnLogout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewInfor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblNameAndID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnManageOrder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnManageStaff, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .addComponent(btnManageItem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnMenuLayout.setVerticalGroup(
             pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnMenuLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
                 .addComponent(lblLogo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblNameAndID)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTime)
+                .addGap(11, 11, 11)
                 .addComponent(btnManageItem, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnManageStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnManageOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnViewInfor, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnMenu, java.awt.BorderLayout.WEST);
@@ -217,7 +214,7 @@ public class frmMenuManager extends javax.swing.JFrame {
         // TODO add your handling code here:
         Config.startPanel(new frmManageStaff(), pnContent, btnManageItem);
         Config.handleButtonClick(buttons, btnManageStaff);
-        
+
     }//GEN-LAST:event_btnManageStaffActionPerformed
 
     private void btnManageOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageOrderActionPerformed
@@ -225,7 +222,7 @@ public class frmMenuManager extends javax.swing.JFrame {
         frmManageOrder order = new frmManageOrder(_account);
         Config.openComponent(order, pnContent);
         Config.handleButtonClick(buttons, btnManageOrder);
-        
+
     }//GEN-LAST:event_btnManageOrderActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -243,8 +240,8 @@ public class frmMenuManager extends javax.swing.JFrame {
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
         Config.handleButtonClick(buttons, btnLogout);
-        int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn đăng xuất?", "Thông báo",  JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(choose == JOptionPane.YES_OPTION){
+        int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn đăng xuất?", "Thông báo", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (choose == JOptionPane.YES_OPTION) {
             new frmLogin().setVisible(true);
             this.dispose();
         }
@@ -263,18 +260,16 @@ public class frmMenuManager extends javax.swing.JFrame {
 //        });
 //    }
 
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnManageItem;
     private javax.swing.JButton btnManageOrder;
     private javax.swing.JButton btnManageStaff;
     private javax.swing.JButton btnViewInfor;
-    private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblNameAndID;
     private javax.swing.JLabel lblPosition;
+    private javax.swing.JLabel lblTime;
     private javax.swing.JPanel pnContent;
     private javax.swing.JPanel pnMenu;
     private javax.swing.JPanel pnMenuSale;

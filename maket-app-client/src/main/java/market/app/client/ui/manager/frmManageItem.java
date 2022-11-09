@@ -56,8 +56,9 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                 Object[] obj = new Object[]{
                     prod.getId(),
                     prod.getName(),
-//                                        productTypeService.findListProductTypeByName(prod.getName()).get().getName(),
-//                                        productTypeService.findListProductTypeByName(prod.getName()).get().getUnit(),
+
+//                    productTypeService.findListProductTypeByName(prod.getName()).get().getName(),
+//                    productTypeService.findListProductTypeByName(prod.getName()).get().getUnit(),
 //                    productService.findProductById(prod.getId()).getType().getName(),
 //                    productService.findProductById(prod.getId()).getType().getUnit(),
 //                    prod.getType().getName(),

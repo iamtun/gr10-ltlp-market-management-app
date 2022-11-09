@@ -37,4 +37,18 @@ public class OrderServiecImpl extends UnicastRemoteObject implements IOrderServi
 		return dao.getAllOrder();
 	}
 
+
+	@Override
+	public List<Order> filter(String dateStart, String dateEnd) throws Exception{
+		// TODO Auto-generated method stub
+		return dao.filter(dateStart, dateEnd);
+	}
+
+
+	@Override
+	public List<Order> getAllOrderDateNow(String dateNow) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.getAllOrderDateNow(dateNow);
+	}
+
 }
