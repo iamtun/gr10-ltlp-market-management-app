@@ -34,7 +34,13 @@ public class frmSale extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmSale
      */
-    private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
+    private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            //all cells false
+            return false;
+        }
+    };
     private final String[] colums = new String[]{"STT", "Tên mặt hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
 
     public frmSale(Account account) {
@@ -75,10 +81,21 @@ public class frmSale extends javax.swing.JInternalFrame {
     }
 
     //handle input number
+    //check number product exists
     private void handleInputNumber(JTextField field) {
         try {
-            int id = Integer.parseInt(field.getText());
-            btnConfirm.setEnabled(true);
+            int number = Integer.parseInt(field.getText());
+            Product product = productService.findProductById(Integer.parseInt(txtItemID.getText()));
+            if (number > 0) {
+                if (number <= product.getNumber()) {
+                    btnConfirm.setEnabled(true);
+                } else {
+                    btnConfirm.setEnabled(false);
+                    lblNotifiNumber.setText("vượt quá số lượng sản phẩm hiện có " + product.getNumber());
+                }
+            } else {
+                lblNotifiNumber.setText("phải là số lớn hơn 0!");
+            }
         } catch (Exception e) {
             lblNotifiNumber.setText("phải là số!");
         }
@@ -109,11 +126,11 @@ public class frmSale extends javax.swing.JInternalFrame {
                         txtItemName.setText("");
                         btnConfirm.setEnabled(false);
                     }
-                }else {
+                } else {
                     if (!field.getText().trim().equals("")) {
                         lblNotifiNumber.setText("");
                         handleInputNumber(field);
-                    }else {
+                    } else {
                         lblNotifiNumber.setText("");
                         btnConfirm.setEnabled(false);
                     }
@@ -382,6 +399,7 @@ public class frmSale extends javax.swing.JInternalFrame {
                 lblTotalMoney.setText(Config.formatMoney(Config.calTotalMoneyByListOrderDetail(details)));
                 clearInput();
             } catch (Exception ex) {
+                ex.printStackTrace();
                 System.err.println("Lỗi tìm kiếm sản phẩm khi xác nhận thêm sản phẩm vào chi tiết hóa đơn!");
             }
         } catch (Exception e) {

@@ -8,9 +8,11 @@ import entity.Account;
 import market.app.client.ui.frmViewInfor;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import market.app.client.Config;
 import market.app.client.ui.frmLogin;
@@ -20,6 +22,7 @@ import market.app.client.ui.frmLogin;
  * @author Le Tuan
  */
 public class frmMenuStaff extends javax.swing.JFrame {
+
     private Account _account;
     /**
      * Creates new form frmHomeStaff
@@ -30,13 +33,16 @@ public class frmMenuStaff extends javax.swing.JFrame {
         initComponents();
         this.buttons = new JButton[]{btnLogout, btnSale, btnViewInfor};
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        
+
         //login send
         _account = account;
-         Config.startPanel(new frmSale(_account), pnContent, btnSale);
-        
+        Config.startPanel(new frmSale(_account), pnContent, btnSale);
+
         lblNameAndID.setText(_account.getStaff().getId() + " - " + account.getStaff().getName());
+        Config.timeChange(lblTime);
     }
+
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -55,6 +61,7 @@ public class frmMenuStaff extends javax.swing.JFrame {
         lblLogo = new javax.swing.JLabel();
         lblPosition = new javax.swing.JLabel();
         lblNameAndID = new javax.swing.JLabel();
+        lblTime = new javax.swing.JLabel();
         pnContent = new javax.swing.JPanel();
 
         jInternalFrame1.setVisible(true);
@@ -113,6 +120,11 @@ public class frmMenuStaff extends javax.swing.JFrame {
         lblNameAndID.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblNameAndID.setText("BH001 - Lê Tuấn");
 
+        lblTime.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTime.setForeground(new java.awt.Color(0, 204, 102));
+        lblTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTime.setText("jLabel1");
+
         javax.swing.GroupLayout pnMenuLayout = new javax.swing.GroupLayout(pnMenu);
         pnMenu.setLayout(pnMenuLayout);
         pnMenuLayout.setHorizontalGroup(
@@ -125,7 +137,8 @@ public class frmMenuStaff extends javax.swing.JFrame {
                     .addComponent(btnViewInfor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                     .addComponent(btnSale, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnMenuLayout.setVerticalGroup(
@@ -137,13 +150,15 @@ public class frmMenuStaff extends javax.swing.JFrame {
                 .addComponent(lblPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblNameAndID)
-                .addGap(69, 69, 69)
+                .addGap(18, 18, 18)
+                .addComponent(lblTime)
+                .addGap(35, 35, 35)
                 .addComponent(btnSale, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnViewInfor, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(125, Short.MAX_VALUE))
+                .addContainerGap(116, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnMenu, java.awt.BorderLayout.WEST);
@@ -213,6 +228,7 @@ public class frmMenuStaff extends javax.swing.JFrame {
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblNameAndID;
     private javax.swing.JLabel lblPosition;
+    private javax.swing.JLabel lblTime;
     private javax.swing.JPanel pnContent;
     private javax.swing.JPanel pnMenu;
     // End of variables declaration//GEN-END:variables

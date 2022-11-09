@@ -34,6 +34,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -142,6 +143,35 @@ public class Config {
         DateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         String dateFormated = format.format(date);
         return dateFormated;
+    }
+
+    public static Date convertStringToDate(String date) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            return formatter.parse(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String convertDateToStringSql(Date date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String dateFormated = format.format(date);
+        return dateFormated;
+    }
+    
+    //oclock
+    public static void timeChange(JLabel label) {
+        Runnable runnable = () -> {
+            while (true) {
+                Date date = new Date();
+                String dateTime = Config.converDateToString(date);
+                label.setText(dateTime);
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 
     //format money

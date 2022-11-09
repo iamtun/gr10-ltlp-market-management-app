@@ -11,4 +11,8 @@ public interface IOrderService extends Remote {
 	public Order findOrderById(int id) throws Exception;
 
 	public int addOrUpdateOrder(Order order) throws Exception;
+
+	public List<Order> filter(String dateStart, String dateEnd) throws Exception;
+	
+	public List<Order> getAllOrderDateNow(String dateNow) throws Exception;
 }
