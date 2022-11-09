@@ -9,7 +9,9 @@ import entity.ProductType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import market.app.client.Config;
 import market.app.client.connect.ConnectServer;
 import service.IProductService;
@@ -46,14 +48,22 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     // load data to list view
     private void loadDataToListView() {
+//        ProductType proType = productTypeService.findProductTypeById(WIDTH)
+
         modelTableProductList.setRowCount(0);
         try {
             for (Product prod : productService.getAllProduct()) {
                 Object[] obj = new Object[]{
                     prod.getId(),
                     prod.getName(),
+
+//                    productTypeService.findListProductTypeByName(prod.getName()).get().getName(),
+//                    productTypeService.findListProductTypeByName(prod.getName()).get().getUnit(),
 //                    productService.findProductById(prod.getId()).getType().getName(),
 //                    productService.findProductById(prod.getId()).getType().getUnit(),
+//                    prod.getType().getName(),
+//                    productTypeService.findProductTypeById(productService.findProductById(prod.getId()).getId()).getName(),
+//                    prod.getType().getUnit(),
                     prod.getNumber(),
                     prod.getPrice()
                 };
@@ -71,7 +81,6 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         try {
             for (ProductType prod : productTypeService.getAllProductType()) {
                 cboProductType.addItem(prod.getName());
-                cboItemUnit.addItem(prod.getUnit());
             }
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
@@ -100,6 +109,13 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         }
 
         return false;
+    }
+    
+    // handle search
+    private void searchFilter(String val) {
+        TableRowSorter<DefaultTableModel> row = new TableRowSorter<DefaultTableModel>((DefaultTableModel)tblProductList.getModel());
+        tblProductList.setRowSorter(row);
+        row.setRowFilter(RowFilter.regexFilter("(?i)" + val));
     }
 
     /**
@@ -144,6 +160,17 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
         lblItemPrice.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemPrice.setText("Giá mặt hàng: ");
+
+        cboProductType.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboProductTypeItemStateChanged(evt);
+            }
+        });
+        cboProductType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboProductTypeActionPerformed(evt);
+            }
+        });
 
         lblItemNumber.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemNumber.setText("Số lượng:");
@@ -278,6 +305,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblProductList);
 
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
+
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblSearch.setText("Tìm kiếm: ");
 
@@ -384,18 +417,18 @@ public class frmManageItem extends javax.swing.JInternalFrame {
             }
 
             // add product
-            for (ProductType proType : productTypeService.getAllProductType()) {
-                if (productTypeName.equals(proType.getName()) && productUnit.equals(proType.getUnit())) {
-                    ProductType productType = productTypeService.findProductTypeById(proType.getId());
+            //for (ProductType proType : productTypeService.getAllProductType()) {
+                //if (productTypeName.equals(proType.getName()) && productUnit.equals(proType.getUnit())) {
+                //ProductType productType = productTypeService.findProductTypeById(proType.getId());
 
-                    Product product = new Product(productName, number, price, productType);
+                Product product = new Product(productName, number, price, new ProductType(productTypeName, productUnit));
 
-                    productService.addOrUpdateProduct(product);
-                    JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
-                    clearInputs();
-                    loadDataToListView();
-                }
-            }
+                productService.addOrUpdateProduct(product);
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
+                clearInputs();
+                loadDataToListView();
+            //}
+            //}
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -518,6 +551,36 @@ public class frmManageItem extends javax.swing.JInternalFrame {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, e);
         }
     }//GEN-LAST:event_btnChangeActionPerformed
+
+    // selected change items
+    private void cboProductTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboProductTypeItemStateChanged
+
+    }//GEN-LAST:event_cboProductTypeItemStateChanged
+
+    private void cboProductTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboProductTypeActionPerformed
+        try {
+            String productType = cboProductType.getSelectedItem().toString();
+            System.out.println("market.app.client.ui.manager.frmManageItem.cboProductTypeActionPerformed()" + productType);
+            //ProductType prodType = productTypeService.findProductTypeById(prodType.getId());;
+
+            for (ProductType prodType : productTypeService.getAllProductType()) {
+                if (productType.equals(prodType.getName())) {
+                    cboItemUnit.removeAllItems();
+                    for (ProductType pt : productTypeService.findListProductTypeByName(productType)) {
+                        cboItemUnit.addItem(pt.getUnit());
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cboProductTypeActionPerformed
+
+    // search filter
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        String searchVal = txtSearch.getText();
+        searchFilter(searchVal);
+    }//GEN-LAST:event_txtSearchKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
