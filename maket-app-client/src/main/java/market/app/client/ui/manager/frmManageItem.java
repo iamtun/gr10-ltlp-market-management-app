@@ -6,6 +6,8 @@ package market.app.client.ui.manager;
 
 import entity.Product;
 import entity.ProductType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -44,26 +46,37 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         // load data
         loadDataToCombobox();
         loadDataToListView();
+        //getProducts();
+    }
+
+    // fix server
+    private List<Product> getProducts() {
+        List<Product> list = new ArrayList<>();
+        try {
+            for (Product pt : productService.getAllProduct()) {
+                Product prod = productService.findProductById(pt.getId());
+                list.add(prod);
+            }
+
+            return list;
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
     }
 
     // load data to list view
     private void loadDataToListView() {
-//        ProductType proType = productTypeService.findProductTypeById(WIDTH)
-
         modelTableProductList.setRowCount(0);
         try {
-            for (Product prod : productService.getAllProduct()) {
+            for (Product prod : getProducts()) {
+                System.out.println("market.app.client.ui.manager.frmManageItem.loadDataToListView()"+prod);
                 Object[] obj = new Object[]{
                     prod.getId(),
                     prod.getName(),
-
-//                    productTypeService.findListProductTypeByName(prod.getName()).get().getName(),
-//                    productTypeService.findListProductTypeByName(prod.getName()).get().getUnit(),
-//                    productService.findProductById(prod.getId()).getType().getName(),
-//                    productService.findProductById(prod.getId()).getType().getUnit(),
-//                    prod.getType().getName(),
-//                    productTypeService.findProductTypeById(productService.findProductById(prod.getId()).getId()).getName(),
-//                    prod.getType().getUnit(),
+                    prod.getType().getName(),
+                    prod.getType().getUnit(),
                     prod.getNumber(),
                     prod.getPrice()
                 };
@@ -110,10 +123,10 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
         return false;
     }
-    
+
     // handle search
     private void searchFilter(String val) {
-        TableRowSorter<DefaultTableModel> row = new TableRowSorter<DefaultTableModel>((DefaultTableModel)tblProductList.getModel());
+        TableRowSorter<DefaultTableModel> row = new TableRowSorter<DefaultTableModel>((DefaultTableModel) tblProductList.getModel());
         tblProductList.setRowSorter(row);
         row.setRowFilter(RowFilter.regexFilter("(?i)" + val));
     }
@@ -147,7 +160,6 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         tblProductList = new javax.swing.JTable();
         txtSearch = new javax.swing.JTextField();
         lblSearch = new javax.swing.JLabel();
-        btnSearch = new javax.swing.JButton();
         btnOpenFrmItemType = new javax.swing.JButton();
 
         pnItemInfor.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Thông tin mặt hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
@@ -314,10 +326,6 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblSearch.setText("Tìm kiếm: ");
 
-        btnSearch.setBackground(new java.awt.Color(69, 123, 157));
-        btnSearch.setForeground(new java.awt.Color(255, 255, 255));
-        btnSearch.setText("Tìm");
-
         javax.swing.GroupLayout pnItemListLayout = new javax.swing.GroupLayout(pnItemList);
         pnItemList.setLayout(pnItemListLayout);
         pnItemListLayout.setHorizontalGroup(
@@ -329,20 +337,16 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                     .addGroup(pnItemListLayout.createSequentialGroup()
                         .addComponent(lblSearch)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSearch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtSearch)))
                 .addContainerGap())
         );
         pnItemListLayout.setVerticalGroup(
             pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnItemListLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnItemListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(107, 107, 107))
@@ -417,18 +421,18 @@ public class frmManageItem extends javax.swing.JInternalFrame {
             }
 
             // add product
-            //for (ProductType proType : productTypeService.getAllProductType()) {
-                //if (productTypeName.equals(proType.getName()) && productUnit.equals(proType.getUnit())) {
-                //ProductType productType = productTypeService.findProductTypeById(proType.getId());
+            for (ProductType proType : productTypeService.getAllProductType()) {
+                if (productTypeName.equals(proType.getName()) && productUnit.equals(proType.getUnit())) {
+                    ProductType productType = productTypeService.findProductTypeById(proType.getId());
 
-                Product product = new Product(productName, number, price, new ProductType(productTypeName, productUnit));
+                    Product product = new Product(productName, number, price, productType);
 
-                productService.addOrUpdateProduct(product);
-                JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
-                clearInputs();
-                loadDataToListView();
-            //}
-            //}
+                    productService.addOrUpdateProduct(product);
+                    JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
+                    clearInputs();
+                    loadDataToListView();
+                }
+            }
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -587,7 +591,6 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnChange;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnOpenFrmItemType;
-    private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cboItemUnit;
     private javax.swing.JComboBox<String> cboProductType;
     private javax.swing.JScrollPane jScrollPane1;

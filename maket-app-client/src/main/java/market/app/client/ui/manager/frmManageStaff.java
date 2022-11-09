@@ -167,7 +167,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         tblStaffList = new javax.swing.JTable();
         txtSearch = new javax.swing.JTextField();
         lblSearch = new javax.swing.JLabel();
-        btnSearch = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -329,10 +328,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblSearch.setText("Tìm kiếm: ");
 
-        btnSearch.setBackground(new java.awt.Color(69, 123, 157));
-        btnSearch.setForeground(new java.awt.Color(255, 255, 255));
-        btnSearch.setText("Tìm");
-
         javax.swing.GroupLayout pnStaffListLayout = new javax.swing.GroupLayout(pnStaffList);
         pnStaffList.setLayout(pnStaffListLayout);
         pnStaffListLayout.setHorizontalGroup(
@@ -344,20 +339,16 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                     .addGroup(pnStaffListLayout.createSequentialGroup()
                         .addComponent(lblSearch)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSearch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtSearch)))
                 .addContainerGap())
         );
         pnStaffListLayout.setVerticalGroup(
             pnStaffListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStaffListLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnStaffListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(pnStaffListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnStaffListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63))
@@ -577,7 +568,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnChange;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cboGender;
     private javax.swing.JComboBox<String> cboPosition;
     private javax.swing.JComboBox<String> cboStatus;
