@@ -99,6 +99,11 @@ public class frmItemType extends javax.swing.JFrame {
         btnSearch.setBackground(new java.awt.Color(69, 123, 157));
         btnSearch.setForeground(new java.awt.Color(255, 255, 255));
         btnSearch.setText("Tìm");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
         btnSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 btnSearchKeyReleased(evt);
@@ -222,18 +227,18 @@ public class frmItemType extends javax.swing.JFrame {
 
     // Load data to list
     private void loadDataToListView() {
-        try {
-            modelTableProductTypeList.setRowCount(0);
+        modelTableProductTypeList.setRowCount(0);
 
+        try {
             for (ProductType prod : productTypeService.getAllProductType()) {
                 Object[] obj = new Object[]{prod.getId(), prod.getName(), prod.getUnit()};
                 modelTableProductTypeList.addRow(obj);
             }
-
-            modelTableProductTypeList.fireTableDataChanged();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        modelTableProductTypeList.fireTableDataChanged();
     }
 
     // clear input
@@ -372,27 +377,39 @@ public class frmItemType extends javax.swing.JFrame {
     // Cliked list view
     private void tblItemTypeListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemTypeListMouseClicked
         int selected = tblItemTypeList.getSelectedRow();
-        
-        try {
-            if (selected >= 0) {
-                int index = (int) tblItemTypeList.getValueAt(selected, 0);
-                System.out.println("market.app.client.ui.manager.frmItemType.tblItemTypeListMouseClicked()" + index);
-                ProductType productType = productTypeService.findProductTypeById(index);
-                System.out.println("market.app.client.ui.manager.frmItemType.tblItemTypeListMouseClicked()" + productType);
 
-                if (productType != null) {
-                    txtProductType.setText(productType.getName());
-                    txtUnit.setText(productType.getUnit());
-                }
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        txtProductType.setText(tblItemTypeList.getValueAt(selected, 1).toString());
+        txtUnit.setText(tblItemTypeList.getValueAt(selected, 2).toString());
     }//GEN-LAST:event_tblItemTypeListMouseClicked
 
     private void btnSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnSearchKeyReleased
 
     }//GEN-LAST:event_btnSearchKeyReleased
+
+    // button search
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        String searchVal = txtProductType.getText();
+
+        if(searchVal.equals("")) {
+            JOptionPane.showMessageDialog(this, "Bạn cần phải tên loại mặt hàng!");
+            return;
+        }
+        
+        try {
+            for (ProductType pt : productTypeService.getAllProductType()) {
+                if (searchVal.equalsIgnoreCase(pt.getName())) {
+                    modelTableProductTypeList.setRowCount(0);
+                    modelTableProductTypeList.addRow(new String[]{
+                        pt.getId() + "",
+                        pt.getName(),
+                        pt.getUnit()
+                    });
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     /**
      * @param args the command line arguments

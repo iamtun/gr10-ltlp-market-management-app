@@ -8,7 +8,9 @@ import entity.Staff;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import market.app.client.Config;
 import market.app.client.connect.ConnectServer;
 import service.IStaffService;
@@ -123,6 +125,13 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         }
 
         return start;
+    }
+    
+        // handle search
+    private void searchFilter(String val) {
+        TableRowSorter<DefaultTableModel> row = new TableRowSorter<DefaultTableModel>((DefaultTableModel)tblStaffList.getModel());
+        tblStaffList.setRowSorter(row);
+        row.setRowFilter(RowFilter.regexFilter("(?i)" + val));
     }
 
     /**
@@ -311,6 +320,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblStaffList);
 
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
+
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblSearch.setText("Tìm kiếm: ");
 
@@ -443,10 +458,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                     cboGender.setSelectedItem(staff.isGender() == true ? "Nam" : "Nữ");
                     cboPosition.setSelectedItem(staff.isPosition() == true ? "Quản lý" : "Nhân viên");
                     cboStatus.setSelectedItem(staff.isStatus() == true ? "Ðang làm" : "Ðã nghỉ");
-
-                    txtIdentification.setEnabled(false);
-                    txtPhoneNumber.setEnabled(false);
-                    cboStatus.setEnabled(false);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
@@ -483,10 +494,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(this, "Xóa nhân viên thành công.");
                             clearInputs();
                             loadDataToListView();
-                            
-                            txtIdentification.setEnabled(true);
-                            txtPhoneNumber.setEnabled(true);
-                            cboStatus.setEnabled(true);
                         }
                     }
                 }
@@ -547,10 +554,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(this, "Cập nhật thành công nhân viên.");
                             loadDataToListView();
                             clearInputs();
-
-                            txtIdentification.setEnabled(true);
-                            txtPhoneNumber.setEnabled(true);
-                            cboStatus.setEnabled(true);
                         }
                     }
                 } else {
@@ -562,6 +565,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
             Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnChangeActionPerformed
+
+    // search filter
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        String searchVal = txtSearch.getText();
+        searchFilter(searchVal);
+    }//GEN-LAST:event_txtSearchKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
