@@ -46,7 +46,6 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         // load data
         loadDataToCombobox();
         loadDataToListView();
-        //getProducts();
     }
 
     // fix server
@@ -69,11 +68,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // load data to list view
     private void loadDataToListView() {
         modelTableProductList.setRowCount(0);
+        
         try {
+            int i = 1;
             for (Product prod : getProducts()) {
-                System.out.println("market.app.client.ui.manager.frmManageItem.loadDataToListView()"+prod);
                 Object[] obj = new Object[]{
-                    prod.getId(),
+                    i++,
                     prod.getName(),
                     prod.getType().getName(),
                     prod.getType().getUnit(),
@@ -447,14 +447,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // clicked list view
     private void tblProductListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductListMouseClicked
         int selected = tblProductList.getSelectedRow();
-
+        Product product = null;
+        
         if (selected >= 0) {
-            int index = (int) tblProductList.getValueAt(selected, 0);
-            Product product = null;
-
             try {
-                product = productService.findProductById(index);
-
+                product = getProducts().get(selected);
+                
                 if (product != null) {
                     txtProductName.setText(product.getName());
                     cboProductType.setSelectedItem(product.getType().getName());
@@ -484,9 +482,8 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
         try {
             if (selected >= 0) {
-                int index = (int) tblProductList.getValueAt(selected, 0);
+                product = getProducts().get(selected);
                 int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa sản phẩm này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
-                product = productService.findProductById(index);
 
                 for (Product prod : productService.getAllProduct()) {
                     if (product.getId() == prod.getId()) {
@@ -524,8 +521,9 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         Product product = null;
 
         try {
-            int index = (int) tblProductList.getValueAt(selected, 0);
-            product = productService.findProductById(index);
+            product = getProducts().get(selected);
+            //int index = (int) tblProductList.getValueAt(selected, 0);
+            //product = productService.findProductById(index);
 
             if (product != null) {
                 product.setName(productName);

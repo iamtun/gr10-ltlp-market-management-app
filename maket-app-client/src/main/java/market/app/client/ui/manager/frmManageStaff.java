@@ -46,8 +46,8 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private void loadDataToCbo() {
         cboGender.addItem("Nam");
         cboGender.addItem("Nữ");
-        cboPosition.addItem("Quản lý");
         cboPosition.addItem("Nhân viên");
+        cboPosition.addItem("Quản lý");
         cboStatus.addItem("Ðang làm");
         cboStatus.addItem("Ðã nghỉ");
     }
@@ -389,6 +389,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         if (checkInputs()) {
             return;
         }
+        
+        // check status
+        if(cboStatus.getSelectedItem().equals("Ðã nghỉ")) {
+            JOptionPane.showMessageDialog(this, "Không thể thêm nhân viên ở trạng thái đã nghỉ. Vui lòng kiểm tra lại!");
+            return;
+        }
 
         String staffName = txtStaffName.getText();
         String identification = txtIdentification.getText();
@@ -522,6 +528,14 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
             pos = false;
         }
 
+        String status = cboStatus.getSelectedItem().toString();
+        boolean sta = false;
+        if(status.equals("Ðang làm")) {
+            sta = true;
+        } else if(status.equals("Ðã nghỉ")) {
+            sta = false;
+        }
+        
         int selected = tblStaffList.getSelectedRow();
         Staff staff = null;
 
@@ -539,6 +553,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             staff.setAddress(address);
                             staff.setGender(gen);
                             staff.setPosition(pos);
+                            staff.setStatus(sta);
 
                             staffService.addOrUpdateStaff(staff);
                             System.out.println("[staff]: " + staff);
