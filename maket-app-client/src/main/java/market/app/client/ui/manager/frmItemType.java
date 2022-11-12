@@ -5,6 +5,8 @@
 package market.app.client.ui.manager;
 
 import entity.ProductType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,6 +25,7 @@ public class frmItemType extends javax.swing.JFrame {
      * Creates new form frmItemType
      */
     private IProductTypeService productTypeService;
+    
     private final DefaultTableModel modelTableProductTypeList = new DefaultTableModel();
     private final String[] colums = new String[]{"STT", "Tên loại mặt hàng", "Đơn vị"};
 
@@ -230,8 +233,9 @@ public class frmItemType extends javax.swing.JFrame {
         modelTableProductTypeList.setRowCount(0);
 
         try {
+            int i = 1;
             for (ProductType prod : productTypeService.getAllProductType()) {
-                Object[] obj = new Object[]{prod.getId(), prod.getName(), prod.getUnit()};
+                Object[] obj = new Object[]{i++, prod.getName(), prod.getUnit()};
                 modelTableProductTypeList.addRow(obj);
             }
         } catch (Exception e) {
@@ -296,6 +300,23 @@ public class frmItemType extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnAddActionPerformed
 
+    // fix server
+    private List<ProductType> getProductTypes() {
+        List<ProductType> list = new ArrayList<>();
+        try {
+            for (ProductType pt : productTypeService.getAllProductType()) {
+                ProductType productType = productTypeService.findProductTypeById(pt.getId());
+                list.add(productType);
+            }
+
+            return list;
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+    
     // Button update
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
         String prodType = txtProductType.getText();
@@ -310,8 +331,7 @@ public class frmItemType extends javax.swing.JFrame {
 
         try {
             if (selected >= 0) {
-                int index = (int) tblItemTypeList.getValueAt(selected, 0);
-                productType = productTypeService.findProductTypeById(index);
+                productType = getProductTypes().get(selected);
 
                 if (productType != null) {
                     productType.setName(prodType);
@@ -352,9 +372,8 @@ public class frmItemType extends javax.swing.JFrame {
 
         try {
             if (selected >= 0) {
-                int index = (int) tblItemTypeList.getValueAt(selected, 0);
+                productType = getProductTypes().get(selected);
                 int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa loại sản phẩm này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
-                productType = productTypeService.findProductTypeById(index);
 
                 for (ProductType prod : productTypeService.getAllProductType()) {
                     if (productType.getId() == prod.getId()) {
