@@ -33,13 +33,15 @@ public class MarketAppClient {
         try {
           //Test thì chạy cái này
           //position true -> manager
-//            Staff staff = new Staff("US002", "Lê Tuấn", "12354684", "0353810411", "278 Quang Trung", true, false);
-//            IStaffService staffService = ConnectServer.getInstance().getStaffService();
-//            staffService.addOrUpdateStaff(staff);
+            IStaffService staffService = ConnectServer.getInstance().getStaffService();
+            Staff admin = staffService.findStaffById("admin");
+            Staff staff = new Staff("US001", "Lê Tuấn Anh", "12354685", "0353810412", "278 Quang Trung", true, false);
+            staff.setManager(admin);
+            staffService.addOrUpdateStaff(staff);
 //////
-//            Account account = new Account(staff, "123456");
-//            IAccountService accountService = ConnectServer.getInstance().getAccountService();
-//            accountService.addAccount(account);
+            Account account = new Account(staff, "123456");
+            IAccountService accountService = ConnectServer.getInstance().getAccountService();
+            accountService.addAccount(account);
 //            
 //            ProductType productType = new ProductType("Snack", "Bịch");
 ////            IProductTypeService productTypeService = ConnectServer.getInstance().getProductTypeService();
