@@ -187,7 +187,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private String createStaffId() {
         String start = "NV";
         try {
-            int number = staffService.getAllStaff().size();
+            int number = staffService.getAllStaff().size() - 1;
 
             if (number < 9) {
                 start = start + "00" + (number + 1);

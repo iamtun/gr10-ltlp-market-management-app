@@ -38,7 +38,7 @@ public class frmOrder extends javax.swing.JFrame {
             return false;
         }
     };
-    private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
+    private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Đơn giá" ,"Số lượng", "Thành tiền"};
 
     public frmOrder(List<OrderDetail> details, Account account, boolean status) {
         initComponents();

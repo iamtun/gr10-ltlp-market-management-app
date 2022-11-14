@@ -11,6 +11,7 @@ import entity.OrderDetail;
 import entity.Product;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -576,23 +577,22 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
-        List<Order> _orders = getAllOrderNowFromServer();
+        _orders = getAllOrderNowFromServer();
         boolean check = false;
         String _text = txtSearch.getText().trim();
         if (!_text.equals("")) {
-            for (int i = 0; i < _orders.size(); ++i) {
-                Order order = _orders.get(i);
-                if (Integer.parseInt(_text) == order.getId()) {
-                    modelTableOrder.setRowCount(0);
-                    modelTableOrder.addRow(new Object[]{i + 1, _orders.get(i).getDate(), _orders.get(i).getTotal()});
-                    check = true;
-                    return;
-                }
-            }
-            if (check == false) {
-                JOptionPane.showMessageDialog(this, "Hóa đơn không tồn tại. Vui lòng kiểm tra lại!");
-                return;
-            }
+        	try {
+				int orderId = Integer.parseInt(_text);
+				Order order =  orderService.findOrderById(orderId);
+				if(order != null) {
+					_orders = Arrays.asList(order);
+					loadDataToOrderTable(_orders);
+				}else {
+					JOptionPane.showMessageDialog(this, "Không tìm thấy hóa đơn có mã này!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				}
+			} catch (Exception e) {
+				 JOptionPane.showMessageDialog(this, "Vui lòng nhập mã hóa đơn là số!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+			}
         } else {
             loadDataToOrderTable(_orders);
             dateChooser1.setSelectedDate(new Date());

@@ -91,7 +91,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     // convert to vnd
     private String formatVND(double price) {
-        String pat = "###.### " + "VNÐ";
+        String pat = "#,### " + "VNÐ";
         DecimalFormat df = new DecimalFormat(pat);
         String format = df.format(price);
 

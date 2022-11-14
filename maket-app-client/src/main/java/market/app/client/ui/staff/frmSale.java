@@ -41,7 +41,7 @@ public class frmSale extends javax.swing.JInternalFrame {
             return false;
         }
     };
-    private final String[] colums = new String[]{"STT", "Tên mặt hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
+    private final String[] colums = new String[]{"STT", "Tên mặt hàng", "Đơn vị tính", "Đơn giá" ,"Số lượng", "Thành tiền"};
 
     public frmSale(Account account) {
         initComponents();

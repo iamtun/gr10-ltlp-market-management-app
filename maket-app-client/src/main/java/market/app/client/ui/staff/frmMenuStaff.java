@@ -116,7 +116,7 @@ public class frmMenuStaff extends javax.swing.JFrame {
         lblPosition.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPosition.setText("Nhân viên bàn hàng");
 
-        lblNameAndID.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblNameAndID.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lblNameAndID.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblNameAndID.setText("BH001 - Lê Tuấn");
 
@@ -158,7 +158,7 @@ public class frmMenuStaff extends javax.swing.JFrame {
                 .addComponent(btnViewInfor, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnMenu, java.awt.BorderLayout.WEST);
