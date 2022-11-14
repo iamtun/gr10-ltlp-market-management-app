@@ -8,7 +8,9 @@ import entity.Staff;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import market.app.client.Config;
 import market.app.client.connect.ConnectServer;
 import service.IStaffService;
@@ -44,8 +46,8 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private void loadDataToCbo() {
         cboGender.addItem("Nam");
         cboGender.addItem("Nữ");
-        cboPosition.addItem("Quản lý");
         cboPosition.addItem("Nhân viên");
+        cboPosition.addItem("Quản lý");
         cboStatus.addItem("Ðang làm");
         cboStatus.addItem("Ðã nghỉ");
     }
@@ -124,6 +126,13 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         return start;
     }
+    
+        // handle search
+    private void searchFilter(String val) {
+        TableRowSorter<DefaultTableModel> row = new TableRowSorter<DefaultTableModel>((DefaultTableModel)tblStaffList.getModel());
+        tblStaffList.setRowSorter(row);
+        row.setRowFilter(RowFilter.regexFilter("(?i)" + val));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -158,7 +167,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         tblStaffList = new javax.swing.JTable();
         txtSearch = new javax.swing.JTextField();
         lblSearch = new javax.swing.JLabel();
-        btnSearch = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -311,12 +319,14 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblStaffList);
 
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
+
         lblSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblSearch.setText("Tìm kiếm: ");
-
-        btnSearch.setBackground(new java.awt.Color(69, 123, 157));
-        btnSearch.setForeground(new java.awt.Color(255, 255, 255));
-        btnSearch.setText("Tìm");
 
         javax.swing.GroupLayout pnStaffListLayout = new javax.swing.GroupLayout(pnStaffList);
         pnStaffList.setLayout(pnStaffListLayout);
@@ -329,20 +339,16 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                     .addGroup(pnStaffListLayout.createSequentialGroup()
                         .addComponent(lblSearch)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSearch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtSearch)))
                 .addContainerGap())
         );
         pnStaffListLayout.setVerticalGroup(
             pnStaffListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStaffListLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnStaffListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(pnStaffListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnStaffListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63))
@@ -381,6 +387,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // check inputs
         if (checkInputs()) {
+            return;
+        }
+        
+        // check status
+        if(cboStatus.getSelectedItem().equals("Ðã nghỉ")) {
+            JOptionPane.showMessageDialog(this, "Không thể thêm nhân viên ở trạng thái đã nghỉ. Vui lòng kiểm tra lại!");
             return;
         }
 
@@ -443,10 +455,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                     cboGender.setSelectedItem(staff.isGender() == true ? "Nam" : "Nữ");
                     cboPosition.setSelectedItem(staff.isPosition() == true ? "Quản lý" : "Nhân viên");
                     cboStatus.setSelectedItem(staff.isStatus() == true ? "Ðang làm" : "Ðã nghỉ");
-
-                    txtIdentification.setEnabled(false);
-                    txtPhoneNumber.setEnabled(false);
-                    cboStatus.setEnabled(false);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
@@ -483,10 +491,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(this, "Xóa nhân viên thành công.");
                             clearInputs();
                             loadDataToListView();
-                            
-                            txtIdentification.setEnabled(true);
-                            txtPhoneNumber.setEnabled(true);
-                            cboStatus.setEnabled(true);
                         }
                     }
                 }
@@ -524,6 +528,14 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
             pos = false;
         }
 
+        String status = cboStatus.getSelectedItem().toString();
+        boolean sta = false;
+        if(status.equals("Ðang làm")) {
+            sta = true;
+        } else if(status.equals("Ðã nghỉ")) {
+            sta = false;
+        }
+        
         int selected = tblStaffList.getSelectedRow();
         Staff staff = null;
 
@@ -541,16 +553,13 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             staff.setAddress(address);
                             staff.setGender(gen);
                             staff.setPosition(pos);
+                            staff.setStatus(sta);
 
                             staffService.addOrUpdateStaff(staff);
                             System.out.println("[staff]: " + staff);
                             JOptionPane.showMessageDialog(this, "Cập nhật thành công nhân viên.");
                             loadDataToListView();
                             clearInputs();
-
-                            txtIdentification.setEnabled(true);
-                            txtPhoneNumber.setEnabled(true);
-                            cboStatus.setEnabled(true);
                         }
                     }
                 } else {
@@ -563,12 +572,17 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnChangeActionPerformed
 
+    // search filter
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        String searchVal = txtSearch.getText();
+        searchFilter(searchVal);
+    }//GEN-LAST:event_txtSearchKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnChange;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cboGender;
     private javax.swing.JComboBox<String> cboPosition;
     private javax.swing.JComboBox<String> cboStatus;
