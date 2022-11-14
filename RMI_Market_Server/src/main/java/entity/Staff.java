@@ -71,6 +71,20 @@ public class Staff implements Serializable{
 		this.position = position;
 		this.status = true;
 	}
+	
+	public Staff(String id, String name, String identify, String phone, String address, boolean gender,
+			boolean position, boolean status, Staff manager) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.identify = identify;
+		this.phone = phone;
+		this.address = address;
+		this.gender = gender;
+		this.position = position;
+		this.status = status;
+		this.manager = manager;
+	}
 
 	public String getId() {
 		return id;
@@ -134,6 +148,14 @@ public class Staff implements Serializable{
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public Staff getManager() {
+		return manager;
+	}
+
+	public void setManager(Staff manager) {
+		this.manager = manager;
 	}
 
 	@Override
