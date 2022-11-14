@@ -7,6 +7,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -45,6 +47,10 @@ public class Staff implements Serializable{
 	@OneToOne(mappedBy = "staff")
 	@PrimaryKeyJoinColumn
 	private Account account;
+	
+	@ManyToOne
+	@JoinColumn(name = "manager_id")
+	private Staff manager;
 	
 	@OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = false)
 	private List<Order> orders;
