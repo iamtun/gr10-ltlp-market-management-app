@@ -367,7 +367,7 @@ public class frmSale extends javax.swing.JInternalFrame {
 
     private void btnCreateOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateOrderActionPerformed
         if (!details.isEmpty()) {
-            frmOrder forder = new frmOrder(details, _account);
+            frmOrder forder = new frmOrder(details, _account, true);
             forder.setVisible(true);
             //listening close form
             forder.addWindowListener(new java.awt.event.WindowAdapter() {

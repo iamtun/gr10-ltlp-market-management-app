@@ -7,6 +7,7 @@ package market.app.client.ui.manager;
 import entity.Staff;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -25,7 +26,13 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
      * Creates new form frmManageItem
      */
     private IStaffService staffService;
-    private DefaultTableModel modelTableStaffList = new DefaultTableModel();
+    private DefaultTableModel modelTableStaffList = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            //all cells false
+            return false;
+        }
+    };
     private String[] colums = new String[]{"Mã nhân viên", "Tên nhân viên", "CMND/ CCCD", "Số điện thoại", "Địa chỉ", "Giới tính", "Chức vụ", "Trạng thái"};
 
     public frmManageStaff() {
@@ -41,7 +48,25 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         loadDataToCbo();
         loadDataToListView();
     }
-
+    //Regex phone
+    private boolean regexPhone(String phone){
+        String reg = "^((09|03|07|08|06|05)+([0-9]{8}))$";
+        Pattern pattern = Pattern.compile(reg);
+        if(pattern.matcher(phone).find()){
+            return true;
+        }
+        return false;
+    }
+    
+    //Regex CMND
+    private boolean regexCMND(String cmnd){
+        String reg = "[0-9]{9}";
+        if(cmnd.matches(reg)){
+            return true;
+        }
+        return false;
+    }
+    
     // load data to combobox
     private void loadDataToCbo() {
         cboGender.addItem("Nam");
@@ -58,6 +83,9 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         try {
             for (Staff staff : staffService.getAllStaff()) {
                 if (staff.isStatus() && !staff.isPosition()) {
+                    if(staff.getId().equals("admin")) {
+                        return;
+                    }
                     Object[] obj = new Object[]{
                         staff.getId(),
                         staff.getName(),
@@ -96,7 +124,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         return false;
     }
-
+    
     // clear inputs
     private void clearInputs() {
         txtStaffName.setText("");
@@ -390,27 +418,37 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
             return;
         }
         
+        String staffName = txtStaffName.getText();
+        String identification = txtIdentification.getText();
+        String phone = txtPhoneNumber.getText().trim();
+        String address = txtAddress.getText();
+        String gender = cboGender.getSelectedItem().toString();
+        String position = cboPosition.getSelectedItem().toString();
+        boolean gen = false;
+        boolean pos = false;
+        
         // check status
         if(cboStatus.getSelectedItem().equals("Ðã nghỉ")) {
             JOptionPane.showMessageDialog(this, "Không thể thêm nhân viên ở trạng thái đã nghỉ. Vui lòng kiểm tra lại!");
             return;
         }
-
-        String staffName = txtStaffName.getText();
-        String identification = txtIdentification.getText();
-        String phone = txtPhoneNumber.getText();
-        String address = txtAddress.getText();
         
-        String gender = cboGender.getSelectedItem().toString();
-        boolean gen = false;
+        if(!regexCMND(identification)){
+            JOptionPane.showMessageDialog(this, "Số CMND || CCCD sai định dạng.Vui lòng kiểm tra lại!");
+            return;   
+        }
+        
+        if(!regexPhone(phone)){
+            JOptionPane.showMessageDialog(this, "Số điện thoại sai định dạng. Vui lòng kiểm tra lại!");
+            return;
+        }
+        
         if(gender.equals("Nam")) {
             gen = true;
         } else if(gender.equals("Nữ")) {
             gen = false;
         }
         
-        String position = cboPosition.getSelectedItem().toString();
-        boolean pos = false;
         if(position.equals("Quản lý")) {
             pos = true;
         } else if(position.equals("Nhân viên")) {

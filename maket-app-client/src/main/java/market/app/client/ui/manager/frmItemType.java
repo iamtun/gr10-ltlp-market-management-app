@@ -5,12 +5,15 @@
 package market.app.client.ui.manager;
 
 import entity.ProductType;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import market.app.client.Config;
 import market.app.client.connect.ConnectServer;
 import service.IProductTypeService;
@@ -26,7 +29,13 @@ public class frmItemType extends javax.swing.JFrame {
      */
     private IProductTypeService productTypeService;
     
-    private final DefaultTableModel modelTableProductTypeList = new DefaultTableModel();
+    private final DefaultTableModel modelTableProductTypeList = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            //all cells false
+            return false;
+        }
+    };
     private final String[] colums = new String[]{"STT", "Tên loại mặt hàng", "Đơn vị"};
 
     public frmItemType() {
@@ -56,12 +65,13 @@ public class frmItemType extends javax.swing.JFrame {
         btnDelete = new javax.swing.JButton();
         lblIItemTypeName = new javax.swing.JLabel();
         txtProductType = new javax.swing.JTextField();
-        btnSearch = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtUnit = new javax.swing.JTextField();
         pnItemTypeList = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblItemTypeList = new javax.swing.JTable();
+        txtSearch = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -99,21 +109,19 @@ public class frmItemType extends javax.swing.JFrame {
         lblIItemTypeName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblIItemTypeName.setText("Tên loại mặt hàng: ");
 
-        btnSearch.setBackground(new java.awt.Color(69, 123, 157));
-        btnSearch.setForeground(new java.awt.Color(255, 255, 255));
-        btnSearch.setText("Tìm");
-        btnSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
-            }
-        });
-        btnSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtProductType.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                btnSearchKeyReleased(evt);
+                txtProductTypeKeyReleased(evt);
             }
         });
 
         jLabel1.setText("Đơn vị:");
+
+        txtUnit.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtUnitKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnActionLayout = new javax.swing.GroupLayout(pnAction);
         pnAction.setLayout(pnActionLayout);
@@ -131,9 +139,7 @@ public class frmItemType extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                                 .addComponent(btnChange, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnActionLayout.createSequentialGroup()
                         .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblIItemTypeName)
@@ -146,9 +152,7 @@ public class frmItemType extends javax.swing.JFrame {
             .addGroup(pnActionLayout.createSequentialGroup()
                 .addComponent(lblIItemTypeName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(txtProductType))
+                .addComponent(txtProductType, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -194,9 +198,17 @@ public class frmItemType extends javax.swing.JFrame {
             pnItemTypeListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnItemTypeListLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(260, 260, 260))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
         );
+
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
+
+        jLabel2.setText("Tìm kiếm: ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -204,7 +216,14 @@ public class frmItemType extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -217,12 +236,16 @@ public class frmItemType extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(pnAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(301, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(261, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(246, 246, 246)
-                    .addComponent(pnItemTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGap(284, 284, 284)
+                    .addComponent(pnItemTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(14, Short.MAX_VALUE)))
         );
 
         pack();
@@ -401,35 +424,30 @@ public class frmItemType extends javax.swing.JFrame {
         txtUnit.setText(tblItemTypeList.getValueAt(selected, 2).toString());
     }//GEN-LAST:event_tblItemTypeListMouseClicked
 
-    private void btnSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnSearchKeyReleased
+    private void txtProductTypeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductTypeKeyReleased
+        // bỏ
+    }//GEN-LAST:event_txtProductTypeKeyReleased
 
-    }//GEN-LAST:event_btnSearchKeyReleased
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        String searchVal = txtSearch.getText();
+        searchFilter(searchVal);
+    }//GEN-LAST:event_txtSearchKeyReleased
 
-    // button search
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        String searchVal = txtProductType.getText();
-
-        if(searchVal.equals("")) {
-            JOptionPane.showMessageDialog(this, "Bạn cần phải tên loại mặt hàng!");
-            return;
+    // No number
+    private void txtUnitKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUnitKeyTyped
+        char c = evt.getKeyChar();
+        if ((Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
         }
-        
-        try {
-            for (ProductType pt : productTypeService.getAllProductType()) {
-                if (searchVal.equalsIgnoreCase(pt.getName())) {
-                    modelTableProductTypeList.setRowCount(0);
-                    modelTableProductTypeList.addRow(new String[]{
-                        pt.getId() + "",
-                        pt.getName(),
-                        pt.getUnit()
-                    });
-                }
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnSearchActionPerformed
+    }//GEN-LAST:event_txtUnitKeyTyped
 
+    // handle search
+    private void searchFilter(String val) {
+        TableRowSorter<DefaultTableModel> row = new TableRowSorter<DefaultTableModel>((DefaultTableModel) tblItemTypeList.getModel());
+        tblItemTypeList.setRowSorter(row);
+        row.setRowFilter(RowFilter.regexFilter("(?i)" + val));
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -444,14 +462,15 @@ public class frmItemType extends javax.swing.JFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnChange;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnSearch;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblIItemTypeName;
     private javax.swing.JPanel pnAction;
     private javax.swing.JPanel pnItemTypeList;
     private javax.swing.JTable tblItemTypeList;
     private javax.swing.JTextField txtProductType;
+    private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtUnit;
     // End of variables declaration//GEN-END:variables
 }
