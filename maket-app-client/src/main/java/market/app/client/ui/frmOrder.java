@@ -24,16 +24,23 @@ public class frmOrder extends javax.swing.JFrame {
 
     private List<OrderDetail> _details;
     private Account _account;
+    private boolean _status;
 
     private IOrderService orderService = ConnectServer.getInstance().getOrderService();
     private Date now = new Date();
     /**
      * Creates new form frmOrder
      */
-    private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel();
+    private final DefaultTableModel modelTableOrderDetail = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            //all cells false
+            return false;
+        }
+    };
     private final String[] colums = new String[]{"STT", "Tên hàng", "Đơn vị tính", "Số lượng", "Thành tiền"};
 
-    public frmOrder(List<OrderDetail> details, Account account) {
+    public frmOrder(List<OrderDetail> details, Account account, boolean status) {
         initComponents();
         Config.initColTable(tblOrderDetail4, modelTableOrderDetail, colums);
 
@@ -41,6 +48,7 @@ public class frmOrder extends javax.swing.JFrame {
         //form sale send
         _details = details;
         _account = account;
+        _status = status;
 
         lblOrderNumber.setText("HĐ số: " + (getNumberOrder() + 1) + "");
         lblDateTime.setText("Ngày: " + Config.converDateToString(now));
@@ -291,7 +299,9 @@ public class frmOrder extends javax.swing.JFrame {
     private void btnPrintOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintOrderActionPerformed
         // TODO add your handling code here:
         Config.printOrder(now, _details, getNumberOrder(), _account.getStaff().getName());
-        btnPaySuccess.setEnabled(true);
+        if(_status){
+            btnPaySuccess.setEnabled(true);
+        }
     }//GEN-LAST:event_btnPrintOrderActionPerformed
 
 //    /**

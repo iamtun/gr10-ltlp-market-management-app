@@ -6,8 +6,11 @@ package market.app.client.ui.manager;
 
 import entity.Product;
 import entity.ProductType;
+import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -30,7 +33,13 @@ public class frmManageItem extends javax.swing.JInternalFrame {
      */
     private IProductService productService;
     private IProductTypeService productTypeService;
-    private final DefaultTableModel modelTableProductList = new DefaultTableModel();
+    private final DefaultTableModel modelTableProductList = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            //all cells false
+            return false;
+        }
+    };
     private String[] colums = new String[]{"STT", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
 
     public frmManageItem() {
@@ -65,6 +74,15 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         return null;
     }
 
+    // convert to vnd
+    private String formatVND(double price) {
+        String pat = "###.### " + "VNÐ";
+        DecimalFormat df = new DecimalFormat(pat);
+        String format = df.format(price);
+        
+        return format;
+    }
+    
     // load data to list view
     private void loadDataToListView() {
         modelTableProductList.setRowCount(0);
@@ -78,7 +96,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                     prod.getType().getName(),
                     prod.getType().getUnit(),
                     prod.getNumber(),
-                    prod.getPrice()
+                    String.format(formatVND(prod.getPrice()), 5)
                 };
                 modelTableProductList.addRow(obj);
             }
@@ -170,6 +188,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         lblItemType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemType.setText("Loại mặt hàng:");
 
+        txtPrice.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPriceKeyTyped(evt);
+            }
+        });
+
         lblItemPrice.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemPrice.setText("Giá mặt hàng: ");
 
@@ -186,6 +210,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
         lblItemNumber.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemNumber.setText("Số lượng:");
+
+        txtNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNumberKeyTyped(evt);
+            }
+        });
 
         lblItemUnit.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemUnit.setText("Đơn vị tính:");
@@ -411,9 +441,9 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         double price = Double.parseDouble(txtPrice.getText());
 
         try {
-            // check exits product
-            for (Product prod : productService.getAllProduct()) {
-                if (productName.equals(prod.getName())) {
+            // check exits product productService.getAllProduct()
+            for (Product prod : getProducts()) {
+                if (productName.equals(prod.getName()) && productTypeName.equals(prod.getType().getName())) {
                     JOptionPane.showMessageDialog(this, "Sản phẩm này đã tồn tại. Bạn có thể thực hiện chức năng sửa số lượng sản phẩm!");
                     clearInputs();
                     return;
@@ -443,7 +473,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         new frmItemType().setVisible(true);
     }//GEN-LAST:event_btnOpenFrmItemTypeActionPerformed
-
+    
     // clicked list view
     private void tblProductListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductListMouseClicked
         int selected = tblProductList.getSelectedRow();
@@ -458,7 +488,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                     cboProductType.setSelectedItem(product.getType().getName());
                     cboItemUnit.setSelectedItem(product.getType().getUnit());
                     txtNumber.setText(product.getNumber() + "");
-                    txtPrice.setText(product.getPrice() + "");
+                    txtPrice.setText(formatVND(product.getPrice()).split(" ")[0]);
 
                     cboProductType.setEnabled(false);
                     cboItemUnit.setEnabled(false);
@@ -499,6 +529,8 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                 }
             }
 
+            cboProductType.setEnabled(true);
+            cboItemUnit.setEnabled(true);
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -522,19 +554,9 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
         try {
             product = getProducts().get(selected);
-            //int index = (int) tblProductList.getValueAt(selected, 0);
-            //product = productService.findProductById(index);
 
             if (product != null) {
                 product.setName(productName);
-
-//                for (ProductType prType : productTypeService.getAllProductType()) {
-//                    if (prType.getId() == product.getId()) {
-//                        prType.setName(productTypeName);
-//                        prType.setUnit(unit);
-//                        product.setType(prType);
-//                    }
-//                }
                 product.setNumber(number);
                 product.setPrice(price);
 
@@ -583,6 +605,21 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         String searchVal = txtSearch.getText();
         searchFilter(searchVal);
     }//GEN-LAST:event_txtSearchKeyReleased
+
+    // No character
+    private void txtNumberKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNumberKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNumberKeyTyped
+
+    private void txtPriceKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPriceKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPriceKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;

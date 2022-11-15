@@ -165,6 +165,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtPrice">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPriceKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblItemPrice">
           <Properties>
@@ -197,6 +200,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtNumber">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNumberKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblItemUnit">
           <Properties>

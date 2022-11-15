@@ -484,7 +484,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         if (_details == null) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn!!");
         } else {
-            new frmOrder(_details, _account).setVisible(true);
+            new frmOrder(_details, _account, false).setVisible(true);
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
