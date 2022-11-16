@@ -20,6 +20,7 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import entity.OrderDetail;
 import entity.Product;
+import entity.ProductType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,6 +30,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -41,6 +44,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
+import market.app.client.ui.manager.frmManageItem;
 
 /**
  *
@@ -138,6 +142,17 @@ public class Config {
             model.addRow(objects);
         }
     }
+    
+    // load cbo product
+//    public static void loadDataToCombobox() {
+//        try {
+//            for (ProductType prod : productTypeService.getAllProductType()) {
+//                cboProductType.addItem(prod.getName());
+//            }
+//        } catch (Exception ex) {
+//            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 
     public static String converDateToString(Date date) {
         DateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");

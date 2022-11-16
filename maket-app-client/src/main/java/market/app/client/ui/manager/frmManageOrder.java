@@ -508,6 +508,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
         List<Order> _orders = getAllOrderNowFromServer();
+        boolean check = false;
         String _text = txtSearch.getText().trim();
         if (!_text.equals("")) {
             for (int i = 0; i < _orders.size(); ++i) {
@@ -515,8 +516,13 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                 if (Integer.parseInt(_text) == order.getId()) {
                     modelTableOrder.setRowCount(0);
                     modelTableOrder.addRow(new Object[]{i + 1, _orders.get(i).getDate(), _orders.get(i).getTotal()});
+                    check = true;
                     return;
                 }
+            }
+            if(check == false){
+                JOptionPane.showMessageDialog(this, "Hóa đơn không tồn tại. Vui lòng kiểm tra lại!");
+                return;
             }
         } else {
             loadDataToOrderTable(_orders);

@@ -4,7 +4,9 @@
  */
 package market.app.client.ui.manager;
 
+import entity.Account;
 import entity.Staff;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -26,6 +28,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
      * Creates new form frmManageItem
      */
     private IStaffService staffService;
+    private Account _account;
     private DefaultTableModel modelTableStaffList = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -35,11 +38,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     };
     private String[] colums = new String[]{"Mã nhân viên", "Tên nhân viên", "CMND/ CCCD", "Số điện thoại", "Địa chỉ", "Giới tính", "Chức vụ", "Trạng thái"};
 
-    public frmManageStaff() {
+    public frmManageStaff(Account _account) {
         initComponents();
 
         // connect rmi
         staffService = ConnectServer.getInstance().getStaffService();
+        this._account = _account;
 
         Config.initColTable(tblStaffList, modelTableStaffList, colums);
         Config.hideTitleBarInternalFrame(this);
@@ -48,31 +52,36 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         loadDataToCbo();
         loadDataToListView();
     }
+
     //Regex phone
-    private boolean regexPhone(String phone){
+    private boolean regexPhone(String phone) {
         String reg = "^((09|03|07|08|06|05)+([0-9]{8}))$";
         Pattern pattern = Pattern.compile(reg);
-        if(pattern.matcher(phone).find()){
+        if (pattern.matcher(phone).find()) {
             return true;
         }
         return false;
     }
-    
+
     //Regex CMND
-    private boolean regexCMND(String cmnd){
+    private boolean regexCMND(String cmnd) {
         String reg = "[0-9]{9}";
-        if(cmnd.matches(reg)){
+        if (cmnd.matches(reg)) {
             return true;
         }
         return false;
     }
-    
+
     // load data to combobox
     private void loadDataToCbo() {
         cboGender.addItem("Nam");
         cboGender.addItem("Nữ");
-        cboPosition.addItem("Nhân viên");
-        cboPosition.addItem("Quản lý");
+        if (_account.getStaff().getId().equals("admin")) {
+            cboPosition.addItem("Nhân viên");
+            cboPosition.addItem("Quản lý");
+        } else {
+            cboPosition.addItem("Nhân viên");
+        }
         cboStatus.addItem("Ðang làm");
         cboStatus.addItem("Ðã nghỉ");
     }
@@ -82,10 +91,21 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         modelTableStaffList.setRowCount(0);
         try {
             for (Staff staff : staffService.getAllStaff()) {
-                if (staff.isStatus() && !staff.isPosition()) {
-                    if(staff.getId().equals("admin")) {
-                        return;
-                    }
+                if (staff.isStatus() && _account.getStaff().getId().equals("admin")) {
+                    // admin
+                    Object[] obj = new Object[]{
+                        staff.getId(),
+                        staff.getName(),
+                        staff.getIdentify(),
+                        staff.getPhone(),
+                        staff.getAddress(),
+                        staff.isGender() == true ? "Nam" : "Nữ",
+                        staff.isPosition() == true ? "Quản lý" : "Nhân viên",
+                        staff.isStatus() == true ? "Ðang làm" : "Ðã nghỉ"
+                    };
+                    modelTableStaffList.addRow(obj);
+                } else if(staff.isStatus() && !staff.isPosition()) {
+                    // qu?n lý
                     Object[] obj = new Object[]{
                         staff.getId(),
                         staff.getName(),
@@ -124,7 +144,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         return false;
     }
-    
+
     // clear inputs
     private void clearInputs() {
         txtStaffName.setText("");
@@ -154,10 +174,10 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         return start;
     }
-    
-        // handle search
+
+    // handle search
     private void searchFilter(String val) {
-        TableRowSorter<DefaultTableModel> row = new TableRowSorter<DefaultTableModel>((DefaultTableModel)tblStaffList.getModel());
+        TableRowSorter<DefaultTableModel> row = new TableRowSorter<DefaultTableModel>((DefaultTableModel) tblStaffList.getModel());
         tblStaffList.setRowSorter(row);
         row.setRowFilter(RowFilter.regexFilter("(?i)" + val));
     }
@@ -202,9 +222,27 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         lblStaffName.setText("Tên nhân viên:");
 
+        txtStaffName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtStaffNameKeyTyped(evt);
+            }
+        });
+
         lblIdentification.setText("CMND/CCCD:");
 
+        txtIdentification.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdentificationKeyTyped(evt);
+            }
+        });
+
         lblPhoneNumber.setText("Số điện thoại:");
+
+        txtPhoneNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPhoneNumberKeyTyped(evt);
+            }
+        });
 
         lblAddress.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblAddress.setText("Địa chỉ: ");
@@ -417,7 +455,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         if (checkInputs()) {
             return;
         }
-        
+
         String staffName = txtStaffName.getText();
         String identification = txtIdentification.getText();
         String phone = txtPhoneNumber.getText().trim();
@@ -426,41 +464,41 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         String position = cboPosition.getSelectedItem().toString();
         boolean gen = false;
         boolean pos = false;
-        
+
         // check status
-        if(cboStatus.getSelectedItem().equals("Ðã nghỉ")) {
+        if (cboStatus.getSelectedItem().equals("Ðã nghỉ")) {
             JOptionPane.showMessageDialog(this, "Không thể thêm nhân viên ở trạng thái đã nghỉ. Vui lòng kiểm tra lại!");
             return;
         }
-        
-        if(!regexCMND(identification)){
+
+        if (!regexCMND(identification)) {
             JOptionPane.showMessageDialog(this, "Số CMND || CCCD sai định dạng.Vui lòng kiểm tra lại!");
-            return;   
+            return;
         }
-        
-        if(!regexPhone(phone)){
+
+        if (!regexPhone(phone)) {
             JOptionPane.showMessageDialog(this, "Số điện thoại sai định dạng. Vui lòng kiểm tra lại!");
             return;
         }
-        
-        if(gender.equals("Nam")) {
+
+        if (gender.equals("Nam")) {
             gen = true;
-        } else if(gender.equals("Nữ")) {
+        } else if (gender.equals("Nữ")) {
             gen = false;
         }
-        
-        if(position.equals("Quản lý")) {
+
+        if (position.equals("Quản lý")) {
             pos = true;
-        } else if(position.equals("Nhân viên")) {
+        } else if (position.equals("Nhân viên")) {
             pos = false;
         }
 
         Staff staff = new Staff(createStaffId(), staffName, identification, phone, address, gen, pos);
         try {
             // check exits staff
-            for(Staff st : staffService.getAllStaff()) {
-                if(identification.equals(st.getIdentify()) || phone.equals(st.getPhone())) {
-                    JOptionPane.showMessageDialog(this, "Nhân viên này đã tồn tại!");
+            for (Staff st : staffService.getAllStaff()) {
+                if (identification.equals(st.getIdentify()) || phone.equals(st.getPhone())) {
+                    JOptionPane.showMessageDialog(this, "Căn cước công dân hoặc số điện thoại này đã tồn tại!");
                     return;
                 }
             }
@@ -549,31 +587,31 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         String identification = txtIdentification.getText();
         String phone = txtPhoneNumber.getText();
         String address = txtAddress.getText();
-        
+
         String gender = cboGender.getSelectedItem().toString();
         boolean gen = false;
-        if(gender.equals("Nam")) {
+        if (gender.equals("Nam")) {
             gen = true;
-        } else if(gender.equals("Nữ")) {
+        } else if (gender.equals("Nữ")) {
             gen = false;
         }
-        
+
         String position = cboPosition.getSelectedItem().toString();
         boolean pos = false;
-        if(position.equals("Quản lý")) {
+        if (position.equals("Quản lý")) {
             pos = true;
-        } else if(position.equals("Nhân viên")) {
+        } else if (position.equals("Nhân viên")) {
             pos = false;
         }
 
         String status = cboStatus.getSelectedItem().toString();
         boolean sta = false;
-        if(status.equals("Ðang làm")) {
+        if (status.equals("Ðang làm")) {
             sta = true;
-        } else if(status.equals("Ðã nghỉ")) {
+        } else if (status.equals("Ðã nghỉ")) {
             sta = false;
         }
-        
+
         int selected = tblStaffList.getSelectedRow();
         Staff staff = null;
 
@@ -615,6 +653,28 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         String searchVal = txtSearch.getText();
         searchFilter(searchVal);
     }//GEN-LAST:event_txtSearchKeyReleased
+
+    // No char
+    private void txtPhoneNumberKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPhoneNumberKeyTyped
+
+    private void txtIdentificationKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdentificationKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtIdentificationKeyTyped
+
+    private void txtStaffNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStaffNameKeyTyped
+        char c = evt.getKeyChar();
+        if ((Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtStaffNameKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

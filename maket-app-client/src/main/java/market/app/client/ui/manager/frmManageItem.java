@@ -4,15 +4,18 @@
  */
 package market.app.client.ui.manager;
 
+import entity.Account;
 import entity.Product;
 import entity.ProductType;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -79,14 +82,14 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         String pat = "###.### " + "VNÐ";
         DecimalFormat df = new DecimalFormat(pat);
         String format = df.format(price);
-        
+
         return format;
     }
-    
+
     // load data to list view
     private void loadDataToListView() {
         modelTableProductList.setRowCount(0);
-        
+
         try {
             int i = 1;
             for (Product prod : getProducts()) {
@@ -109,6 +112,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     // load data to combobox
     private void loadDataToCombobox() {
+        // event close frmItemType       
         try {
             for (ProductType prod : productTypeService.getAllProductType()) {
                 cboProductType.addItem(prod.getName());
@@ -138,6 +142,32 @@ public class frmManageItem extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
             return true;
         }
+
+        return false;
+    }
+
+    /// vaildate ten san pham
+    private boolean regexName(String name) {
+        String reg = "^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\n"
+                + "fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\n"
+                + "UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ123456789]+)"
+                + "((\\s{1}[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\n"
+                + "fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\n"
+                + "UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789]*){0,})$";
+        Pattern pattern = Pattern.compile(reg);
+        if (pattern.matcher(name).find()) {
+            return true;
+        }
+//        String firstLetter="[A-EGHIK-VXYÂĐỔÔÚỨ]";
+//        String firstLetter1="[a-zâđổôúứ]";
+//      	String otherLetters="[a-zàáâãèéêìíòóôõùúýỳỹỷỵựửữừứưụủũợởỡờớơộổỗồốọỏịỉĩệểễềếẹẻẽặẳẵằắăậẩẫầấạảđ₫]";
+//      	String regexString="^"
+//                 +firstLetter+otherLetters+"+\\s"
+//                 +"("+firstLetter1+otherLetters+"+\\s)*"
+//                 +firstLetter1+otherLetters+"+$";        
+//        if(name.matches(regexString)) {
+//            return true;
+//        }
 
         return false;
     }
@@ -429,16 +459,22 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     // button add product
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // check inputs
-        if (checkInputs()) {
-            return;
-        }
-
         String productName = txtProductName.getText();
         String productTypeName = cboProductType.getSelectedItem().toString();
         String productUnit = cboItemUnit.getSelectedItem().toString();
         int number = Integer.parseInt(txtNumber.getText());
         double price = Double.parseDouble(txtPrice.getText());
+
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
+        // check name product
+        if (!regexName(productName)) {
+            JOptionPane.showMessageDialog(this, "Tên mặt hàng không hợp lệ. Vui lòng kiểm tra lại!");
+            return;
+        }
 
         try {
             // check exits product productService.getAllProduct()
@@ -471,18 +507,31 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     private void btnOpenFrmItemTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFrmItemTypeActionPerformed
         // TODO add your handling code here:
-        new frmItemType().setVisible(true);
+        frmItemType forder = new frmItemType();
+        forder.setVisible(true);
+        forder.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                try {
+                    for (ProductType prod : productTypeService.getAllProductType()) {
+                        cboProductType.addItem(prod.getName());
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }//GEN-LAST:event_btnOpenFrmItemTypeActionPerformed
-    
+
     // clicked list view
     private void tblProductListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductListMouseClicked
         int selected = tblProductList.getSelectedRow();
         Product product = null;
-        
+
         if (selected >= 0) {
             try {
                 product = getProducts().get(selected);
-                
+
                 if (product != null) {
                     txtProductName.setText(product.getName());
                     cboProductType.setSelectedItem(product.getType().getName());
