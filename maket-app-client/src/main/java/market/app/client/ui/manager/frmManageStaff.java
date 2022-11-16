@@ -462,8 +462,8 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         String address = txtAddress.getText();
         String gender = cboGender.getSelectedItem().toString();
         String position = cboPosition.getSelectedItem().toString();
-        boolean gen = false;
-        boolean pos = false;
+        boolean gen = false; // 
+        boolean pos = false; // test
 
         // check status
         if (cboStatus.getSelectedItem().equals("Ðã nghỉ")) {
