@@ -513,6 +513,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
             @Override
             public void windowClosed(WindowEvent e) {
                 try {
+                    cboProductType.removeAllItems();
                     for (ProductType prod : productTypeService.getAllProductType()) {
                         cboProductType.addItem(prod.getName());
                     }
