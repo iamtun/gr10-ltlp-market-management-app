@@ -6,6 +6,7 @@ package market.app.client.ui.manager;
 
 import entity.ProductType;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -112,6 +113,9 @@ public class frmItemType extends javax.swing.JFrame {
         txtProductType.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtProductTypeKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtProductTypeKeyTyped(evt);
             }
         });
 
@@ -222,8 +226,7 @@ public class frmItemType extends javax.swing.JFrame {
                         .addGap(7, 7, 7)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(txtSearch)))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -440,6 +443,14 @@ public class frmItemType extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txtUnitKeyTyped
+
+    // No number
+    private void txtProductTypeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductTypeKeyTyped
+        char c = evt.getKeyChar();
+        if ((Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtProductTypeKeyTyped
 
     // handle search
     private void searchFilter(String val) {

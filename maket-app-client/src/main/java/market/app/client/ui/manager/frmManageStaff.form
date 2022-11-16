@@ -143,6 +143,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtStaffName">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtStaffNameKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblIdentification">
           <Properties>
@@ -150,6 +153,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtIdentification">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtIdentificationKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPhoneNumber">
           <Properties>
@@ -157,6 +163,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtPhoneNumber">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPhoneNumberKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblAddress">
           <Properties>
