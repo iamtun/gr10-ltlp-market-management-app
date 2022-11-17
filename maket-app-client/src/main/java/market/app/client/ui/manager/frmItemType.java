@@ -401,11 +401,6 @@ public class frmItemType extends javax.swing.JFrame {
             return;
         }
 
-        // check inputs
-        if (checkInputs()) {
-            return;
-        }
-
         try {
             if (selected >= 0) {
                 productType = getProductTypes().get(selected);

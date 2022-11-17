@@ -12,7 +12,6 @@ import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -158,16 +157,6 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         if (pattern.matcher(name).find()) {
             return true;
         }
-//        String firstLetter="[A-EGHIK-VXYÂĐỔÔÚỨ]";
-//        String firstLetter1="[a-zâđổôúứ]";
-//      	String otherLetters="[a-zàáâãèéêìíòóôõùúýỳỹỷỵựửữừứưụủũợởỡờớơộổỗồốọỏịỉĩệểễềếẹẻẽặẳẵằắăậẩẫầấạảđ₫]";
-//      	String regexString="^"
-//                 +firstLetter+otherLetters+"+\\s"
-//                 +"("+firstLetter1+otherLetters+"+\\s)*"
-//                 +firstLetter1+otherLetters+"+$";        
-//        if(name.matches(regexString)) {
-//            return true;
-//        }
 
         return false;
     }
@@ -527,42 +516,22 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // clicked list view
     private void tblProductListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductListMouseClicked
         int selected = tblProductList.getSelectedRow();
-        Product product = null;
-
-        if (selected >= 0) {
-            try {
-                product = getProducts().get(selected);
-
-                if (product != null) {
-                    txtProductName.setText(product.getName());
-                    cboProductType.setSelectedItem(product.getType().getName());
-                    cboItemUnit.setSelectedItem(product.getType().getUnit());
-                    txtNumber.setText(product.getNumber() + "");
-                    txtPrice.setText(formatVND(product.getPrice()).split(" ")[0]);
-
-                    cboProductType.setEnabled(false);
-                    cboItemUnit.setEnabled(false);
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
-                ex.printStackTrace();
-            }
-        }
+        
+        txtProductName.setText(tblProductList.getValueAt(selected, 1).toString());
+        cboProductType.setSelectedItem(tblProductList.getValueAt(selected, 2));
+        cboItemUnit.setSelectedItem(tblProductList.getValueAt(selected, 3));
+        txtNumber.setText(tblProductList.getValueAt(selected, 4).toString());
+        txtPrice.setText(tblProductList.getValueAt(selected, 5).toString().split(" ")[0]);
     }//GEN-LAST:event_tblProductListMouseClicked
 
     // button delete product
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int selected = tblProductList.getSelectedRow();
-        if(selected < 0){
+        if (selected < 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần xóa");
             return;
         }
 
-        // check inputs
-        if (checkInputs()) {
-            return;
-        }
-        
         Product product = null;
 
         try {
@@ -583,19 +552,31 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                     }
                 }
             }
-
-            cboProductType.setEnabled(true);
-            cboItemUnit.setEnabled(true);
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    // helper update
+    private ProductType findProductTypeByNameAndUnit(String name, String unit) {
+        try {
+            List<ProductType> types = productTypeService.findListProductTypeByName(name);
+            for (ProductType type : types) {
+                if (type.getUnit().equals(unit)) {
+                    return type;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     // button update product
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
         int selected = tblProductList.getSelectedRow();
         if (selected < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần sửa");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần sửa!");
             return;
         }
 
@@ -605,8 +586,8 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         }
 
         String productName = txtProductName.getText();
-        //String productTypeName = cboProductType.getSelectedItem().toString();
-        //String unit = cboItemUnit.getSelectedItem().toString();
+        String productTypeName = cboProductType.getSelectedItem().toString();
+        String unit = cboItemUnit.getSelectedItem().toString();
         int number = Integer.parseInt(txtNumber.getText());
         double price = Double.parseDouble(txtPrice.getText());
         Product product = null;
@@ -619,13 +600,13 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                 product.setNumber(number);
                 product.setPrice(price);
 
+                ProductType productType = findProductTypeByNameAndUnit(productTypeName, unit);
+                product.setType(productType);
+
                 productService.addOrUpdateProduct(product);
                 JOptionPane.showMessageDialog(this, "Cập nhật thành công sản phẩm.");
                 loadDataToListView();
                 clearInputs();
-
-                cboProductType.setEnabled(true);
-                cboItemUnit.setEnabled(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Cập nhật không thành công sản phẩm!");
                 clearInputs();
@@ -643,8 +624,6 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     private void cboProductTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboProductTypeActionPerformed
         try {
             String productType = cboProductType.getSelectedItem().toString();
-            System.out.println("market.app.client.ui.manager.frmManageItem.cboProductTypeActionPerformed()" + productType);
-            //ProductType prodType = productTypeService.findProductTypeById(prodType.getId());;
 
             for (ProductType prodType : productTypeService.getAllProductType()) {
                 if (productType.equals(prodType.getName())) {

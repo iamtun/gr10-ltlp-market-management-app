@@ -546,12 +546,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int selected = tblStaffList.getSelectedRow();
         if (selected < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa");
-            return;
-        }
-        
-        // check inputs
-        if (checkInputs()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa!");
             return;
         }
 
