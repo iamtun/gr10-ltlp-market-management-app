@@ -544,12 +544,17 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
     // button delete staff
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selected = tblStaffList.getSelectedRow();
+        if (selected < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa");
+            return;
+        }
+        
         // check inputs
         if (checkInputs()) {
             return;
         }
 
-        int selected = tblStaffList.getSelectedRow();
         Staff staff = null;
 
         try {
@@ -578,6 +583,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
     // button update staff
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+        int selected = tblStaffList.getSelectedRow();
+        if (selected < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần sửa");
+            return;
+        }
+        
         // check inputs
         if (checkInputs()) {
             return;
@@ -612,7 +623,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
             sta = false;
         }
 
-        int selected = tblStaffList.getSelectedRow();
         Staff staff = null;
 
         try {
