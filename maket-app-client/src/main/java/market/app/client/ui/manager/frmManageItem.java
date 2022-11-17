@@ -459,16 +459,16 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     // button add product
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
         String productName = txtProductName.getText();
         String productTypeName = cboProductType.getSelectedItem().toString();
         String productUnit = cboItemUnit.getSelectedItem().toString();
         int number = Integer.parseInt(txtNumber.getText());
         double price = Double.parseDouble(txtPrice.getText());
-
-        // check inputs
-        if (checkInputs()) {
-            return;
-        }
 
         // check name product
         if (!regexName(productName)) {
@@ -552,12 +552,17 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     // button delete product
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selected = tblProductList.getSelectedRow();
+        if(selected < 0){
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần xóa");
+            return;
+        }
+
         // check inputs
         if (checkInputs()) {
             return;
         }
-
-        int selected = tblProductList.getSelectedRow();
+        
         Product product = null;
 
         try {
@@ -588,6 +593,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
     // button update product
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+        int selected = tblProductList.getSelectedRow();
+        if (selected < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần sửa");
+            return;
+        }
+
         // check inputs
         if (checkInputs()) {
             return;
@@ -598,8 +609,6 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         //String unit = cboItemUnit.getSelectedItem().toString();
         int number = Integer.parseInt(txtNumber.getText());
         double price = Double.parseDouble(txtPrice.getText());
-
-        int selected = tblProductList.getSelectedRow();
         Product product = null;
 
         try {

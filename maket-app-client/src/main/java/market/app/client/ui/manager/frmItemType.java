@@ -29,7 +29,7 @@ public class frmItemType extends javax.swing.JFrame {
      * Creates new form frmItemType
      */
     private IProductTypeService productTypeService;
-    
+
     private final DefaultTableModel modelTableProductTypeList = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -342,13 +342,18 @@ public class frmItemType extends javax.swing.JFrame {
 
         return null;
     }
-    
+
     // Button update
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
         String prodType = txtProductType.getText();
         String unit = txtUnit.getText();
         int selected = tblItemTypeList.getSelectedRow();
         ProductType productType = null;
+
+        if (selected < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại mặt hàng cần sửa");
+            return;
+        }
 
         // check inputs
         if (checkInputs()) {
@@ -390,6 +395,11 @@ public class frmItemType extends javax.swing.JFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int selected = tblItemTypeList.getSelectedRow();
         ProductType productType = null;
+
+        if (selected < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại mặt hàng cần xóa");
+            return;
+        }
 
         // check inputs
         if (checkInputs()) {
@@ -458,7 +468,7 @@ public class frmItemType extends javax.swing.JFrame {
         tblItemTypeList.setRowSorter(row);
         row.setRowFilter(RowFilter.regexFilter("(?i)" + val));
     }
-    
+
     /**
      * @param args the command line arguments
      */
