@@ -160,6 +160,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtProductName">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblItemType">
           <Properties>
@@ -187,6 +190,7 @@
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cboProductTypeItemStateChanged"/>
@@ -414,6 +418,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Lo&#x1ea1;i m&#x1eb7;t h&#xe0;ng"/>
+        <Property name="toolTipText" type="java.lang.String" value="Ch&#x1ecd;n &#x111;&#x1ec3; th&#xea;m lo&#x1ea1;i m&#x1eb7;t h&#xe0;ng"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenFrmItemTypeActionPerformed"/>

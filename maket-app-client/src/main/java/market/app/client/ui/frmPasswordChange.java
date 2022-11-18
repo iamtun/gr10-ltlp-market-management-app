@@ -62,11 +62,14 @@ public class frmPasswordChange extends javax.swing.JFrame {
         btnConfirm.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnConfirm.setForeground(new java.awt.Color(255, 255, 255));
         btnConfirm.setText("Xác nhận");
+        btnConfirm.setToolTipText("Chọn để xác nhận việc đổi mật khẩu");
         btnConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnConfirmActionPerformed(evt);
             }
         });
+
+        txtCurrentPass.setToolTipText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

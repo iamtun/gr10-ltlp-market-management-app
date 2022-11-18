@@ -46,7 +46,7 @@ public class frmItemType extends javax.swing.JFrame {
         productTypeService = ConnectServer.getInstance().getProductTypeService();
         setLocationRelativeTo(null);
         Config.initColTable(tblItemTypeList, modelTableProductTypeList, colums);
-        
+
         //btn
         btnChange.setEnabled(false);
         btnDelete.setEnabled(false);
@@ -91,6 +91,7 @@ public class frmItemType extends javax.swing.JFrame {
         btnAdd.setBackground(new java.awt.Color(69, 123, 157));
         btnAdd.setForeground(new java.awt.Color(255, 255, 255));
         btnAdd.setText("Thêm");
+        btnAdd.setToolTipText("Thêm loại mặt hàng");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -100,6 +101,7 @@ public class frmItemType extends javax.swing.JFrame {
         btnChange.setBackground(new java.awt.Color(69, 123, 157));
         btnChange.setForeground(new java.awt.Color(255, 255, 255));
         btnChange.setText("Sửa");
+        btnChange.setToolTipText("Cập nhật thông tin");
         btnChange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChangeActionPerformed(evt);
@@ -109,6 +111,7 @@ public class frmItemType extends javax.swing.JFrame {
         btnDelete.setBackground(new java.awt.Color(69, 123, 157));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
+        btnDelete.setToolTipText("Xóa loại mặt hàng");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
@@ -118,6 +121,7 @@ public class frmItemType extends javax.swing.JFrame {
         lblIItemTypeName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblIItemTypeName.setText("Tên loại mặt hàng: ");
 
+        txtProductType.setToolTipText("Tên loại mặt hàng có thể trùng");
         txtProductType.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtProductTypeKeyReleased(evt);
@@ -129,6 +133,7 @@ public class frmItemType extends javax.swing.JFrame {
 
         jLabel1.setText("Đơn vị:");
 
+        txtUnit.setToolTipText("Đơn vị phải là duy nhất");
         txtUnit.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtUnitKeyTyped(evt);
@@ -283,7 +288,7 @@ public class frmItemType extends javax.swing.JFrame {
         txtProductType.setText("");
         txtUnit.setText("");
         txtProductType.requestFocus();
-        
+
         btnChange.setEnabled(false);
         btnDelete.setEnabled(false);
         btnAdd.setEnabled(true);
@@ -296,7 +301,7 @@ public class frmItemType extends javax.swing.JFrame {
         String unit = txtUnit.getText();
 
         if (prodType.equals("") || unit.equals("")) {
-            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
+            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return true;
         }
 
@@ -319,18 +324,21 @@ public class frmItemType extends javax.swing.JFrame {
             // check exist product type
             for (ProductType prod : productTypeService.getAllProductType()) {
                 if (prodType.equals(prod.getName()) && unit.equals(prod.getUnit())) {
-                    JOptionPane.showMessageDialog(this, "Loại sản phẩm này đã tồn tại. Vui lòng nhập loại sản phẩm khác!");
-                    clearInputs();
+                    JOptionPane.showMessageDialog(this, "Đơn vị của loại sản phẩm này đã tồn tại, Vui lòng nhập tên khác nếu muốn nhập loại sản phẩm có cùng tên!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    //clearInputs();
                     return;
                 }
             }
 
             //productType.setSelling(true);
-            productTypeService.addOrUpdateProductType(productType);
-
-            JOptionPane.showMessageDialog(this, "Thêm loại sản phẩm thành công.");
+            boolean res = productTypeService.addOrUpdateProductType(productType);
+            if (res) {
+                JOptionPane.showMessageDialog(this, "Thêm loại sản phẩm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                loadDataToListView();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm loại sản phẩm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
             clearInputs();
-            loadDataToListView();
         } catch (Exception ex) {
             Logger.getLogger(frmItemType.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -383,18 +391,22 @@ public class frmItemType extends javax.swing.JFrame {
                     // check exist product type
                     for (ProductType prod : productTypeService.getAllProductType()) {
                         if (prodType.equals(prod.getName()) && unit.equals(prod.getUnit())) {
-                            JOptionPane.showMessageDialog(this, "Loại sản phẩm này đã tồn tại. Vui lòng nhập loại sản phẩm khác!");
-                            clearInputs();
+                            JOptionPane.showMessageDialog(this, "Đơn vị của loại sản phẩm này đã tồn tại, Vui lòng nhập tên khác nếu muốn nhập loại sản phẩm có cùng tên!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                            //clearInputs();
                             return;
                         }
                     }
 
-                    productTypeService.addOrUpdateProductType(productType);
-                    JOptionPane.showMessageDialog(this, "Cập nhật thành công loại sản phẩm.");
-                    loadDataToListView();
+                    boolean res = productTypeService.addOrUpdateProductType(productType);
+                    if (res) {
+                        JOptionPane.showMessageDialog(this, "Cập nhật thành công loại sản phẩm!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        loadDataToListView();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Cập nhật loại sản phẩm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
                     clearInputs();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Cập nhật không thành công loại sản phẩm!");
+                    JOptionPane.showMessageDialog(this, "Loại sản phẩm không tồn tại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                     clearInputs();
                 }
             }
@@ -443,7 +455,7 @@ public class frmItemType extends javax.swing.JFrame {
         btnChange.setEnabled(true);
         btnDelete.setEnabled(true);
         btnAdd.setEnabled(false);
-        
+
         txtProductType.setText(tblItemTypeList.getValueAt(selected, 1).toString());
         txtUnit.setText(tblItemTypeList.getValueAt(selected, 2).toString());
     }//GEN-LAST:event_tblItemTypeListMouseClicked
@@ -489,10 +501,10 @@ public class frmItemType extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new frmItemType().setVisible(true);
-        });
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(() -> {
+//            new frmItemType().setVisible(true);
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

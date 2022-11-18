@@ -175,6 +175,7 @@ public class frmOrder extends javax.swing.JFrame {
         btnPaySuccess.setBackground(new java.awt.Color(69, 123, 157));
         btnPaySuccess.setForeground(new java.awt.Color(255, 255, 255));
         btnPaySuccess.setText("Hoàn tất thanh toán");
+        btnPaySuccess.setToolTipText("Lưu hóa đơn");
         btnPaySuccess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPaySuccessActionPerformed(evt);
@@ -184,6 +185,7 @@ public class frmOrder extends javax.swing.JFrame {
         btnPrintOrder.setBackground(new java.awt.Color(29, 146, 183));
         btnPrintOrder.setForeground(new java.awt.Color(255, 255, 255));
         btnPrintOrder.setText("In hóa đơn");
+        btnPrintOrder.setToolTipText("In hóa đơn gửi cho khách hàng kiểm tra");
         btnPrintOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintOrderActionPerformed(evt);
