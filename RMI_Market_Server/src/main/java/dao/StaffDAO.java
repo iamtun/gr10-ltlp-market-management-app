@@ -40,7 +40,8 @@ public class StaffDAO extends UnicastRemoteObject implements IStaffService {
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
-			session.merge(staff);
+			session.saveOrUpdate(staff);
+//			session.flush();
 			transaction.commit();
 			return true;
 		} catch (Exception e) {

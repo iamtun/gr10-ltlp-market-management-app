@@ -25,6 +25,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,10 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import market.app.client.ui.manager.frmManageItem;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -142,7 +146,7 @@ public class Config {
             model.addRow(objects);
         }
     }
-    
+
     // load cbo product
 //    public static void loadDataToCombobox() {
 //        try {
@@ -153,7 +157,6 @@ public class Config {
 //            Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-
     public static String converDateToString(Date date) {
         DateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         String dateFormated = format.format(date);
@@ -175,7 +178,7 @@ public class Config {
         String dateFormated = format.format(date);
         return dateFormated;
     }
-    
+
     //oclock
     public static void timeChange(JLabel label) {
         Runnable runnable = () -> {
@@ -199,16 +202,16 @@ public class Config {
     //print order
     public static void printOrder(Date now, List<OrderDetail> _details, int numberOrder, String nameStaff) {
         try {
-            File directory = new File("C:/orders/");
+            File directory = new File("C:/k-mart/orders");
             if (!directory.exists()) {
                 if (directory.mkdir()) {
                     System.err.println("create folder success!");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Bạn cần tạo folder [orders] trong ổ đĩa C để chứa hóa đơn", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Bạn cần tạo folder [k-mart/orders] trong ổ đĩa C để chứa hóa đơn", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
             }
-            String dest = "C:/orders/" + Config.converDateToString(now).replace(":", "_") + ".pdf";
+            String dest = "C:/k-mart/orders/" + Config.converDateToString(now).replace(":", "_") + ".pdf";
             PdfWriter writer = new PdfWriter(dest);
 
             PdfDocument pdfDocument = new PdfDocument(writer);

@@ -8,16 +8,22 @@ import com.raven.datechooser.SelectedDate;
 import entity.Account;
 import entity.Order;
 import entity.OrderDetail;
+import entity.Product;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import market.app.client.Config;
 import market.app.client.connect.ConnectServer;
 import market.app.client.ui.frmOrder;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import service.IOrderDetailService;
 import service.IOrderService;
 
@@ -66,6 +72,8 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         detailService = ConnectServer.getInstance().getOrderDetailService();
         _orders = getAllOrderNowFromServer();
         loadDataToOrderTable(_orders);
+
+        btnChange.setEnabled(false);
     }
 
     private List<Order> getAllOrderNowFromServer() {
@@ -140,6 +148,47 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         txtItemName.setText("");
         txtItemNumber.setText("");
         txtSearch.setText("");
+
+        btnChange.setEnabled(false);
+    }
+
+    private void exportReport(JTable table, String path) {
+        try {
+            TableModel model = table.getModel();
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet();
+            Row row;
+            Cell cell;
+
+            // write the column headers
+            row = sheet.createRow(0);
+            for (int c = 0; c < model.getColumnCount(); c++) {
+                cell = row.createCell(c);
+                cell.setCellValue(model.getColumnName(c));
+            }
+
+            // write the data rows
+            for (int r = 0; r < model.getRowCount(); r++) {
+                row = sheet.createRow(r + 1);
+                for (int c = 0; c < model.getColumnCount(); c++) {
+                    cell = (Cell) row.createCell(c);
+                    Object value = model.getValueAt(r, c);
+                    if (value instanceof String) {
+                        cell.setCellValue((String) value);
+                    } else if (value instanceof Integer) {
+                        cell.setCellValue((Integer) value);
+                    }
+                }
+            }
+
+            FileOutputStream out = new FileOutputStream(path);
+            workbook.write(out);
+            out.close();
+            workbook.close();
+            JOptionPane.showMessageDialog(null, "Xuất báo cáo thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -166,6 +215,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         btnFillter = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         lblSales = new javax.swing.JLabel();
+        btnExport = new javax.swing.JButton();
         pnOrderDetailList = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblOrderDetail = new javax.swing.JTable();
@@ -243,8 +293,18 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Doanh thu:");
 
+        lblSales.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblSales.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblSales.setText("7.000.000 VNĐ");
+
+        btnExport.setBackground(new java.awt.Color(69, 123, 157));
+        btnExport.setForeground(new java.awt.Color(255, 255, 255));
+        btnExport.setText("Xuất báo cáo");
+        btnExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnOrderListLayout = new javax.swing.GroupLayout(pnOrderList);
         pnOrderList.setLayout(pnOrderListLayout);
@@ -275,7 +335,8 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblSales, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblSales, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnExport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnOrderListLayout.setVerticalGroup(
@@ -296,12 +357,14 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                     .addComponent(btnFillter, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(pnOrderListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(lblSales))
-                .addContainerGap())
+                    .addComponent(lblSales)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnOrderDetailList.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Danh sách mặt hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
@@ -335,6 +398,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Tổng tiền:");
 
+        lblTotalMoney.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblTotalMoney.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout pnOrderDetailListLayout = new javax.swing.GroupLayout(pnOrderDetailList);
@@ -358,7 +422,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
             .addGroup(pnOrderDetailListLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(pnOrderDetailListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(lblTotalMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -520,7 +584,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                     return;
                 }
             }
-            if(check == false){
+            if (check == false) {
                 JOptionPane.showMessageDialog(this, "Hóa đơn không tồn tại. Vui lòng kiểm tra lại!");
                 return;
             }
@@ -546,20 +610,44 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                         JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
                     OrderDetail detail = _details.get(index);
-                    int _newQuantity = Integer.parseInt(txtItemNumber.getText());
-                    detail.setQuantity(_newQuantity);
                     try {
-                        boolean _check = detailService.addOrUpdateOrderDetail(detail);
-                        if (_check) {
-                            JOptionPane.showMessageDialog(null, "Chỉnh sửa thành công!");
-                            List<OrderDetail> details = orderService.findOrderById(_orders.get(indexSelected).getId()).getDetails();
-                            loadDataToOrderDetailList(details);
-                            _orders = getAllOrderNowFromServer();
-                            loadDataToOrderTable(_orders);
+                        int _newQuantity = Integer.parseInt(txtItemNumber.getText());
+                        if (_newQuantity > 0) {
+                            if (_newQuantity <= detail.getProduct().getNumber()) {
+                                detail.setQuantity(_newQuantity);
+                                boolean _check = detailService.addOrUpdateOrderDetail(detail);
+                                if (_check) {
+                                    JOptionPane.showMessageDialog(null, "Chỉnh sửa thành công!");
+                                    List<OrderDetail> details = orderService.findOrderById(_orders.get(indexSelected).getId()).getDetails();
+                                    loadDataToOrderDetailList(details);
+
+                                    //get date
+                                    Date start = Config.convertStringToDate(txtDateStart.getText());
+                                    Date end = Config.convertStringToDate(txtDateEnd.getText());
+
+                                    String _start = Config.convertDateToStringSql(start);
+                                    String _end = Config.convertDateToStringSql(end);
+
+                                    System.err.println(start + "-" + end);
+                                    if (_start.equals(_end)) {
+                                        _orders = getAllOrderNowFromServer();
+                                    } else {
+                                        List<Order> orders = orderService.filter(_start, _end);
+                                        _orders = getOrderDetailFromOrder(orders);
+                                    }
+                                    loadDataToOrderTable(_orders);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Chỉnh sửa thất bại!");
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Số lượng bạn nhập lớn " + detail.getProduct().getNumber() + " hiện có, vui lòng nhập lại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         } else {
-                            JOptionPane.showMessageDialog(null, "Chỉnh sửa thất bại!");
+                            JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                         }
+
                     } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Số lượng phải là số!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                         Logger.getLogger(frmManageOrder.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -571,6 +659,8 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
     private void tblOrderDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrderDetailMouseClicked
         // TODO add your handling code here:
         int index = tblOrderDetail.getSelectedRow();
+
+        btnChange.setEnabled(true);
         if (index > -1) {
             OrderDetail detail = _details.get(index);
             txtCode.setText(String.valueOf(detail.getProduct().getId()));
@@ -614,11 +704,22 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_btnFillterActionPerformed
 
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+        // TODO add your handling code here:
+        if (tblOrderList.getRowCount() > 0) {
+            String path = "C:/k-mart/reports/report_" + txtDateStart.getText() + "_" + txtDateEnd.getText() + ".xlsx";
+            exportReport(tblOrderList, path);
+        }else {
+            JOptionPane.showMessageDialog(null, "Không có gì để xuất báo cáo!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnExportActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnChange;
     private javax.swing.JButton btnDateStart;
+    private javax.swing.JButton btnExport;
     private javax.swing.JButton btnFillter;
     private javax.swing.JButton btnSearch;
     private com.raven.datechooser.DateChooser dateChooser1;
