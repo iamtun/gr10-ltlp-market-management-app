@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import market.app.client.Config;
 import market.app.client.connect.ConnectServer;
+import service.IAccountService;
 import service.IStaffService;
 
 /**
@@ -28,6 +29,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
      * Creates new form frmManageItem
      */
     private IStaffService staffService;
+    private IAccountService accountService;
     private Account _account;
     private DefaultTableModel modelTableStaffList = new DefaultTableModel() {
         @Override
@@ -43,11 +45,15 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         // connect rmi
         staffService = ConnectServer.getInstance().getStaffService();
+        accountService = ConnectServer.getInstance().getAccountService();
         this._account = _account;
 
         Config.initColTable(tblStaffList, modelTableStaffList, colums);
         Config.hideTitleBarInternalFrame(this);
 
+        //btn
+        btnChange.setEnabled(false);
+        btnDelete.setEnabled(false);
         // load data
         loadDataToCbo();
         loadDataToListView();
@@ -155,6 +161,10 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         cboPosition.setSelectedIndex(0);
         cboStatus.setSelectedIndex(0);
         txtStaffName.requestFocus();
+        
+        btnAdd.setEnabled(true);
+        btnChange.setEnabled(false);
+        btnDelete.setEnabled(false);
     }
 
     // create staff id
@@ -217,6 +227,11 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         lblSearch = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         pnStaffInfor.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Thông tin nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
 
@@ -502,8 +517,9 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                     return;
                 }
             }
+            staff.setManager(_account.getStaff());
             staffService.addOrUpdateStaff(staff);
-
+            accountService.addAccount(new Account(staff, "123456"));
             JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công.");
             clearInputs();
             loadDataToListView();
@@ -517,6 +533,10 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         int selected = tblStaffList.getSelectedRow();
         Staff staff = null;
 
+        btnChange.setEnabled(true);
+        btnDelete.setEnabled(true);
+        btnAdd.setEnabled(false);
+        
         if (selected >= 0) {
             String index = (String) tblStaffList.getValueAt(selected, 0);
 
@@ -534,10 +554,6 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                 }
             } catch (Exception ex) {
                 Logger.getLogger(frmManageStaff.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            if (staff != null) {
-
             }
         }
     }//GEN-LAST:event_tblStaffListMouseClicked
@@ -636,7 +652,8 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             staff.setPosition(pos);
                             staff.setStatus(sta);
 
-                            staffService.addOrUpdateStaff(staff);
+                            boolean res = staffService.addOrUpdateStaff(staff);
+                            System.out.println(res);
                             System.out.println("[staff]: " + staff);
                             JOptionPane.showMessageDialog(this, "Cập nhật thành công nhân viên.");
                             loadDataToListView();
@@ -680,6 +697,11 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txtStaffNameKeyTyped
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODO add your handling code here:
+        clearInputs();
+    }//GEN-LAST:event_formMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

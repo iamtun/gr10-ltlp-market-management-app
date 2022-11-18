@@ -63,7 +63,7 @@ public class frmSale extends javax.swing.JInternalFrame {
             int id = Integer.parseInt(field.getText());
             try {
                 Product product = productService.findProductById(id);
-                if (product != null) {
+                if (product != null && product.getType().isSelling()) {
                     txtItemName.setText(product.getName());
                     txtNumber.setEditable(true);
                     btnConfirm.setEnabled(false);

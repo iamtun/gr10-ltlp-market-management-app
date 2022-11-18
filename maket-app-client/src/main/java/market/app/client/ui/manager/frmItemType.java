@@ -46,7 +46,10 @@ public class frmItemType extends javax.swing.JFrame {
         productTypeService = ConnectServer.getInstance().getProductTypeService();
         setLocationRelativeTo(null);
         Config.initColTable(tblItemTypeList, modelTableProductTypeList, colums);
-
+        
+        //btn
+        btnChange.setEnabled(false);
+        btnDelete.setEnabled(false);
         // load data
         loadDataToListView();
     }
@@ -77,6 +80,11 @@ public class frmItemType extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setResizable(false);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         pnAction.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(69, 123, 157), 3, true), "Chức năng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
 
@@ -223,10 +231,9 @@ public class frmItemType extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSearch)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -239,9 +246,9 @@ public class frmItemType extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(pnAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addContainerGap(261, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -276,6 +283,11 @@ public class frmItemType extends javax.swing.JFrame {
         txtProductType.setText("");
         txtUnit.setText("");
         txtProductType.requestFocus();
+        
+        btnChange.setEnabled(false);
+        btnDelete.setEnabled(false);
+        btnAdd.setEnabled(true);
+        tblItemTypeList.clearSelection();
     }
 
     // Check inputs
@@ -428,6 +440,10 @@ public class frmItemType extends javax.swing.JFrame {
     private void tblItemTypeListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemTypeListMouseClicked
         int selected = tblItemTypeList.getSelectedRow();
 
+        btnChange.setEnabled(true);
+        btnDelete.setEnabled(true);
+        btnAdd.setEnabled(false);
+        
         txtProductType.setText(tblItemTypeList.getValueAt(selected, 1).toString());
         txtUnit.setText(tblItemTypeList.getValueAt(selected, 2).toString());
     }//GEN-LAST:event_tblItemTypeListMouseClicked
@@ -456,6 +472,11 @@ public class frmItemType extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txtProductTypeKeyTyped
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODO add your handling code here:
+        clearInputs();
+    }//GEN-LAST:event_formMouseClicked
 
     // handle search
     private void searchFilter(String val) {
