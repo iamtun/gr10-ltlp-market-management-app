@@ -262,6 +262,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         btnSearch.setBackground(new java.awt.Color(69, 123, 157));
         btnSearch.setForeground(new java.awt.Color(255, 255, 255));
         btnSearch.setText("Tìm");
+        btnSearch.setToolTipText("Để trống sẽ tải lại danh sách hóa đơn hôm nay");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -285,6 +286,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         btnFillter.setBackground(new java.awt.Color(69, 123, 157));
         btnFillter.setForeground(new java.awt.Color(255, 255, 255));
         btnFillter.setText("Thống kê");
+        btnFillter.setToolTipText("Thống kê hóa đơn theo khoảng thời gian");
         btnFillter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFillterActionPerformed(evt);
@@ -300,6 +302,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         btnExport.setBackground(new java.awt.Color(69, 123, 157));
         btnExport.setForeground(new java.awt.Color(255, 255, 255));
         btnExport.setText("Xuất báo cáo");
+        btnExport.setToolTipText("Xuất ra file excel");
         btnExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportActionPerformed(evt);
@@ -447,6 +450,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
         btnChange.setBackground(new java.awt.Color(69, 123, 157));
         btnChange.setForeground(new java.awt.Color(255, 255, 255));
         btnChange.setText("Sửa");
+        btnChange.setToolTipText("Cập nhật số lượng hóa đơn khi khách hàng phản hồi");
         btnChange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChangeActionPerformed(evt);

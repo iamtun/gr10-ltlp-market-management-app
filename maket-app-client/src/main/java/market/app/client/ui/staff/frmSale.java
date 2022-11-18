@@ -218,6 +218,7 @@ public class frmSale extends javax.swing.JInternalFrame {
         btnDel.setBackground(new java.awt.Color(69, 123, 157));
         btnDel.setForeground(new java.awt.Color(255, 255, 255));
         btnDel.setText("Xóa");
+        btnDel.setToolTipText("Chọn một mặt hàng để xóa");
         btnDel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelActionPerformed(evt);

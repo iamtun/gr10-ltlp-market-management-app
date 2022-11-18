@@ -70,7 +70,7 @@ public class frmLogin extends javax.swing.JFrame {
         lblTiltle.setText("Đăng nhập");
 
         txtUserName.setText("US002");
-        txtUserName.setToolTipText("");
+        txtUserName.setToolTipText("Tài khoản là mã nhân viên");
         txtUserName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUserNameActionPerformed(evt);
@@ -92,6 +92,7 @@ public class frmLogin extends javax.swing.JFrame {
         });
 
         txtPassword.setText("123456");
+        txtPassword.setToolTipText("");
 
         javax.swing.GroupLayout pnLoginLayout = new javax.swing.GroupLayout(pnLogin);
         pnLogin.setLayout(pnLoginLayout);
@@ -154,7 +155,7 @@ public class frmLogin extends javax.swing.JFrame {
         String password = new String(txtPassword.getPassword()).trim();
         try {
             if (userName.equals("") || password.equals("")) {
-                JOptionPane.showMessageDialog(this, "Bạn vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Bạn vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             } else {
                 Account account = accountService.findAccountByUserName(userName);
 //                System.err.println(account);
@@ -170,14 +171,14 @@ public class frmLogin extends javax.swing.JFrame {
                             //close form
                             this.dispose();
                         } else {
-                            JOptionPane.showMessageDialog(this, "Tài khoản này không có quyền đăng nhập!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(this, "Tài khoản này không có quyền đăng nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                         }
 
                     } else {
-                        JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 }
             }
         } catch (Exception e) {

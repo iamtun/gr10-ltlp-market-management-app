@@ -259,6 +259,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Ho&#xe0;n t&#x1ea5;t thanh to&#xe1;n"/>
+        <Property name="toolTipText" type="java.lang.String" value="L&#x1b0;u h&#xf3;a &#x111;&#x1a1;n"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPaySuccessActionPerformed"/>
@@ -273,6 +274,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="In h&#xf3;a &#x111;&#x1a1;n"/>
+        <Property name="toolTipText" type="java.lang.String" value="In h&#xf3;a &#x111;&#x1a1;n g&#x1eed;i cho kh&#xe1;ch h&#xe0;ng ki&#x1ec3;m tra"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintOrderActionPerformed"/>

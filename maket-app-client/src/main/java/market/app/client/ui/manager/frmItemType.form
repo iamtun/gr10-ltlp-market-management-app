@@ -152,6 +152,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
+            <Property name="toolTipText" type="java.lang.String" value="Th&#xea;m lo&#x1ea1;i m&#x1eb7;t h&#xe0;ng"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddActionPerformed"/>
@@ -166,6 +167,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
+            <Property name="toolTipText" type="java.lang.String" value="C&#x1ead;p nh&#x1ead;t th&#xf4;ng tin"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnChangeActionPerformed"/>
@@ -180,6 +182,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="X&#xf3;a"/>
+            <Property name="toolTipText" type="java.lang.String" value="X&#xf3;a lo&#x1ea1;i m&#x1eb7;t h&#xe0;ng"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
@@ -194,6 +197,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtProductType">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="T&#xea;n lo&#x1ea1;i m&#x1eb7;t h&#xe0;ng c&#xf3; th&#x1ec3; tr&#xf9;ng"/>
+          </Properties>
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtProductTypeKeyReleased"/>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtProductTypeKeyTyped"/>
@@ -205,6 +211,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtUnit">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="&#x110;&#x1a1;n v&#x1ecb; ph&#x1ea3;i l&#xe0; duy nh&#x1ea5;t"/>
+          </Properties>
           <Events>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtUnitKeyTyped"/>
           </Events>

@@ -232,6 +232,8 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         lblItemName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemName.setText("Tên mặt hàng: ");
 
+        txtProductName.setToolTipText("");
+
         lblItemType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemType.setText("Loại mặt hàng:");
 
@@ -244,6 +246,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         lblItemPrice.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblItemPrice.setText("Giá mặt hàng: ");
 
+        cboProductType.setToolTipText("");
         cboProductType.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboProductTypeItemStateChanged(evt);
@@ -433,6 +436,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         btnOpenFrmItemType.setBackground(new java.awt.Color(69, 123, 157));
         btnOpenFrmItemType.setForeground(new java.awt.Color(255, 255, 255));
         btnOpenFrmItemType.setText("Loại mặt hàng");
+        btnOpenFrmItemType.setToolTipText("Chọn để thêm loại mặt hàng");
         btnOpenFrmItemType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpenFrmItemTypeActionPerformed(evt);
