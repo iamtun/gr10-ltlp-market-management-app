@@ -47,7 +47,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     };
     private DefaultComboBoxModel cboProductTypeModel = new DefaultComboBoxModel();
     private String[] colums = new String[]{"STT", "Tên mặt hàng", "Loại mặt hàng", "Đơn vị tính", "Số lượng tồn", "Giá mặt hàng "};
-    
+
     public frmManageItem() {
         initComponents();
 
@@ -66,7 +66,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         // load data
         loadDataToCombobox();
         loadDataToListView();
-        
+
         cboProductType.setModel(cboProductTypeModel);
     }
 
@@ -76,14 +76,16 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         try {
             for (Product pt : productService.getAllProduct()) {
                 Product prod = productService.findProductById(pt.getId());
-                list.add(prod);
+                if (prod.getType().isSelling()) {
+                    list.add(prod);
+                }
             }
-            
+
             return list;
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
 
@@ -92,14 +94,14 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         String pat = "###.### " + "VNÐ";
         DecimalFormat df = new DecimalFormat(pat);
         String format = df.format(price);
-        
+
         return format;
     }
 
     // load data to list view
     private void loadDataToListView() {
         modelTableProductList.setRowCount(0);
-        
+
         try {
             int i = 1;
             for (Product prod : getProducts()) {
@@ -118,13 +120,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         modelTableProductList.fireTableDataChanged();
     }
 
     // load data to combobox
     private void loadDataToCombobox() {
-        // event close frmItemType       
         cboProductTypeModel.removeAllElements();
         Set<String> productTypeName = new HashSet<>();
         try {
@@ -146,7 +147,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         txtNumber.setText("");
         txtPrice.setText("");
         txtProductName.requestFocus();
-        
+
         btnChange.setEnabled(false);
         btnDelete.setEnabled(false);
         btnAdd.setEnabled(true);
@@ -158,12 +159,12 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         String productName = txtProductName.getText();
         String number = txtNumber.getText();
         String price = txtPrice.getText();
-        
+
         if (productName.equals("") || number.equals("") || price.equals("")) {
-            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
+            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return true;
         }
-        
+
         return false;
     }
 
@@ -179,7 +180,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         if (pattern.matcher(name).find()) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -485,7 +486,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         if (checkInputs()) {
             return;
         }
-        
+
         String productName = txtProductName.getText();
         String productTypeName = cboProductType.getSelectedItem().toString();
         String productUnit = cboItemUnit.getSelectedItem().toString();
@@ -494,15 +495,15 @@ public class frmManageItem extends javax.swing.JInternalFrame {
 
         // check name product
         if (!regexName(productName)) {
-            JOptionPane.showMessageDialog(this, "Tên mặt hàng không hợp lệ. Vui lòng kiểm tra lại!");
+            JOptionPane.showMessageDialog(this, "Tên mặt hàng không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         try {
             // check exits product productService.getAllProduct()
             for (Product prod : getProducts()) {
                 if (productName.equals(prod.getName()) && productTypeName.equals(prod.getType().getName())) {
-                    JOptionPane.showMessageDialog(this, "Sản phẩm này đã tồn tại. Bạn có thể thực hiện chức năng sửa số lượng sản phẩm!");
+                    JOptionPane.showMessageDialog(this, "Sản phẩm này đã tồn tại. Bạn có thể thực hiện chức năng sửa số lượng sản phẩm!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                     clearInputs();
                     return;
                 }
@@ -512,11 +513,11 @@ public class frmManageItem extends javax.swing.JInternalFrame {
             for (ProductType proType : productTypeService.getAllProductType()) {
                 if (productTypeName.equals(proType.getName()) && productUnit.equals(proType.getUnit())) {
                     ProductType productType = productTypeService.findProductTypeById(proType.getId());
-                    
+
                     Product product = new Product(productName, number, price, productType);
-                    
+
                     productService.addOrUpdateProduct(product);
-                    JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.");
+                    JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     clearInputs();
                     loadDataToListView();
                 }
@@ -554,7 +555,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         btnAdd.setEnabled(false);
         btnChange.setEnabled(true);
         btnDelete.setEnabled(true);
-        
+
         txtProductName.setText(tblProductList.getValueAt(selected, 1).toString());
         cboProductType.setSelectedItem(tblProductList.getValueAt(selected, 2));
         cboItemUnit.setSelectedItem(tblProductList.getValueAt(selected, 3));
@@ -565,29 +566,25 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // button delete product
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int selected = tblProductList.getSelectedRow();
+
         if (selected < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần xóa");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần xóa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
         Product product = null;
-        
+
         try {
-            if (selected >= 0) {
+            if (selected > -1) {
                 product = getProducts().get(selected);
                 int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa sản phẩm này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
-                
-                for (Product prod : productService.getAllProduct()) {
-                    if (product.getId() == prod.getId()) {
-                        if (choise == JOptionPane.YES_OPTION) {
-                            product.setSelling(false);
-                            productService.addOrUpdateProduct(product);
-                            
-                            JOptionPane.showMessageDialog(this, "Xóa sản phẩm thành công.");
-                            clearInputs();
-                            loadDataToListView();
-                        }
-                    }
+
+                if (choise == JOptionPane.YES_OPTION) {
+                    product.setSelling(false);
+                    productService.addOrUpdateProduct(product);
+
+                    JOptionPane.showMessageDialog(this, "Xóa sản phẩm thành công.");
+                    clearInputs();
+                    loadDataToListView();
                 }
             }
         } catch (Exception ex) {
@@ -613,8 +610,9 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // button update product
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
         int selected = tblProductList.getSelectedRow();
+        
         if (selected < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần sửa!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -622,31 +620,31 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         if (checkInputs()) {
             return;
         }
-        
+
         String productName = txtProductName.getText();
         String productTypeName = cboProductType.getSelectedItem().toString();
         String unit = cboItemUnit.getSelectedItem().toString();
         int number = Integer.parseInt(txtNumber.getText());
         double price = Double.parseDouble(txtPrice.getText());
         Product product = null;
-        
+
         try {
             product = getProducts().get(selected);
-            
+
             if (product != null) {
                 product.setName(productName);
                 product.setNumber(number);
                 product.setPrice(price);
-                
+
                 ProductType productType = findProductTypeByNameAndUnit(productTypeName, unit);
                 product.setType(productType);
-                
+
                 productService.addOrUpdateProduct(product);
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công sản phẩm.");
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công sản phẩm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 loadDataToListView();
                 clearInputs();
             } else {
-                JOptionPane.showMessageDialog(this, "Cập nhật không thành công sản phẩm!");
+                JOptionPane.showMessageDialog(this, "Cập nhật không thành công sản phẩm!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                 clearInputs();
             }
         } catch (Exception e) {
@@ -663,13 +661,13 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         try {
             if (cboProductType.getSelectedIndex() > -1) {
                 String productType = cboProductType.getSelectedItem().toString();
-                
+
                 cboItemUnit.removeAllItems();
                 for (ProductType pt : productTypeService.findListProductTypeByName(productType)) {
                     cboItemUnit.addItem(pt.getUnit());
                 }
             }
-            
+
         } catch (Exception ex) {
             Logger.getLogger(frmManageItem.class.getName()).log(Level.SEVERE, null, ex);
         }
