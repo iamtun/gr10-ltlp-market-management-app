@@ -371,7 +371,7 @@ public class frmItemType extends javax.swing.JFrame {
         ProductType productType = null;
 
         if (selected < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại mặt hàng cần sửa");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại mặt hàng cần sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -421,7 +421,7 @@ public class frmItemType extends javax.swing.JFrame {
         ProductType productType = null;
 
         if (selected < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại mặt hàng cần xóa");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại mặt hàng cần xóa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -436,7 +436,7 @@ public class frmItemType extends javax.swing.JFrame {
                             productType.setSelling(false);
                             productTypeService.addOrUpdateProductType(productType);
 
-                            JOptionPane.showMessageDialog(this, "Xóa loại sản phẩm thành công.");
+                            JOptionPane.showMessageDialog(this, "Xóa loại sản phẩm thành công.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                             clearInputs();
                             loadDataToListView();
                         }

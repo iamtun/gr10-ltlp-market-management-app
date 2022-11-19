@@ -97,7 +97,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         modelTableStaffList.setRowCount(0);
         try {
             for (Staff staff : staffService.getAllStaff()) {
-                if (staff.isStatus() && _account.getStaff().getId().equals("admin")) {
+                if (_account.getStaff().getId().equals("admin")) {
                     // admin
                     Object[] obj = new Object[]{
                         staff.getId(),
@@ -110,7 +110,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                         staff.isStatus() == true ? "Ðang làm" : "Ðã nghỉ"
                     };
                     modelTableStaffList.addRow(obj);
-                } else if(staff.isStatus() && !staff.isPosition()) {
+                } else if (!staff.isPosition()) {
                     // qu?n lý
                     Object[] obj = new Object[]{
                         staff.getId(),
@@ -144,7 +144,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         if (staffName.equals("") || identification.equals("") || phone.equals("") || address.equals("") || gender.equals("")
                 || position.equals("") || status.equals("")) {
-            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
+            JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return true;
         }
 
@@ -161,7 +161,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         cboPosition.setSelectedIndex(0);
         cboStatus.setSelectedIndex(0);
         txtStaffName.requestFocus();
-        
+
         btnAdd.setEnabled(true);
         btnChange.setEnabled(false);
         btnDelete.setEnabled(false);
@@ -482,17 +482,19 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
 
         // check status
         if (cboStatus.getSelectedItem().equals("Ðã nghỉ")) {
-            JOptionPane.showMessageDialog(this, "Không thể thêm nhân viên ở trạng thái đã nghỉ. Vui lòng kiểm tra lại!");
+            JOptionPane.showMessageDialog(this, "Không thể thêm nhân viên ở trạng thái đã nghỉ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         if (!regexCMND(identification)) {
-            JOptionPane.showMessageDialog(this, "Số CMND || CCCD sai định dạng.Vui lòng kiểm tra lại!");
+            JOptionPane.showMessageDialog(this, "Số CMND || CCCD sai định dạng (phải gồm 9\n"
+                    + " số). Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         if (!regexPhone(phone)) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại sai định dạng. Vui lòng kiểm tra lại!");
+            JOptionPane.showMessageDialog(this, "Số điện thoại sai định dạng (phải gồm 10 số và bắt đầu bằng\n"
+                    + "03 | 05 | 06 | 07 | 08 | 09). Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -513,14 +515,14 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
             // check exits staff
             for (Staff st : staffService.getAllStaff()) {
                 if (identification.equals(st.getIdentify()) || phone.equals(st.getPhone())) {
-                    JOptionPane.showMessageDialog(this, "Căn cước công dân hoặc số điện thoại này đã tồn tại!");
+                    JOptionPane.showMessageDialog(this, "Căn cước công dân hoặc số điện thoại này đã tồn tại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
             }
             staff.setManager(_account.getStaff());
             staffService.addOrUpdateStaff(staff);
             accountService.addAccount(new Account(staff, "123456"));
-            JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công.");
+            JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             clearInputs();
             loadDataToListView();
         } catch (Exception ex) {
@@ -536,7 +538,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         btnChange.setEnabled(true);
         btnDelete.setEnabled(true);
         btnAdd.setEnabled(false);
-        
+
         if (selected >= 0) {
             String index = (String) tblStaffList.getValueAt(selected, 0);
 
@@ -562,7 +564,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int selected = tblStaffList.getSelectedRow();
         if (selected < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -580,7 +582,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             staff.setStatus(false);
                             staffService.addOrUpdateStaff(staff);
 
-                            JOptionPane.showMessageDialog(this, "Xóa nhân viên thành công.");
+                            JOptionPane.showMessageDialog(this, "Xóa nhân viên thành công.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                             clearInputs();
                             loadDataToListView();
                         }
@@ -596,12 +598,7 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
         int selected = tblStaffList.getSelectedRow();
         if (selected < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần sửa");
-            return;
-        }
-        
-        // check inputs
-        if (checkInputs()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần sửa", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -609,6 +606,23 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         String identification = txtIdentification.getText();
         String phone = txtPhoneNumber.getText();
         String address = txtAddress.getText();
+
+        if (!regexCMND(identification)) {
+            JOptionPane.showMessageDialog(this, "Số CMND || CCCD sai định dạng (phải gồm 9\n"
+                    + " số). Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!regexPhone(phone)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại sai định dạng (phải gồm 10 số và bắt đầu bằng\n"
+                    + "03 | 05 | 06 | 07 | 08 | 09). Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
 
         String gender = cboGender.getSelectedItem().toString();
         boolean gen = false;
@@ -655,13 +669,13 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             boolean res = staffService.addOrUpdateStaff(staff);
                             System.out.println(res);
                             System.out.println("[staff]: " + staff);
-                            JOptionPane.showMessageDialog(this, "Cập nhật thành công nhân viên.");
+                            JOptionPane.showMessageDialog(this, "Cập nhật thành công nhân viên.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                             loadDataToListView();
                             clearInputs();
                         }
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Cập nhật không thành công nhân viên!");
+                    JOptionPane.showMessageDialog(this, "Cập nhật không thành công nhân viên!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                     clearInputs();
                 }
             }
