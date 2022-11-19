@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -307,12 +308,40 @@ public class frmItemType extends javax.swing.JFrame {
 
         return false;
     }
+    
+        /// vaildate ten nhan vien
+    private boolean regexName(String name) {
+        String reg = "^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\n"
+                + "fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\n"
+                + "UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ123456789]+)"
+                + "((\\s{1}[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\n"
+                + "fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\n"
+                + "UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789]*){0,})$";
+        Pattern pattern = Pattern.compile(reg);
+        if (pattern.matcher(name).find()) {
+            return true;
+        }
+
+        return false;
+    }
 
     // Button add product type
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         String prodType = txtProductType.getText();
         String unit = txtUnit.getText();
 
+        // check name product type
+        if (!regexName(prodType)) {
+            JOptionPane.showMessageDialog(this, "Tên loại mặt hàng không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // check unit
+        if (!regexName(unit)) {
+            JOptionPane.showMessageDialog(this, "Đơn vị không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         // check inputs
         if (checkInputs()) {
             return;
@@ -372,6 +401,18 @@ public class frmItemType extends javax.swing.JFrame {
 
         if (selected < 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn loại mặt hàng cần sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // check name product type
+        if (!regexName(prodType)) {
+            JOptionPane.showMessageDialog(this, "Tên loại mặt hàng không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // check unit
+        if (!regexName(unit)) {
+            JOptionPane.showMessageDialog(this, "Đơn vị không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 

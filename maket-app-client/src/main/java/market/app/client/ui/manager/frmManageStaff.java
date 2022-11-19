@@ -77,6 +77,22 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
         }
         return false;
     }
+    
+    /// vaildate ten nhan vien
+    private boolean regexName(String name) {
+        String reg = "^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\n"
+                + "fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\n"
+                + "UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ123456789]+)"
+                + "((\\s{1}[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\n"
+                + "fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\n"
+                + "UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789]*){0,})$";
+        Pattern pattern = Pattern.compile(reg);
+        if (pattern.matcher(name).find()) {
+            return true;
+        }
+
+        return false;
+    }
 
     // load data to combobox
     private void loadDataToCbo() {
@@ -497,6 +513,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                     + "03 | 05 | 06 | 07 | 08 | 09). Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        // check name nhan vien
+        if (!regexName(staffName)) {
+            JOptionPane.showMessageDialog(this, "Tên nhân viên không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         if (gender.equals("Nam")) {
             gen = true;
@@ -618,6 +640,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                     + "03 | 05 | 06 | 07 | 08 | 09). Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        // check name nhan vien
+        if (!regexName(staffName)) {
+            JOptionPane.showMessageDialog(this, "Tên nhân viên không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         // check inputs
         if (checkInputs()) {
@@ -667,10 +695,12 @@ public class frmManageStaff extends javax.swing.JInternalFrame {
                             staff.setStatus(sta);
 
                             boolean res = staffService.addOrUpdateStaff(staff);
-                            System.out.println(res);
-                            System.out.println("[staff]: " + staff);
-                            JOptionPane.showMessageDialog(this, "Cập nhật thành công nhân viên.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                            loadDataToListView();
+                            if(res) {
+                                JOptionPane.showMessageDialog(this, "Cập nhật thành công nhân viên.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                loadDataToListView();                                
+                            } else {
+                                JOptionPane.showMessageDialog(this, "Cập nhật nhân viên thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                            }
                             clearInputs();
                         }
                     }
