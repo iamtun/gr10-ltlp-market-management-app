@@ -610,14 +610,9 @@ public class frmManageItem extends javax.swing.JInternalFrame {
     // button update product
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
         int selected = tblProductList.getSelectedRow();
-        
+
         if (selected < 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn mặt hàng cần sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // check inputs
-        if (checkInputs()) {
             return;
         }
 
@@ -626,6 +621,18 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         String unit = cboItemUnit.getSelectedItem().toString();
         int number = Integer.parseInt(txtNumber.getText());
         double price = Double.parseDouble(txtPrice.getText());
+
+        // check name product
+        if (!regexName(productName)) {
+            JOptionPane.showMessageDialog(this, "Tên mặt hàng không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
         Product product = null;
 
         try {
@@ -639,9 +646,13 @@ public class frmManageItem extends javax.swing.JInternalFrame {
                 ProductType productType = findProductTypeByNameAndUnit(productTypeName, unit);
                 product.setType(productType);
 
-                productService.addOrUpdateProduct(product);
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công sản phẩm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                loadDataToListView();
+                boolean res = productService.addOrUpdateProduct(product);
+                if (res) {
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công sản phẩm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    loadDataToListView();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cập nhật sản phẩm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
                 clearInputs();
             } else {
                 JOptionPane.showMessageDialog(this, "Cập nhật không thành công sản phẩm!", "Thông báo", JOptionPane.ERROR_MESSAGE);
