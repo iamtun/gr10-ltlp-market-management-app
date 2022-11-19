@@ -187,6 +187,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
             workbook.close();
             JOptionPane.showMessageDialog(null, "Xuất báo cáo thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng tạo folder k-mart/reports trong ổ đĩa C!", "Thông báo", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -710,12 +711,17 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
 
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
         // TODO add your handling code here:
-        if (tblOrderList.getRowCount() > 0) {
+       try {
+            if (tblOrderList.getRowCount() > 0) {
             String path = "C:/k-mart/reports/report_" + txtDateStart.getText() + "_" + txtDateEnd.getText() + ".xlsx";
             exportReport(tblOrderList, path);
         }else {
             JOptionPane.showMessageDialog(null, "Không có gì để xuất báo cáo!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
+       } catch(Exception ex) {
+           JOptionPane.showMessageDialog(this, "Vui lòng tạo folder k-mark/reports trong ổ đĩa C!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+           ex.printStackTrace();
+       }
     }//GEN-LAST:event_btnExportActionPerformed
 
 
