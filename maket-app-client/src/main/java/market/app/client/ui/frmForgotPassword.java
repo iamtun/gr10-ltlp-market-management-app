@@ -114,7 +114,7 @@ public class frmForgotPassword extends javax.swing.JFrame {
         btnForgotPassword.setBackground(new java.awt.Color(69, 123, 157));
         btnForgotPassword.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnForgotPassword.setForeground(new java.awt.Color(255, 255, 255));
-        btnForgotPassword.setText("Lấy lại mật khẩu");
+        btnForgotPassword.setText("Tạo mật khẩu mới");
         btnForgotPassword.setToolTipText("Nhập tài khoản mật khẩu để đăng nhập");
         btnForgotPassword.setMaximumSize(new java.awt.Dimension(66, 22));
         btnForgotPassword.setMinimumSize(new java.awt.Dimension(66, 22));
@@ -260,6 +260,12 @@ public class frmForgotPassword extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPhoneStaffFocusLost
 
     private void btnForgotPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForgotPasswordActionPerformed
+       if(txtIdStaff.getText().equals("") || txtNewPassword.getText().equals("") || txtConfirmPassword.getText().equals("") || txtPhoneStaff.getText().equals("")) {
+           JOptionPane.showMessageDialog(null, "Cần phải nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+
+
         String confirmPass = new String(txtConfirmPassword.getPassword());
         if (confirmPass.equals(new String(txtNewPassword.getPassword()))) {
             account.setPassword(confirmPass);
