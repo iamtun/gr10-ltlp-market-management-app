@@ -95,6 +95,7 @@ public class frmLogin extends javax.swing.JFrame {
         txtPassword.setText("123456");
         txtPassword.setToolTipText("");
 
+        lblForgotPassword.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblForgotPassword.setText("Quên mật khẩu");
         lblForgotPassword.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

@@ -4,7 +4,13 @@
  */
 package market.app.client.ui;
 
+import entity.Account;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import market.app.client.connect.ConnectServer;
+import service.IAccountService;
 
 /**
  *
@@ -12,16 +18,25 @@ import javax.swing.JFrame;
  */
 public class frmForgotPassword extends javax.swing.JFrame {
 
+    private IAccountService accountService = null;
+    private Account account = null;
+
     /**
      * Creates new form frmForgotPassword
      */
     public frmForgotPassword() {
         initComponents();
-        
-        this.setSize(750, 550);
+
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        lblErrorId.setText("");
+        lblErrorPhone.setText("");
+        lblConfirmNewPass.setText("");
+        lblErrorPassword.setText("");
+        btnForgotPassword.setEnabled(false);
+        //code
+        accountService = ConnectServer.getInstance().getAccountService();
     }
 
     /**
@@ -44,6 +59,10 @@ public class frmForgotPassword extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         btnForgotPassword = new javax.swing.JButton();
+        lblErrorId = new javax.swing.JLabel();
+        lblErrorPhone = new javax.swing.JLabel();
+        lblErrorPassword = new javax.swing.JLabel();
+        lblConfirmNewPass = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,27 +75,33 @@ public class frmForgotPassword extends javax.swing.JFrame {
         lblTiltle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTiltle.setText("Quên mật khẩu");
 
-        txtPhoneStaff.setText("US002");
         txtPhoneStaff.setToolTipText("Tài khoản là mã nhân viên");
-        txtPhoneStaff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPhoneStaffActionPerformed(evt);
+        txtPhoneStaff.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPhoneStaffFocusLost(evt);
             }
         });
 
-        txtNewPassword.setText("123456");
         txtNewPassword.setToolTipText("");
-
-        txtIdStaff.setText("US002");
-        txtIdStaff.setToolTipText("Tài khoản là mã nhân viên");
-        txtIdStaff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIdStaffActionPerformed(evt);
+        txtNewPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNewPasswordFocusLost(evt);
             }
         });
 
-        txtConfirmPassword.setText("123456");
+        txtIdStaff.setToolTipText("Tài khoản là mã nhân viên");
+        txtIdStaff.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtIdStaffFocusLost(evt);
+            }
+        });
+
         txtConfirmPassword.setToolTipText("");
+        txtConfirmPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtConfirmPasswordFocusLost(evt);
+            }
+        });
 
         jLabel1.setText("Nhập mã nhân viên:");
 
@@ -100,32 +125,61 @@ public class frmForgotPassword extends javax.swing.JFrame {
             }
         });
 
+        lblErrorId.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblErrorId.setForeground(new java.awt.Color(255, 0, 0));
+        lblErrorId.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblErrorId.setText("jLabel5");
+
+        lblErrorPhone.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblErrorPhone.setForeground(new java.awt.Color(255, 0, 0));
+        lblErrorPhone.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblErrorPhone.setText("jLabel5");
+
+        lblErrorPassword.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblErrorPassword.setForeground(new java.awt.Color(255, 0, 0));
+        lblErrorPassword.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblErrorPassword.setText("jLabel5");
+
+        lblConfirmNewPass.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblConfirmNewPass.setForeground(new java.awt.Color(255, 0, 0));
+        lblConfirmNewPass.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblConfirmNewPass.setText("jLabel5");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTiltle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblNameShop, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(txtIdStaff)
+                    .addComponent(txtPhoneStaff)
+                    .addComponent(txtNewPassword)
+                    .addComponent(txtConfirmPassword)
+                    .addComponent(btnForgotPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblTiltle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNameShop, javax.swing.GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnForgotPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPhoneStaff)
-                                    .addComponent(txtNewPassword)
-                                    .addComponent(txtIdStaff)
-                                    .addComponent(txtConfirmPassword, javax.swing.GroupLayout.Alignment.TRAILING))))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblErrorPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblErrorId, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblErrorPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblConfirmNewPass, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -135,42 +189,118 @@ public class frmForgotPassword extends javax.swing.JFrame {
                 .addComponent(lblNameShop)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTiltle)
-                .addGap(34, 34, 34)
+                .addGap(1, 1, 1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtIdStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel1)
+                    .addComponent(lblErrorId))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtIdStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPhoneStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblErrorPhone))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPhoneStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel2)
+                    .addComponent(lblErrorPassword))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(26, 26, 26)
+                    .addComponent(jLabel3)
+                    .addComponent(lblConfirmNewPass))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnForgotPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtPhoneStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneStaffActionPerformed
+    private void txtIdStaffFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIdStaffFocusLost
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPhoneStaffActionPerformed
+        String staffId = txtIdStaff.getText();
+        if (staffId.trim().equals("")) {
+            lblErrorId.setText("Vui lòng nhập mã nhân viên");
+            btnForgotPassword.setEnabled(false);
+        } else {
+            try {
+                account = accountService.findAccountByUserName(staffId);
+                if (account != null) {
+                    if (account.getStaff().isStatus()) {
+                        lblErrorId.setText("");
+                        btnForgotPassword.setEnabled(true);
+                    } else {
+                        lblErrorId.setText("Nhân viên này đã nghỉ làm!");
+                        btnForgotPassword.setEnabled(false);
+                    }
+                } else {
+                    btnForgotPassword.setEnabled(false);
+                    lblErrorId.setText("Nhân viên này không tồn tại!");
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(frmForgotPassword.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_txtIdStaffFocusLost
 
-    private void txtIdStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdStaffActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtIdStaffActionPerformed
+    private void txtPhoneStaffFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneStaffFocusLost
+        String txtPhone = txtPhoneStaff.getText();
+        if (account != null) {
+            if (!txtPhone.trim().equals("") && account.getStaff().getPhone().equals(txtPhone)) {
+                lblErrorPhone.setText("");
+            } else {
+                lblErrorPhone.setText("Số điện thoại không đúng!");
+            }
+        }
+    }//GEN-LAST:event_txtPhoneStaffFocusLost
 
     private void btnForgotPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForgotPasswordActionPerformed
-        // TODO add your handling code here:
-        
+        String confirmPass = new String(txtConfirmPassword.getPassword());
+        if (confirmPass.equals(new String(txtNewPassword.getPassword()))) {
+            account.setPassword(confirmPass);
+            try {
+                boolean res = accountService.changePassWord(account);
+                if(res) {
+                    JOptionPane.showMessageDialog(null, "Mật khẩu mới đã được cập nhật!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    txtConfirmPassword.setText("");
+                    txtIdStaff.setText("");
+                    txtNewPassword.setText("");
+                    txtPhoneStaff.setText("");
+                    lblConfirmNewPass.setText("");
+                }else {
+                    JOptionPane.showMessageDialog(null, "Mật khẩu mới cập nhật thất bại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(frmForgotPassword.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            lblConfirmNewPass.setText("Mật khẩu nhập lại không đúng với mật khẩu mới!");
+        }
     }//GEN-LAST:event_btnForgotPasswordActionPerformed
+
+    private void txtNewPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNewPasswordFocusLost
+        // TODO add your handling code here:
+        String txtNewPass = new String(txtNewPassword.getPassword());
+        if (txtNewPass.length() < 6) {
+            lblErrorPassword.setText("Mật khẩu phải tối thiểu 6 ký tự!");
+        } else {
+            lblErrorPassword.setText("");
+        }
+    }//GEN-LAST:event_txtNewPasswordFocusLost
+
+    private void txtConfirmPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtConfirmPasswordFocusLost
+        String confirmPass = new String(txtConfirmPassword.getPassword());
+        if (confirmPass.equals(new String(txtNewPassword.getPassword()))) {
+            lblConfirmNewPass.setText("");
+        } else {
+            lblConfirmNewPass.setText("Mật khẩu nhập lại không đúng với mật khẩu mới!");
+        }
+    }//GEN-LAST:event_txtConfirmPasswordFocusLost
 
     /**
      * @param args the command line arguments
@@ -213,6 +343,10 @@ public class frmForgotPassword extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lblConfirmNewPass;
+    private javax.swing.JLabel lblErrorId;
+    private javax.swing.JLabel lblErrorPassword;
+    private javax.swing.JLabel lblErrorPhone;
     private javax.swing.JLabel lblNameShop;
     private javax.swing.JLabel lblTiltle;
     private javax.swing.JPasswordField txtConfirmPassword;
