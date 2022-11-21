@@ -308,8 +308,8 @@ public class frmItemType extends javax.swing.JFrame {
 
         return false;
     }
-    
-        /// vaildate ten nhan vien
+
+    /// vaildate ten nhan vien
     private boolean regexName(String name) {
         String reg = "^([aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\n"
                 + "fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\n"
@@ -330,20 +330,20 @@ public class frmItemType extends javax.swing.JFrame {
         String prodType = txtProductType.getText();
         String unit = txtUnit.getText();
 
+        // check inputs
+        if (checkInputs()) {
+            return;
+        }
+
         // check name product type
         if (!regexName(prodType)) {
             JOptionPane.showMessageDialog(this, "Tên loại mặt hàng không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         // check unit
         if (!regexName(unit)) {
             JOptionPane.showMessageDialog(this, "Đơn vị không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        // check inputs
-        if (checkInputs()) {
             return;
         }
 
@@ -403,13 +403,13 @@ public class frmItemType extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn loại mặt hàng cần sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         // check name product type
         if (!regexName(prodType)) {
             JOptionPane.showMessageDialog(this, "Tên loại mặt hàng không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         // check unit
         if (!regexName(unit)) {
             JOptionPane.showMessageDialog(this, "Đơn vị không hợp lệ. Vui lòng kiểm tra lại!", "Thông báo", JOptionPane.WARNING_MESSAGE);

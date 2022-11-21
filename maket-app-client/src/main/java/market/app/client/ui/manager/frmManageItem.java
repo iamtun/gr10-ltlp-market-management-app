@@ -491,7 +491,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         String productTypeName = cboProductType.getSelectedItem().toString();
         String productUnit = cboItemUnit.getSelectedItem().toString();
         int number = Integer.parseInt(txtNumber.getText());
-        double price = Double.parseDouble(txtPrice.getText());
+        double price = Double.parseDouble(txtPrice.getText().replace(",", ""));
 
         // check name product
         if (!regexName(productName)) {
@@ -560,7 +560,7 @@ public class frmManageItem extends javax.swing.JInternalFrame {
         cboProductType.setSelectedItem(tblProductList.getValueAt(selected, 2));
         cboItemUnit.setSelectedItem(tblProductList.getValueAt(selected, 3));
         txtNumber.setText(tblProductList.getValueAt(selected, 4).toString());
-        txtPrice.setText(tblProductList.getValueAt(selected, 5).toString().split(" ")[0]);
+        txtPrice.setText(tblProductList.getValueAt(selected, 5).toString().split(" ")[0].replace(",", ""));
     }//GEN-LAST:event_tblProductListMouseClicked
 
     // button delete product

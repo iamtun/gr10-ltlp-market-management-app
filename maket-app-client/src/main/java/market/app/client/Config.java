@@ -201,7 +201,7 @@ public class Config {
 	}
 
 	// print order
-	public static void printOrder(Date now, List<OrderDetail> _details, int numberOrder, String nameStaff) {
+	public static boolean printOrder(Date now, List<OrderDetail> _details, int numberOrder, String nameStaff) {
 		try {
 			File directory = new File("C:/k-mart/orders");
 			if (!directory.exists()) {
@@ -211,7 +211,7 @@ public class Config {
 					JOptionPane.showMessageDialog(null,
 							"Bạn cần tạo folder [k-mart/orders] trong ổ đĩa C để chứa hóa đơn", "Thông báo",
 							JOptionPane.INFORMATION_MESSAGE);
-					return;
+					return false;
 				}
 			}
 			String dest = "C:/k-mart/orders/" + Config.converDateToString(now).replace(":", "_") + ".pdf";
@@ -285,5 +285,7 @@ public class Config {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Lỗi in hóa đơn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 		}
+                
+                return true;
 	}
 }

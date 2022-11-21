@@ -300,8 +300,8 @@ public class frmOrder extends javax.swing.JFrame {
 
     private void btnPrintOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintOrderActionPerformed
         // TODO add your handling code here:
-        Config.printOrder(now, _details, getNumberOrder(), _account.getStaff().getName());
-        if(_status){
+        boolean print = Config.printOrder(now, _details, getNumberOrder(), _account.getStaff().getName());
+        if(print && _status){
             btnPaySuccess.setEnabled(true);
         }
     }//GEN-LAST:event_btnPrintOrderActionPerformed
