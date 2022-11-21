@@ -4,16 +4,22 @@
  */
 package market.app.client.ui;
 
-import com.formdev.flatlaf.FlatLightLaf;
+import entity.Account;
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.JOptionPane;
+import market.app.client.Config;
+import market.app.client.connect.ConnectServer;
+import market.app.client.ui.manager.frmMenuManager;
+import market.app.client.ui.staff.frmMenuStaff;
+import service.IAccountService;
 
 /**
  *
  * @author Le Tuan
  */
 public class frmLogin extends javax.swing.JFrame {
+
+    private IAccountService accountService;
 
     /**
      * Creates new form frmLogin
@@ -22,6 +28,7 @@ public class frmLogin extends javax.swing.JFrame {
         initComponents();
         //set full size
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        accountService = ConnectServer.getInstance().getAccountService();
     }
 
     /**
@@ -37,38 +44,64 @@ public class frmLogin extends javax.swing.JFrame {
         lblNameShop = new javax.swing.JLabel();
         lblTiltle = new javax.swing.JLabel();
         txtUserName = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
+        txtPassword = new javax.swing.JPasswordField();
+        lblForgotPassword = new javax.swing.JLabel();
         pnImage = new javax.swing.JPanel();
         lblImage = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnLogin.setBackground(new java.awt.Color(214, 229, 227));
         pnLogin.setPreferredSize(new java.awt.Dimension(400, 618));
 
-        lblNameShop.setFont(new java.awt.Font("Palatino Linotype", 0, 36)); // NOI18N
+        lblNameShop.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         lblNameShop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblNameShop.setText("Siêu Thị KMart");
         lblNameShop.setToolTipText("");
 
-        lblTiltle.setFont(new java.awt.Font("Palatino Linotype", 0, 24)); // NOI18N
+        lblTiltle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTiltle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTiltle.setText("Đăng nhập");
 
-        txtUserName.setText("Tên đăng nhập");
-        txtUserName.setToolTipText("");
-
-        txtPassword.setText("Mật khẩu");
+        txtUserName.setText("US002");
+        txtUserName.setToolTipText("Tài khoản là mã nhân viên");
+        txtUserName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUserNameActionPerformed(evt);
+            }
+        });
 
         btnLogin.setBackground(new java.awt.Color(69, 123, 157));
-        btnLogin.setFont(new java.awt.Font("Palatino Linotype", 1, 12)); // NOI18N
+        btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
         btnLogin.setText("Đăng nhập");
         btnLogin.setToolTipText("Nhập tài khoản mật khẩu để đăng nhập");
         btnLogin.setMaximumSize(new java.awt.Dimension(66, 22));
         btnLogin.setMinimumSize(new java.awt.Dimension(66, 22));
         btnLogin.setPreferredSize(new java.awt.Dimension(66, 22));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
+
+        txtPassword.setText("123456");
+        txtPassword.setToolTipText("");
+
+        lblForgotPassword.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblForgotPassword.setText("Quên mật khẩu");
+        lblForgotPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblForgotPasswordMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnLoginLayout = new javax.swing.GroupLayout(pnLogin);
         pnLogin.setLayout(pnLoginLayout);
@@ -77,11 +110,14 @@ public class frmLogin extends javax.swing.JFrame {
             .addGroup(pnLoginLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtUserName)
                     .addComponent(lblNameShop, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                    .addComponent(lblTiltle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblTiltle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnLoginLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblForgotPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnLoginLayout.setVerticalGroup(
@@ -92,12 +128,14 @@ public class frmLogin extends javax.swing.JFrame {
                 .addGap(173, 173, 173)
                 .addComponent(lblTiltle)
                 .addGap(31, 31, 31)
-                .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(lblForgotPassword)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(217, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnLogin, java.awt.BorderLayout.WEST);
@@ -125,19 +163,67 @@ public class frmLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // TODO add your handling code here:
+        String userName = txtUserName.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
+        try {
+            if (userName.equals("") || password.equals("")) {
+                JOptionPane.showMessageDialog(this, "Bạn vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            } else {
+                Account account = accountService.findAccountByUserName(userName);
+//                System.err.println(account);
+                if (account != null) {
+                    if (account.getStaff().getId().equals(userName) && account.getPassword().equals(password)) {
+                        if (account.getStaff().isStatus()) {
+                            if (!account.getStaff().isPosition()) {
+                                new frmMenuStaff(account).setVisible(true);
+                            } else {
+                                new frmMenuManager(account).setVisible(true);
+                            }
+
+                            //close form
+                            this.dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Tài khoản này không có quyền đăng nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                        }
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi xử lý đăng nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        Config.closeForm(this);
+    }//GEN-LAST:event_formWindowClosing
+
+    // Lỡ tay bấm. sr
+    private void txtUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUserNameActionPerformed
+
+    private void lblForgotPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblForgotPasswordMouseClicked
+        frmForgotPassword frmForgotPassword = new frmForgotPassword();
+        frmForgotPassword.setVisible(true);
+    }//GEN-LAST:event_lblForgotPasswordMouseClicked
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the FlatLaf look and feel */
-        try {
-            FlatLightLaf.setup();
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (UnsupportedLookAndFeelException ex) {
-            System.err.println("Failed to initialize LaF");
-        }
 
-        /* Create and display the form */
+ /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new frmLogin().setVisible(true);
         });
@@ -145,12 +231,13 @@ public class frmLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
+    private javax.swing.JLabel lblForgotPassword;
     private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblNameShop;
     private javax.swing.JLabel lblTiltle;
     private javax.swing.JPanel pnImage;
     private javax.swing.JPanel pnLogin;
-    private javax.swing.JTextField txtPassword;
+    private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 }
