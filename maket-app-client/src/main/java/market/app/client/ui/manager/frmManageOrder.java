@@ -599,6 +599,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
             dateChooser2.setSelectedDate(new Date());
         }
         clearInput();
+        modelTableOrderDetail.setRowCount(0);
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
@@ -706,7 +707,8 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
                 Logger.getLogger(frmManageOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        clearInput();
+        modelTableOrderDetail.setRowCount(0);
     }//GEN-LAST:event_btnFillterActionPerformed
 
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
@@ -716,7 +718,7 @@ public class frmManageOrder extends javax.swing.JInternalFrame {
             String path = "C:/k-mart/reports/report_" + txtDateStart.getText() + "_" + txtDateEnd.getText() + ".xlsx";
             exportReport(tblOrderList, path);
         }else {
-            JOptionPane.showMessageDialog(null, "Không có gì để xuất báo cáo!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Không có hóa đơn nào để xuất báo cáo!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
        } catch(Exception ex) {
            JOptionPane.showMessageDialog(this, "Vui lòng tạo folder k-mark/reports trong ổ đĩa C!", "Thông báo", JOptionPane.ERROR_MESSAGE);
